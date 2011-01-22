@@ -1,7 +1,7 @@
 function RestClient() {
 	var secureBaseUrl = 'https://www.zarcode4fishin.appspot.com';
 	var baseUrl = 'http://mobile.lazylaker.net';
-	var myMsgRestURL = baseUrl + '/resources/events/';
+	var myMsgRestURL = baseUrl + '/resources/buzz/';
 	var myLakeRestURL = baseUrl + '/resources/lakes/';
 	var myUserRestURL = baseUrl + '/resources/users/';
     
@@ -44,7 +44,7 @@ function RestClient() {
                 // create connection
                 //
 				var appContent = 'msgEvent';
-				var msgUrl = '/resources/events/';
+				var msgUrl = '/resources/buzz/';
 				var targetURL = secureBaseUrl + msgUrl + msg.resourceId + '/' + appContent + '?id=' + from + '&fbPostFlag=' + (fbPostFlag ? 1 : 0);
 				Titanium.API.info('postMessage: REST URL: ' + targetURL);
                 xhr.open('POST', targetURL);
@@ -92,7 +92,7 @@ function RestClient() {
                 // create connection
                 //
 				var appContent = 'comment';
-				var msgUrl = '/resources/events/';
+				var msgUrl = '/resources/buzz/';
 				var targetURL = secureBaseUrl + msgUrl + comment.resourceId + '/' + appContent + '?id=' + from;
 				Titanium.API.info('postComment: REST URL: ' + targetURL);
                 xhr.open('POST', targetURL);
@@ -128,9 +128,9 @@ function RestClient() {
                 xhr.onload = function() {
 					Titanium.API.info('updateDisplayName: onload: Entered - ' + this.responseText);
 					var jsonNodeData = JSON.parse(this.responseText);
-					if (jsonNodeData != null) {
+					if (jsonNodeData != null && jsonNodeData.result > 0) {
 						Titanium.API.info('updateDisplayName: onload: SUCCESS');
-						Ti.App.fireEvent('UPDATED_USER', { user:jsonNodeData });
+						Ti.App.fireEvent('UPDATED_DISPLAY_NAME', { displayName:jsonNodeData.value });
 					}
 					else {
 						alert('Server unable to complete request -- Support has been contacted.');
@@ -140,18 +140,71 @@ function RestClient() {
                 //
                 // create connection
                 //
-				var appContent = 'displayName';
-				var userUrl = '/resources/user/';
-				var targetURL = secureBaseUrl + userUrl + from + '/' + appContent;
+				var userUrl = '/resources/users/update';
+				var targetURL = secureBaseUrl + userUrl;
 				Titanium.API.info('updateDisplayName: REST URL: ' + targetURL);
                 xhr.open('POST', targetURL);
 				xhr.setRequestHeader('Content-Type', 'application/json');
 				xhr.setRequestHeader('Accept', 'application/json');
                 //
                 // send HTTP request
-                //i
+                //
                 Titanium.API.info('updateDisplayName: Posting to server ... ' + displayName);
-                xhr.send(displayName);	
+				var modId = Titanium.Network.encodeURIComponent(from);
+				var modName = Titanium.Network.encodeURIComponent(displayName);
+				var updateAction = { llId:modId, object:'User', field:'displayName', value: modName, result: 0 };
+				var str = JSON.stringify(updateAction);
+                xhr.send(str);	
+			},
+			//
+			// This method updates display name
+			//
+			updateProfileUrl : function(from, profileUrl) {
+               	Titanium.API.info("updateProfileUrl: Entered");
+				var xhr = Ti.Network.createHTTPClient();
+                xhr.setTimeout(90000);
+				
+                // 
+                // error
+                //
+                xhr.onerror = function(e) {
+                	alert('updateProfileUrl: onerror: Unable to connect to remote services -- ' + e.error); 
+                	Titanium.API.info("some error");
+					alert('Unable to connect to remote services');
+                }; 
+            
+                // 
+                // success    
+                //
+                xhr.onload = function() {
+					Titanium.API.info('updateProfileUrl: onload: Entered - ' + this.responseText);
+					var jsonNodeData = JSON.parse(this.responseText);
+					if (jsonNodeData != null && jsonNodeData.result > 0) {
+						Titanium.API.info('updateProfileUrl: onload: SUCCESS');
+						Ti.App.fireEvent('UPDATED_PROFILE_URL', { profileUrl:jsonNodeData.value });
+					}
+					else {
+						alert('Server unable to complete request -- Support has been contacted.');
+					}
+                };
+
+                //
+                // create connection
+                //
+				var userUrl = '/resources/user/update/';
+				var targetURL = secureBaseUrl + userUrl;
+				Titanium.API.info('updateProfileUrl: REST URL: ' + targetURL);
+                xhr.open('POST', targetURL);
+				xhr.setRequestHeader('Content-Type', 'application/json');
+				xhr.setRequestHeader('Accept', 'application/json');
+                //
+                // send HTTP request
+                //
+				var modId = Titanium.Network.encodeURIComponent(from);
+				var modUrl = Titanium.Network.encodeURIComponent(profileUrl);
+				var updateTask = { llId:modId, object:'User', field:'profileUrl', value:modUrl, result: 0 };
+				var str = JSON.stringify(updateTask);
+                xhr.send(str);	
 			},
 			//
 			// This method retrieves top 50 messages posted to the requested lake polygon resource
@@ -366,7 +419,8 @@ function RestClient() {
 					targetURL = myUserRestURL + "ping/" + llId + '?lat=' + lat + '&lng=' + lng + '&devId=' + deviceId;
 				}
 				else {
-					targetURL = myUserRestURL + "ping/" + llId + '?lat=' + lat + '&lng=' + lng;
+					var modId = Titanium.Network.encodeURIComponent(llId);
+					targetURL = myUserRestURL + "ping/" + modId + '?lat=' + lat + '&lng=' + lng;
 				}
 				Titanium.API.info('getBestResourceMatch: REST URL: ' + targetURL);
                 xhr.open('GET', targetURL);

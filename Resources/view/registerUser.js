@@ -1,5 +1,6 @@
-Ti.include('model/modelLocator.js');
-Ti.include('util/tea.js');
+Ti.include('../model/modelLocator.js');
+Ti.include('../util/tea.js');
+Ti.include('../util/tools.js');
 
 var win = Ti.UI.currentWindow;
 var model = win.model;
@@ -30,10 +31,16 @@ function init() {
 			if (tempXML != null && tempXML.length > 0) {
 				var len = tempXML.length - 25 - 14;
 				tempXML = tempXML.substr(25, len);
-				tempXML = trim(tempXML);
+				tempXML = Tools.trim(tempXML);
 				var modXML = "<?xml version=\"1.0\" encoding=\"utf-8\"?>" + tempXML;
 				Ti.API.info("Modified XML :: " +  modXML);
 				var xml = Titanium.XML.parseString(modXML);
+				
+				// server secret
+				var serverSecret = xml.documentElement.getElementsByTagName("servercode").item(0);
+				var serverSecretStr = Tea.decrypt(serverSecret.text, model.getPW1());
+				Ti.API.info('Server Secret: [' + serverSecretStr + ']');
+				model.setPW2(serverSecretStr);
 				
 				// email address
 				var emailAddr = xml.documentElement.getElementsByTagName("emailaddr").item(0);
@@ -47,18 +54,25 @@ function init() {
 				var llid = xml.documentElement.getElementsByTagName("llid").item(0);
 				var llIdStr = Tea.decrypt(llid.text, model.getPW1());
 				Ti.API.info('LL Id: [' + llIdStr + ']');
+				
+				// encrypt id for client to server key
+				Ti.API.info('Encrypting clear id=' + llIdStr + ' with key [' + serverSecretStr + ']');
+				var llIdCrypted = Tea.encrypt(llIdStr, serverSecretStr);
+				Ti.API.info('NEW llId for sending to server [' + llIdCrypted + ']');
+				var d = Tea.decrypt(llIdCrypted, serverSecretStr)
+				Ti.API.info('----------------> ' + d);
 			
-				var u = { emailAddr:emailAddrStr, displayName:nickname.text, idClear:llIdStr, id:llid.text };
+				var u = { emailAddr:emailAddrStr, displayName:nickname.text, idClear:llIdStr, id:llIdCrypted };
 				model.setCurrentUser(u);
 				
 				// facebook key
-				var fbKey = xml.documentElement.getElementsByTagName("fblazylakerkey").item(0);
+				var fbKey = xml.documentElement.getElementsByTagName("fbkey").item(0);
 				var fbKeyStr = Tea.decrypt(fbKey.text, model.getPW1());
 				Ti.API.info('FB Key: [' + fbKeyStr + ']');
 				model.setFBAPIKey(fbKey.text);
 			
 				// facebook secret	
-				var fbSecret = xml.documentElement.getElementsByTagName("fblazylakersecret").item(0);
+				var fbSecret = xml.documentElement.getElementsByTagName("fbsecret").item(0);
 				var fbSecretStr = Tea.decrypt(fbSecret.text, model.getPW1());
 				Ti.API.info('FB Secret: [' + fbSecretStr + ']');
 				model.setFBSecret(fbSecretStr);
@@ -75,11 +89,7 @@ function init() {
 				Ti.API.info('Picasa Password: [' + pPasswordStr + ']');
 				model.setPicasaPassword(pPassword.text);
 			
-				// server secret
-				var serverSecret = xml.documentElement.getElementsByTagName("servercode").item(0);
-				var serverSecretStr = Tea.decrypt(serverSecret.text, model.getPW1());
-				Ti.API.info('Server Secret: [' + serverSecretStr + ']');
-				model.setPW2(serverSecretStr);
+				
 					
 				addRegistration(llid.text, emailAddr.text, nickname, fbKey.text, fbSecret.text, pUser.text, pPassword.text, serverSecret.text);
 				
@@ -92,6 +102,7 @@ function init() {
 			win.close();
 		}
 		else {
+			loginPage.show();
 			Ti.API.info("Display this page --- URL=" + e.url);
 		}
 	});

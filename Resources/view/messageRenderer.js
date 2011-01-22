@@ -135,8 +135,8 @@ function createNewCommentsSection(m) {
 		var client = new RestClient();
 		var lat = model.getUserLat();
 		var lng = model.getUserLng();
-		var newComment = { resourceId:msgEvent.resourceId, username:currentUser.username,
-			response:msgText.value, msgEventId:msgEvent.eventId, 
+		var newComment = { resourceId:msgEvent.resourceId, username:currentUser.displayName,
+			response:msgText.value, msgId:msgEvent.msgId, 
 			lat:lat, lng:lng
 		};
 		if (currentUser.profileUrl != null) {

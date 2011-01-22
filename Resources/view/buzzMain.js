@@ -125,14 +125,10 @@ function init(){
 			//
 			var client = new RestClient();
 			var llId = 'ABC123';
-			var u = model.getCurrentUser();
-			if (u != null) {
-				var cipherText = Tea.encrypt(u.federatedId, model.getPW1());
-				llId = cipherText;
-			}
+			var user = model.getCurrentUser();
 			lat = 32.85;
 			lng = -96.50;
-			client.getBestResourceMatch(llId, lat, lng);
+			client.getBestResourceMatch(user.id, lat, lng);
 			mainInd.show();
 		}
 	});

@@ -14,20 +14,20 @@ function postMessage2FB(m) {
 		
 		if (m.photoUrl != null) {
 			fbRec = {
-				name: m.username + " via " + model.getAppName(),
+				name: m.displayName + " via " + model.getAppName(),
 				href:"http://www.lazylaker.net",
 				caption:m.messageData,
-				description:"Message from " + m.username + " on " + m.location ,
+				description:"Message from " + m.displayName + " on " + m.location ,
 				media:[{ type:"image", src:m.photoUrl, href:"http://www.lazylaker.net" }],
 				properties:{}
 			};
 		}
 		else {
 			fbRec = {
-				name: m.username + " via " + model.getAppName(),
+				name: m.displayName + " via " + model.getAppName(),
 				href:"http://www.lazylaker.net",
 				caption:m.messageData,
-				description:"Message from " + m.username + " on " + m.location ,
+				description:"Message from " + m.displayName + " on " + m.location ,
 				properties:{}
 			};
 		}
@@ -247,7 +247,7 @@ function buildForm() {
 			msgEvent = {
 				title: '',
 				version: 0,
-				username: currentUser.username,
+				username: currentUser.displayName,
 				resourceId: myLocation.id,
 				location: myLocation.name,
 				messageData: msgText.value,
@@ -284,7 +284,7 @@ function buildForm() {
 			msgEvent = {
 				title: '',
 				version: 0,
-				username: currentUser.username,
+				username: currentUser.displayName,
 				resourceId: myLocation.id,
 				location: myLocation.name,
 				messageData: msgText.value,

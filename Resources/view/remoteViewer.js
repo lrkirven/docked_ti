@@ -468,7 +468,7 @@ function buildMsgRowCollection(msgEventList) {
 			}
 			
 			
-			Ti.API.info('buildMsgRowCollection: msgEvent= ' + msgEvent);
+			Ti.info('buil: msgEvent= ' + msgEvent);
 			username = msgEvent.username;
 			Ti.API.info('buildMsgRowCollection: username: ' + username);
 			location = msgEvent.location;

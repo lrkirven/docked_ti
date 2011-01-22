@@ -75,8 +75,20 @@ function buildForm() {
 		borderStyle: Titanium.UI.INPUT_BORDERSTYLE_ROUNDED,
 		borderWidth: 2,
 		borderRadius: 1,
-	});		
-	
+	});	
+	displayNameText.addEventListener('change', function() {
+		var name = displayNameText.value;
+		if (name != null && name.length > 0) {
+			continueBtn.enabled = true;	
+			if (name.length > 200) {
+				name = name.substr(0, 200);
+				displayNameText.value = name;
+			}
+		}
+		else {
+			continueBtn.enabled = false;
+		}
+	});
 	panel.add(displayNameText);
 	
 	//
@@ -99,7 +111,7 @@ function buildForm() {
 		if (str != model.getCurrentUser().displayName) {
 			var client = new RestClient();
 			var user = model.getCurrentUser();
-			client.updateDisplayName(user.id, msgEvent);	
+			client.updateDisplayName(user.id, str);	
 		}
 	});
 	

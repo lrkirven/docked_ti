@@ -18,6 +18,7 @@ var css = CSSMgr();
 Ti.Geolocation.purpose = "Recieve User Location";
 var myFont = 'Verdana';
 var db = Titanium.Database.open('db.lazylaker.net');
+db.execute('DROP TABLE IF EXISTS AppParams');
 db.execute('CREATE TABLE IF NOT EXISTS AppParams (id INTEGER PRIMARY KEY, name VARCHAR(30), valueStr TEXT, valueInt INTEGER)');
 var tabGroup = null;
 var buzzTab = null;
@@ -42,6 +43,9 @@ function hasUserRegistered() {
     return (count > 0);
 }
 
+/**
+ * Loads the user registration data from the local database
+ */
 function loadRegistration() {
 	var rows = 0;
     var rowcpt = null;
@@ -70,6 +74,8 @@ function loadRegistration() {
     if (rowcpt.isValidRow()) {
         displayName = rowcpt.fieldByName('valueStr');
     }
+	
+	Ti.API.info('Creating user instance --> emailAddr=' + emailAddrStr + ' displayName=' + displayName + 'idClear=' + llIdStr);
 	
 	var user = { emailAddr:emailAddrStr, displayName:displayName, idClear:llIdStr, id:llId };
 	model.setCurrentUser(user);
@@ -224,10 +230,14 @@ Titanium.App.addEventListener('GOOGLE_MAP_LOADED', function(e) {
 	Ti.API.info('My Google Map is loaded!!');
 });
 
-Titanium.App.addEventListener('UPDATED_USER', function(e) { 
-	Ti.API.info('*** UPDATED DISPLAYNAME -->' + e.user.username);
-	model.getCurrentUser().displayName = e.user.username;
-	updateDisplayName(e.user.username);
+Titanium.App.addEventListener('UPDATED_PROFILE_URL', function(e) { 
+	Ti.API.info('*** UPDATED_PROFILE_URL -->' + e.profileUrl);
+});
+
+Titanium.App.addEventListener('UPDATED_DISPLAY_NAME', function(e) { 
+	Ti.API.info('*** UPDATED_DISPLAY_NAME -->' + e.displayName);
+	model.getCurrentUser().displayName = e.displayName;
+	updateDisplayName(e.displayName);
 	
 	if (promptDisplayNameWin != null) {
 		promptDisplayNameWin.close();
@@ -481,8 +491,8 @@ function init() {
 				font: { fontSize: 20, fontFamily: myFont },
 				backgroundColor: css.getColor0(),
 				barColor: css.getColor0(),
-				// url: 'view/promptUserToRegister.js'
-				url: 'view/promptUser4Displayname.js'
+				url: 'view/promptUserToRegister.js'
+				// url: 'view/promptUser4Displayname.js'
 			});
 			promptWin.model = model;
 			promptWin.db = db;
