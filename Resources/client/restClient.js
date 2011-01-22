@@ -191,7 +191,7 @@ function RestClient() {
                 //
                 // create connection
                 //
-				var userUrl = '/resources/user/update/';
+				var userUrl = '/resources/user/update';
 				var targetURL = secureBaseUrl + userUrl;
 				Titanium.API.info('updateProfileUrl: REST URL: ' + targetURL);
                 xhr.open('POST', targetURL);
@@ -368,8 +368,8 @@ function RestClient() {
 			//
 			// This method determines if the user's location is inside a pre-defined lake polygon	
 			//
-			getBestResourceMatch : function(llId, lat, lng) {
-               	Titanium.API.info("getBestResourceMatch: Entered");
+			ping : function(llId, lat, lng) {
+               	Titanium.API.info("ping: Entered");
 				var xhr = Ti.Network.createHTTPClient();
                 xhr.setTimeout(90000);
 				
@@ -377,7 +377,7 @@ function RestClient() {
                 // error
                 //
                 xhr.onerror = function(e) {
-                	alert('getBestResourceMatch: onerror: Unable to connect to remote services -- ' + e.error); 
+                	alert('ping: onerror: Unable to connect to remote services -- ' + e.error); 
                 	Titanium.API.info("some error");
                 }; 
             
@@ -385,20 +385,20 @@ function RestClient() {
                 // success    
                 //
                 xhr.onload = function() {
-					Titanium.API.info('getBestResourceMatch: onload: Entered - [' + this.responseText + ']');
+					Titanium.API.info('ping: onload: Entered - [' + this.responseText + ']');
 					if (this.responseText == 'null' || this.responseText == undefined) {
 						Ti.App.fireEvent('BEST_RESOURCE_MATCH_RECD', { MsgEvent:[] });
 						return;
 					}
 					if (this.responseText == 'null' || this.responseText == undefined) {
-						Titanium.API.info('getLocalMsgEvents: onload: Returning empty set');
+						Titanium.API.info('ping: onload: Returning empty set');
 						Ti.App.fireEvent('BEST_RESOURCE_MATCH_RECD', { MsgEvent:[] });
 						return;
 					}
 					if (this.responseText != null) {
 						var jsonNodeData = JSON.parse(this.responseText);
 						if (jsonNodeData != null) {
-							Titanium.API.info('getBestResourceMatch: onload: SUCCESS');
+							Titanium.API.info('ping: onload: SUCCESS');
 							Ti.App.fireEvent('BEST_RESOURCE_MATCH_RECD', jsonNodeData);
 						}
 						else {
@@ -413,23 +413,21 @@ function RestClient() {
                 //
                 // create connection
                 //
-				var targetURL = null;
-				if (llId == 'ABC123') {
-					var deviceId = Titanium.Network.encodeURIComponent(model.getDeviceId());
-					targetURL = myUserRestURL + "ping/" + llId + '?lat=' + lat + '&lng=' + lng + '&devId=' + deviceId;
-				}
-				else {
-					var modId = Titanium.Network.encodeURIComponent(llId);
-					targetURL = myUserRestURL + "ping/" + modId + '?lat=' + lat + '&lng=' + lng;
-				}
-				Titanium.API.info('getBestResourceMatch: REST URL: ' + targetURL);
-                xhr.open('GET', targetURL);
+				var userUrl = '/resources/user/ping';
+				var targetURL = secureBaseUrl + userUrl;
+				Titanium.API.info('ping: REST URL: ' + targetURL);
+                xhr.open('POST', targetURL);
+				xhr.setRequestHeader('Content-Type', 'application/json');
 				xhr.setRequestHeader('Accept', 'application/json');
+				var modId = Titanium.Network.encodeURIComponent(llId);
+				var deviceId = Titanium.Network.encodeURIComponent(model.getDeviceId());
+				var pingData = { llId:modId, deviceId:deviceId, lat:lat, lng:lng };
+				var str = JSON.stringify(pingData);
                 //
                 // send HTTP request
                 //
-                Titanium.API.info('getBestResourceMatch: Trying to determine if the user is inside of the lake polygon');
-                xhr.send();	
+                Titanium.API.info('ping: Trying to determine if the user is inside of the lake polygon');
+                xhr.send(str);	
 			}
     };
     return myClient;

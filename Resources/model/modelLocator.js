@@ -12,6 +12,7 @@ function ModelLocator() {
 	var pendingRawImage = null;
 	var userLat = 0;
 	var userLng = 0;
+	var lastMove = 0;
 	var resourceId = 0;
 	var myFont = 'Verdana';	
 	var fbName = null;
@@ -150,6 +151,12 @@ function ModelLocator() {
 					return false;
 				}
 				return true;	
+			},
+			setLastPing : function(tm) {
+				lastPing = tm;	
+			},
+			getLastPing : function() {
+				return lastPing;
 			},
 			setUserLat : function(lat) {
 				userLat = lat;	

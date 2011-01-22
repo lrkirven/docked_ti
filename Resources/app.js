@@ -6,6 +6,7 @@ Ti.include('client/picasaClient.js');
 Ti.include('client/restClient.js');
 Ti.include('props/cssMgr.js');
 Ti.include('util/tea.js');
+Ti.include('util/tools.js');
 
 
 //////////////////////////////////////////////////////////////////////////////////
@@ -202,28 +203,89 @@ function handleInitialUserPosition(e) {
 	var lng = e.coords.longitude;
 	var timestamp = e.coords.timestamp;
 	var accuracy = e.coords.accuracy;
-	
-	model.setUserLng(lng);
-	model.setUserLat(lat);
-	Ti.API.info('lat: ' + lat);
-	Ti.API.info('lng: ' + lng);
-	
-	Titanium.API.info('geo - current location: ' + new Date(timestamp) + ' lng ' + lng + ' lat ' + lat + ' accuracy ' + accuracy);
-	
-	//
-	// determine if we are inside a local lake polygon
-	//
-	var client = new RestClient();
-	var llId = 'ABC123';
-	var u = model.getCurrentUser();
-	if (u != null) {
-		var cipherText = Tea.encrypt(u.federatedId, model.getPW1());
-		llId = cipherText;	
+
+	var bUpdateServer = false;
+	var now = new Date();
+	var tm = d.getTime();
+	if (model.getUserLat() == 0 && model.getUserLng() == 0) {
+		bUpdateServer = true;
 	}
-	// hardcoding Lake Ray Roberts
-	lat = 32.85;
-	lng = -96.50;
-	client.getBestResourceMatch(llId, lat, lng);
+	else {
+		var lakePoly = model.getCurrentLake();
+		//
+		// we are in a lake polygon
+		//
+		if (lakePoly != null) {
+			var lastPing = model.getLastPing();
+			var diffInMsecs = tm - lastPing;
+			var diffInMins = ((diffInMsecs / 1000) / 60);
+			if (diffInMins > 10) {
+				bUpdateServer = true;
+			}
+			else {
+				var oldLat = model.getUserLat();
+				var oldLng = model.getUserLng();
+				var diff = Tools.distanceFromAB(oldLat, oldLng, lat, lng);
+				if (diff > 1) {
+					bUpdateServer = true;
+				}
+			}
+		}
+		else {
+			var lastPing = model.getLastPing();
+			var diffInMsecs = tm - lastPing;
+			var diffInMins = ((diffInMsecs / 1000) / 60);
+			if (diffInMins > 20) {
+				bUpdateServer = true;
+			}
+			else {
+				var oldLat = model.getUserLat();
+				var oldLng = model.getUserLng();
+				var diff = Tools.distanceFromAB(oldLat, oldLng, lat, lng);
+				if (diff > 2) {
+					bUpdateServer = true;
+				}
+			}
+			
+		}
+		
+	}
+	
+
+	//
+	// update server
+	//
+	if (bUpdateServer) {
+		model.setUserLng(lng);
+		model.setUserLat(lat);
+		Titanium.API.info('lat: ' + lat);
+		Titanium.API.info('lng: ' + lng);
+		Titanium.API.info('geo - current location: ' + new Date(timestamp) + ' lng ' + lng + ' lat ' + lat + ' accuracy ' + accuracy);
+		//
+		// determine if we are inside a local lake polygon
+		//
+		var client = new RestClient();
+		//
+		// anonymous user
+		//
+		var llId = 'ABC123';
+		var user = model.getCurrentUser();
+		//
+		// if we have a real user, use their id
+		//
+		if (user != null) {
+			llId = user.id;
+		}
+		// hardcoding Lake Ray Roberts
+		lat = 32.85;
+		lng = -96.50;
+		//
+		// alert remote services where I am located
+		//
+		Titanium.API.info('Last Ping updated to ---> ' + tm);
+		model.setLastPing(tm);
+		client.ping(llId, lat, lng);
+	}
 };
 
 Titanium.App.addEventListener('GOOGLE_MAP_LOADED', function(e) { 
