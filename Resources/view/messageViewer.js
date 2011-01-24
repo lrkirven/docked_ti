@@ -885,7 +885,8 @@ function buildPanelHeader(){
 					location: myLocation.name,
 					messageData: msgText.value,
 					lat: model.getUserLat(),
-					lng: model.getUserLng()
+					lng: model.getUserLng(),
+					llId: currentUser.id
 				};
 				//
 				// add user's profile url to message if they have one
@@ -894,7 +895,7 @@ function buildPanelHeader(){
 					msgEvent.profileUrl = currentUser.profileUrl;
 				}
 				restClient = new RestClient();
-				restClient.postMessage(currentUser.id, msgEvent);
+				restClient.postMessage(msgEvent);
 			}
 		});
 		w.add(submitBtn);

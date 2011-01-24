@@ -72,7 +72,7 @@ function buildForm() {
 		width: 100
 	});
 	laterBtn.addEventListener('click', function() {
-		Titanium.App.fireEvent('PROMPT_COMPLETE', { registerFlag:false });
+		Titanium.App.fireEvent('PROMPT_USER_TO_REGISTER_COMPLETE', { registerFlag:false });
 	});	
 	
 	//
@@ -91,7 +91,7 @@ function buildForm() {
 		width: 100
 	});
 	registerBtn.addEventListener('click', function() {
-		Titanium.App.fireEvent('PROMPT_COMPLETE', { registerFlag:true });
+		Titanium.App.fireEvent('PROMPT_USER_TO_REGISTER_COMPLETE', { registerFlag:true });
 	});
 	panel.add(registerBtn);
 	panel.add(laterBtn);

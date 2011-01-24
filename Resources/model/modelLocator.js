@@ -3,7 +3,8 @@ function ModelLocator() {
 	var baseUrl = 'http://mobile.lazylaker.net';
 	var myRestURL = baseUrl + '/resources/events/add/123';
 	var currentLake = null;
-	var currentUser = { displayName:'John Boyd', id:'1515151514141163228', emailAddr:'john@yahoo.com' };
+	// var currentUser = { displayName:'John Boyd', id:'1515151514141163228', emailAddr:'john@yahoo.com' };
+	var currentUser = null;
     var responseMap = {};
 	var centerLat = 0;
 	var centerLng = 0;
@@ -28,6 +29,7 @@ function ModelLocator() {
 	var anonymousUser = 'ABC123';
 	var anonymousPassword = 'ABCDEF7891011121314';
 	var deviceId = null;
+	var lastPing = 0;
 	
     this.singletonInstance = null;
 

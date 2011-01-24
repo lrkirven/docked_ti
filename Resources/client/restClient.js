@@ -12,7 +12,7 @@ function RestClient() {
 			//
 			// This method posts a message by the user to a specific lake resource (or region)
 			//
-			postMessage : function(from, msg, fbPostFlag) {
+			postMessage : function(llId, msg) {
                	Titanium.API.info("postMessage: Entered");
 				var xhr = Ti.Network.createHTTPClient();
                 xhr.setTimeout(90000);
@@ -30,29 +30,38 @@ function RestClient() {
                 //
                 xhr.onload = function() {
 					Titanium.API.info('postMessage: onload: Entered - ' + this.responseText);
-					var jsonNodeData = JSON.parse(this.responseText);
-					if (jsonNodeData != null) {
-						Titanium.API.info('postMessage: onload: SUCCESS');
-						Ti.App.fireEvent('NEW_MSG_EVENT_ADDED', { newMsgEvent:jsonNodeData, origMsgEvent:msg });
+					if (this.responseText != null) {
+						var jsonNodeData = JSON.parse(this.responseText);
+						if (jsonNodeData != null) {
+							Titanium.API.info('postMessage: onload: SUCCESS');
+							Ti.App.fireEvent('NEW_MSG_EVENT_ADDED', { newMsgEvent: jsonNodeData, origMsgEvent: msg, status:0 });
+						}
+						else {
+							Ti.App.fireEvent('NEW_MSG_EVENT_ADDED', 
+								{ status:99, errorMsg:'Remote services unable to complete request -- Support has been contacted.' });
+						}
 					}
 					else {
-						alert('Server unable to complete request -- Support has been contacted.');
+						Ti.App.fireEvent('NEW_MSG_EVENT_ADDED', 
+							{ status:99, errorMsg:'Remote services unable to complete request -- Support has been contacted.' });
 					}
                 };
 
                 //
                 // create connection
                 //
-				var appContent = 'msgEvent';
+				var appContent = 'newMsg';
 				var msgUrl = '/resources/buzz/';
-				var targetURL = secureBaseUrl + msgUrl + msg.resourceId + '/' + appContent + '?id=' + from + '&fbPostFlag=' + (fbPostFlag ? 1 : 0);
+				var targetURL = secureBaseUrl + msgUrl + msg.resourceId + '/' + appContent ;
 				Titanium.API.info('postMessage: REST URL: ' + targetURL);
                 xhr.open('POST', targetURL);
 				xhr.setRequestHeader('Content-Type', 'application/json');
 				xhr.setRequestHeader('Accept', 'application/json');
                 //
                 // send HTTP request
-                //i
+                //
+				var modId = Titanium.Network.encodeURIComponent(llId);
+				msg.llId = modId;
 				var str = JSON.stringify(msg);
                 Titanium.API.info('postMessage: Posting JSON msg (msgEvent) to server ... ' + str);
                 xhr.send(str);	
@@ -413,7 +422,7 @@ function RestClient() {
                 //
                 // create connection
                 //
-				var userUrl = '/resources/user/ping';
+				var userUrl = '/resources/users/ping';
 				var targetURL = secureBaseUrl + userUrl;
 				Titanium.API.info('ping: REST URL: ' + targetURL);
                 xhr.open('POST', targetURL);

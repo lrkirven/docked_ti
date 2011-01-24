@@ -51,7 +51,19 @@ function getMyFacebookInfo() {
 /**
  * This method initializes the buzz main menu for user selections.
  */
-function init(){
+function init() {
+	
+	mainInd = Titanium.UI.createActivityIndicator({
+		top: 135,
+		left: 135,
+		height: 150,
+		width: 50,
+		message: 'Loading ...',
+		style: Titanium.UI.iPhone.ActivityIndicatorStyle.DARK
+	});
+	win.add(mainInd);
+	Ti.API.info('Show buzzMain indicator ...');
+	mainInd.show();
 
 	win.touchEnabled = false;
 	
@@ -64,7 +76,7 @@ function init(){
 		title: 'Map Buzz',
 		hasChild: true,
 		leftImage: '../phone_playmovie.png',
-		ptr: 'navigateViewer.js'
+		ptr: 'buzzOnMapViewer.js'
 	}, {
 		title: 'Post Buzz',
 		hasChild: true,
@@ -86,7 +98,7 @@ function init(){
 		title: 'Map Buzz',
 		hasChild: true,
 		leftImage: '../phone_playmovie.png',
-		ptr: 'navigateViewer.js'
+		ptr: 'buzzOnMapViewer.js'
 	}, {
 		title: 'Visit other Lakers',
 		hasChild: true,
@@ -101,6 +113,7 @@ function init(){
 		ptr: 'remoteViewer.js'
 	}];
 	
+	/*
 	Titanium.Geolocation.addEventListener('location', function(evt){
 		if (evt.error) {
 			Ti.API.info('GEO ERROR:' + JSON.stringify(evt.error));
@@ -109,9 +122,7 @@ function init(){
 		var lat = evt.coords.latitude;
 		var lng = evt.coords.longitude;
 		var timestamp = evt.coords.timestamp;
-		//
-		// if user location has changed, lets check if we are in lake polygon or not.
-		// 
+		
 		if (!model.isUserLocationSame(lat, lng)) {
 			currentLocationLabel.text = "[ No Lake Found ... ]";
 			currentLocationLabel.color = css.getColor3();
@@ -120,18 +131,17 @@ function init(){
 			model.setUserLat(lat);
 			Ti.API.info('new lat: ' + lat);
 			Ti.API.info('new lng: ' + lng);
-			//
-			// determine if we are inside a local lake polygon
-			//
+			
 			var client = new RestClient();
 			var llId = 'ABC123';
 			var user = model.getCurrentUser();
 			lat = 32.85;
 			lng = -96.50;
-			client.getBestResourceMatch(user.id, lat, lng);
+			client.ping(user.id, lat, lng);
 			mainInd.show();
 		}
 	});
+	*/
 	
 	Titanium.App.addEventListener('LOCATION_CHANGED', function(e){
 		Ti.API.info('Handle LOCATION_CHANGED event ...');
@@ -291,14 +301,7 @@ function init(){
     });
     win.add(iads);
 	
-	mainInd = Titanium.UI.createActivityIndicator({
-		top: 135,
-		left: 135,
-		height: 150,
-		width: 50,
-		style: Titanium.UI.iPhone.ActivityIndicatorStyle.DARK
-	});
-	win.add(mainInd);
+	
 	
 	if (Titanium.Facebook.isLoggedIn()) {
 		getMyFacebookInfo();

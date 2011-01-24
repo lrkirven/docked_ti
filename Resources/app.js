@@ -19,7 +19,7 @@ var css = CSSMgr();
 Ti.Geolocation.purpose = "Recieve User Location";
 var myFont = 'Verdana';
 var db = Titanium.Database.open('db.lazylaker.net');
-db.execute('DROP TABLE IF EXISTS AppParams');
+// db.execute('DROP TABLE IF EXISTS AppParams');
 db.execute('CREATE TABLE IF NOT EXISTS AppParams (id INTEGER PRIMARY KEY, name VARCHAR(30), valueStr TEXT, valueInt INTEGER)');
 var tabGroup = null;
 var buzzTab = null;
@@ -50,6 +50,16 @@ function hasUserRegistered() {
 function loadRegistration() {
 	var rows = 0;
     var rowcpt = null;
+	
+	// server secret
+	rowcpt = db.execute("SELECT * FROM AppParams WHERE name = 'SERVERSECRET'");
+	var serverSecret = null;
+	var serverSecretStr = null;
+    if (rowcpt.isValidRow()) {
+        serverSecret = rowcpt.fieldByName('valueStr');
+		serverSecretStr = Tea.decrypt(serverSecret, model.getPW1());
+		model.setPW2(serverSecretStr);
+    }
 
 	// ll Id	
     rowcpt = db.execute("SELECT * FROM AppParams WHERE name = 'LLID'");
@@ -59,6 +69,7 @@ function loadRegistration() {
         llId = rowcpt.fieldByName('valueStr');
 		llIdStr = Tea.decrypt(llId, model.getPW1());
     }
+	var c2sLLId = Tea.encrypt(llIdStr, model.getPW2());
 	
 	// email address
 	rowcpt = db.execute("SELECT * FROM AppParams WHERE name = 'EMAILADDR'");
@@ -78,7 +89,7 @@ function loadRegistration() {
 	
 	Ti.API.info('Creating user instance --> emailAddr=' + emailAddrStr + ' displayName=' + displayName + 'idClear=' + llIdStr);
 	
-	var user = { emailAddr:emailAddrStr, displayName:displayName, idClear:llIdStr, id:llId };
+	var user = { emailAddr:emailAddrStr, displayName:displayName, idClear:llIdStr, id:c2sLLId };
 	model.setCurrentUser(user);
 	
 	// fb key
@@ -121,15 +132,7 @@ function loadRegistration() {
 		model.setPicasaPassword(pPasswordStr);
     }
 	
-	// server secret
-	rowcpt = db.execute("SELECT * FROM AppParams WHERE name = 'SERVERSECRET'");
-	var serverSecret = null;
-	var serverSecretStr = null;
-    if (rowcpt.isValidRow()) {
-        serverSecret = rowcpt.fieldByName('valueStr');
-		serverSecretStr = Tea.decrypt(serverSecret, model.getPW1());
-		model.setPW2(serverSecretStr);
-    }
+	
 	Ti.API.info("loadRegistration(): Done");
 }
 
@@ -206,7 +209,7 @@ function handleInitialUserPosition(e) {
 
 	var bUpdateServer = false;
 	var now = new Date();
-	var tm = d.getTime();
+	var tm = now.getTime();
 	if (model.getUserLat() == 0 && model.getUserLng() == 0) {
 		bUpdateServer = true;
 	}
@@ -248,7 +251,6 @@ function handleInitialUserPosition(e) {
 			}
 			
 		}
-		
 	}
 	
 
@@ -256,6 +258,12 @@ function handleInitialUserPosition(e) {
 	// update server
 	//
 	if (bUpdateServer) {
+		//
+		// hardcoding Lake Ray Roberts
+		//
+		lat = 32.85;
+		lng = -96.50;
+		
 		model.setUserLng(lng);
 		model.setUserLat(lat);
 		Titanium.API.info('lat: ' + lat);
@@ -276,9 +284,7 @@ function handleInitialUserPosition(e) {
 		if (user != null) {
 			llId = user.id;
 		}
-		// hardcoding Lake Ray Roberts
-		lat = 32.85;
-		lng = -96.50;
+		
 		//
 		// alert remote services where I am located
 		//
@@ -331,7 +337,7 @@ Titanium.App.addEventListener('REGISTER_COMPLETE', function(e) {
 	
 });
 
-Titanium.App.addEventListener('PROMPT_COMPLETE', function(e) { 
+Titanium.App.addEventListener('PROMPT_USER_TO_REGISTER_COMPLETE', function(e) { 
 	Ti.API.info('registerFlag -->' + e.registerFlag);
 	if (e.registerFlag) {
 		registerWin = Titanium.UI.createWindow({

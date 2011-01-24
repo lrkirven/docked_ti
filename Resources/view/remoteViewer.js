@@ -476,7 +476,7 @@ function buildMsgRowCollection(msgEventList) {
 			msgTitle = 'Posted by ' + username + ' on ' + location;
 			Ti.API.info('buildMsgRowCollection: title: ' + msgTitle);
 			
-			//
+		/
 			// create table row
 			//
 			var row = Ti.UI.createTableViewRow({

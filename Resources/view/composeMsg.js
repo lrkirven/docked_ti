@@ -334,15 +334,28 @@ function performExit() {
 };
 
 function handleNewMsgPosted(e) {
-	if (post2FB) {
-		postingInd.visible = false;
-		Ti.API.info('handleNewMsgPosted(): Going to facebook ---> ' + e.origMsgEvent);
-		postMessage2FB(e.origMsgEvent);
+	if (e.status == 0) {
+		if (post2FB) {
+			postingInd.visible = false;
+			Ti.API.info('handleNewMsgPosted(): Going to facebook ---> ' + e.origMsgEvent);
+			postMessage2FB(e.origMsgEvent);
+		}
+		else {
+			postingInd.visible = false;
+			var alertDialog = Titanium.UI.createAlertDialog({
+				message: 'Message posted!',
+				buttonNames: ['OK']
+			});
+			alertDialog.show();
+			performExit();
+			win.close();
+		}
 	}
 	else {
 		postingInd.visible = false;
 		var alertDialog = Titanium.UI.createAlertDialog({
-			message: 'Message posted!',
+			message: e.errorMsg,
+			title: model.getAppName(),
 			buttonNames: ['OK']
 		});
 		alertDialog.show();
