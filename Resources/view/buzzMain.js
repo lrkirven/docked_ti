@@ -12,6 +12,8 @@ var outPolygonMM = null;
 var userCountLbl = null;
 var mainInd = null;
 
+
+
 function check4NewMsgEvents() {
 	var client = new RestClient();
 	var activeLake = model.getCurrentLake();
@@ -53,17 +55,7 @@ function getMyFacebookInfo() {
  */
 function init() {
 	
-	mainInd = Titanium.UI.createActivityIndicator({
-		top: 135,
-		left: 135,
-		height: 150,
-		width: 50,
-		message: 'Loading ...',
-		style: Titanium.UI.iPhone.ActivityIndicatorStyle.DARK
-	});
-	win.add(mainInd);
-	Ti.API.info('Show buzzMain indicator ...');
-	mainInd.show();
+	
 
 	win.touchEnabled = false;
 	
@@ -301,12 +293,21 @@ function init() {
     });
     win.add(iads);
 	
-	
-	
 	if (Titanium.Facebook.isLoggedIn()) {
 		getMyFacebookInfo();
 	}
 	
+	mainInd = Titanium.UI.createActivityIndicator({
+		top: 125,
+		left: 135,
+		height: 150,
+		width: 50,
+		message: 'Initializing ...',
+		style: Titanium.UI.iPhone.ActivityIndicatorStyle.DARK
+	});
+	win.add(mainInd);
+	Ti.API.info('Show buzzMain indicator ...');
+	mainInd.show();
 };
 
 init();
