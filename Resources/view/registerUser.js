@@ -59,7 +59,7 @@ function init() {
 				Ti.API.info('Encrypting clear id=' + llIdStr + ' with key [' + serverSecretStr + ']');
 				var llIdCrypted = Tea.encrypt(llIdStr, serverSecretStr);
 				Ti.API.info('NEW llId for sending to server [' + llIdCrypted + ']');
-				var d = Tea.decrypt(llIdCrypted, serverSecretStr)
+				var d = Tea.decrypt(llIdCrypted, serverSecretStr);
 				Ti.API.info('----------------> ' + d);
 			
 				var u = { emailAddr:emailAddrStr, displayName:nickname.text, idClear:llIdStr, id:llIdCrypted };

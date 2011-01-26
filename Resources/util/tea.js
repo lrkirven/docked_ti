@@ -19,12 +19,14 @@
 	 * @returns {string} encrypted text
 	 */
 	Tea.encrypt = function(plaintext, password){
-		if (plaintext.length == 0) 
+		if (plaintext.length == 0) {
 			return (''); // nothing to encrypt
+		}
 		// convert string to array of longs after converting any multi-byte chars to UTF-8
 		var v = Tea.strToLongs(Utf8.encode(plaintext));
-		if (v.length <= 1) 
+		if (v.length <= 1) {
 			v[1] = 0; // algorithm doesn't work for n<2 so fudge by adding a null
+		}
 		// simply convert first 16 chars of password as key
 		var k = Tea.strToLongs(Utf8.encode(password).slice(0, 16));
 		var n = v.length;
@@ -50,7 +52,7 @@
 		
 		// return Titanium.Utils.base64encode(ciphertext);
 		return Base64.encode(ciphertext);
-	}
+	};
 	
 	/*
 	 * decrypt text using Corrected Block TEA (xxtea) algorithm
@@ -60,8 +62,9 @@
 	 * @returns {string} decrypted text
 	 */
 	Tea.decrypt = function(ciphertext, password){
-		if (ciphertext.length == 0) 
+		if (ciphertext.length == 0) {
 			return ('');
+		}
 		// var v = Tea.strToLongs(Titanium.Utils.base64decode(ciphertext));
 		var v = Tea.strToLongs(Base64.decode(ciphertext));
 		var k = Tea.strToLongs(Utf8.encode(password).slice(0, 16));
@@ -90,7 +93,7 @@
 		plaintext = plaintext.replace(/\0+$/, '');
 		
 		return Utf8.decode(plaintext);
-	}
+	};
 	
 	/* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -  */
 	
@@ -107,14 +110,14 @@
 			(s.charCodeAt(i * 4 + 3) << 24);
 		}
 		return l; // note running off the end of the string generates nulls since 
-	} // bitwise operators treat NaN as 0
+	}; // bitwise operators treat NaN as 0
 	Tea.longsToStr = function(l){ // convert array of longs back to string
 		var a = new Array(l.length);
 		for (var i = 0; i < l.length; i++) {
 			a[i] = String.fromCharCode(l[i] & 0xFF, l[i] >>> 8 & 0xFF, l[i] >>> 16 & 0xFF, l[i] >>> 24 & 0xFF);
 		}
 		return a.join(''); // use Array.join() rather than repeated string appends for efficiency in IE
-	}
+	};
 	
 	
 	/* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -  */
@@ -170,7 +173,7 @@
 		coded = coded.slice(0, coded.length - pad.length) + pad;
 		
 		return coded;
-	}
+	};
 	
 	/**
 	 * Decode string from Base64, as defined by RFC 4648 [http://tools.ietf.org/html/rfc4648]
@@ -203,14 +206,16 @@
 			
 			d[c / 4] = String.fromCharCode(o1, o2, o3);
 			// check for padding
-			if (h4 == 0x40) 
+			if (h4 == 0x40) {
 				d[c / 4] = String.fromCharCode(o1, o2);
-			if (h3 == 0x40) 
+			}
+			if (h3 == 0x40) {
 				d[c / 4] = String.fromCharCode(o1);
+			}
 		}
 		plain = d.join(''); // join() is far faster than repeated string concatenation in IE
 		return utf8decode ? Utf8.decode(plain) : plain;
-	}
+	};
 	
 	
 	/* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -  */
@@ -242,7 +247,7 @@
 			return String.fromCharCode(0xe0 | cc >> 12, 0x80 | cc >> 6 & 0x3F, 0x80 | cc & 0x3f);
 		});
 		return strUtf;
-	}
+	};
 	
 	/**
 	 * Decode utf-8 encoded string back into multi-byte Unicode characters
@@ -263,7 +268,7 @@
 			return String.fromCharCode(cc);
 		});
 		return strUni;
-	}
+	};
 	
 /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -  */
 

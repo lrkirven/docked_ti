@@ -105,36 +105,6 @@ function init() {
 		ptr: 'remoteViewer.js'
 	}];
 	
-	/*
-	Titanium.Geolocation.addEventListener('location', function(evt){
-		if (evt.error) {
-			Ti.API.info('GEO ERROR:' + JSON.stringify(evt.error));
-			return;
-		}
-		var lat = evt.coords.latitude;
-		var lng = evt.coords.longitude;
-		var timestamp = evt.coords.timestamp;
-		
-		if (!model.isUserLocationSame(lat, lng)) {
-			currentLocationLabel.text = "[ No Lake Found ... ]";
-			currentLocationLabel.color = css.getColor3();
-			Titanium.API.info('geo - location updated: ' + new Date(timestamp) + ' lng ' + lng + ' lat ' + lat);
-			model.setUserLng(lng);
-			model.setUserLat(lat);
-			Ti.API.info('new lat: ' + lat);
-			Ti.API.info('new lng: ' + lng);
-			
-			var client = new RestClient();
-			var llId = 'ABC123';
-			var user = model.getCurrentUser();
-			lat = 32.85;
-			lng = -96.50;
-			client.ping(user.id, lat, lng);
-			mainInd.show();
-		}
-	});
-	*/
-	
 	Titanium.App.addEventListener('LOCATION_CHANGED', function(e){
 		Ti.API.info('Handle LOCATION_CHANGED event ...');
 		if (model.getCurrentLake() != null) {
@@ -219,7 +189,7 @@ function init() {
 	var userLabel = Ti.UI.createLabel({
 		text: displayName,
 		top: 0,
-		width: 100,
+		width: 150,
 		right: 10,
 		height: 20,
 		textAlign: 'right',

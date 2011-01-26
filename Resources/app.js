@@ -218,33 +218,38 @@ function handleInitialUserPosition(e) {
 		//
 		// we are in a lake polygon
 		//
+		var diffInMsecs = 0;
+		var diffInMins = 0;
+		var oldLat = 0;
+		var oldLng = 0;
+		var diff = 0;
 		if (lakePoly != null) {
 			var lastPing = model.getLastPing();
-			var diffInMsecs = tm - lastPing;
-			var diffInMins = ((diffInMsecs / 1000) / 60);
+			diffInMsecs = tm - lastPing;
+			diffInMins = ((diffInMsecs / 1000) / 60);
 			if (diffInMins > 10) {
 				bUpdateServer = true;
 			}
 			else {
-				var oldLat = model.getUserLat();
-				var oldLng = model.getUserLng();
-				var diff = Tools.distanceFromAB(oldLat, oldLng, lat, lng);
+				oldLat = model.getUserLat();
+				oldLng = model.getUserLng();
+				diff = Tools.distanceFromAB(oldLat, oldLng, lat, lng);
 				if (diff > 1) {
 					bUpdateServer = true;
 				}
 			}
 		}
 		else {
-			var lastPing = model.getLastPing();
-			var diffInMsecs = tm - lastPing;
-			var diffInMins = ((diffInMsecs / 1000) / 60);
+			lastPing = model.getLastPing();
+			diffInMsecs = tm - lastPing;
+			diffInMins = ((diffInMsecs / 1000) / 60);
 			if (diffInMins > 20) {
 				bUpdateServer = true;
 			}
 			else {
-				var oldLat = model.getUserLat();
-				var oldLng = model.getUserLng();
-				var diff = Tools.distanceFromAB(oldLat, oldLng, lat, lng);
+				oldLat = model.getUserLat();
+				oldLng = model.getUserLng();
+				diff = Tools.distanceFromAB(oldLat, oldLng, lat, lng);
 				if (diff > 2) {
 					bUpdateServer = true;
 				}
@@ -304,8 +309,9 @@ Titanium.App.addEventListener('UPDATED_PROFILE_URL', function(e) {
 
 Titanium.App.addEventListener('UPDATED_DISPLAY_NAME', function(e) { 
 	Ti.API.info('*** UPDATED_DISPLAY_NAME -->' + e.displayName);
-	model.getCurrentUser().displayName = e.displayName;
-	updateDisplayName(e.displayName);
+	var displayName = Titanium.Network.decodeURIComponent(e.displayName);
+	model.getCurrentUser().displayName = displayName;
+	updateDisplayName(displayName);
 	
 	if (promptDisplayNameWin != null) {
 		promptDisplayNameWin.close();

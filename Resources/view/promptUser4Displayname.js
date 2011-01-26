@@ -74,14 +74,14 @@ function buildForm() {
 		keyboardType: Titanium.UI.KEYBOARD_NUMBERS_PUNCTUATION,
 		borderStyle: Titanium.UI.INPUT_BORDERSTYLE_ROUNDED,
 		borderWidth: 2,
-		borderRadius: 1,
+		borderRadius: 1
 	});	
 	displayNameText.addEventListener('change', function() {
 		var name = displayNameText.value;
 		if (name != null && name.length > 0) {
 			continueBtn.enabled = true;	
-			if (name.length > 200) {
-				name = name.substr(0, 200);
+			if (name.length > 50) {
+				name = name.substr(0, 50);
 				displayNameText.value = name;
 			}
 		}
