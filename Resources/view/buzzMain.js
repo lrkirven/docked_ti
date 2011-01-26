@@ -1,5 +1,6 @@
 Ti.include('../model/modelLocator.js');
 Ti.include('../client/restClient.js');
+Ti.include('../util/tools.js');
 
 var win = Ti.UI.currentWindow;
 var model = win.model;
@@ -23,7 +24,7 @@ function check4NewMsgEvents() {
 	}
 	else {
 		Ti.API.info('check4MsgEvent(): Not in a region to view messages!!!!');
-		Ti.App.fireEvent('LOCAL_MSG_EVENTS_RECD', { result:[] });
+		Ti.App.fireEvent('LOCAL_MSG_EVENTS_RECD', { result:[], status:0 });
 	}
 };
 
@@ -55,8 +56,6 @@ function getMyFacebookInfo() {
  */
 function init() {
 	
-	
-
 	win.touchEnabled = false;
 	
 	inPolygonMM = [{

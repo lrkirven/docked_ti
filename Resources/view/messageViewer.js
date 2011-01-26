@@ -1,5 +1,6 @@
 Ti.include('../model/modelLocator.js');
 Ti.include('../client/restClient.js');
+Ti.include('../util/tools.js');
 
 /**
  * local variables
@@ -1076,20 +1077,25 @@ function init() {
 	};
 	
 	Titanium.App.addEventListener('LOCAL_MSG_EVENTS_RECD', function(e) {
-		Ti.API.info('Handling event -- LOCAL_MSG_EVENTS_RECD --> ' + e.result);
-		//
-		// update to data
-		//
-		if (headerView == null) {
-			headerView = buildPanelHeader();
-			win.add(headerView);
+		if (e.status == 0) {
+			Ti.API.info('Handling event -- LOCAL_MSG_EVENTS_RECD --> ' + e.result);
+			//
+			// update to data
+			//
+			if (headerView == null) {
+				headerView = buildPanelHeader();
+				win.add(headerView);
+			}
+			if (tableView != null) {
+				win.remove(tableView);
+			}
+			tableView = buildTableView();
+			win.add(tableView);
+			updateTableViewDisplay(e.result);
 		}
-		if (tableView != null) {
-			win.remove(tableView);
+		else {
+			Tools.reportMsg(model.getAppName(), e.errorMsg);			
 		}
-		tableView = buildTableView();
-		win.add(tableView);
-		updateTableViewDisplay(e.result);
 	});
 	
 	//////////////////////////////////////////

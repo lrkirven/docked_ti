@@ -17,6 +17,7 @@ var myFont = 'Verdana';
 var model = new ModelLocator();
 var css = CSSMgr();
 Ti.Geolocation.purpose = "Recieve User Location";
+
 var myFont = 'Verdana';
 var db = Titanium.Database.open('db.lazylaker.net');
 // db.execute('DROP TABLE IF EXISTS AppParams');
@@ -166,39 +167,52 @@ function updateDisplayName(displayName) {
  * 
  * @param {Object} e
  */
-Titanium.App.addEventListener('BEST_RESOURCE_MATCH_RECD', function(e) {
-	Ti.API.info('Handling event -- BEST_RESOURCE_MATCH_RECD --> ' + e);
-	if (e.error) {
-		currentLocation.text = 'error: ' + JSON.stringify(e.error);
-		alert('error ' + JSON.stringify(e.error));
-		model.setCurrentLake(null);
-		return;
-	}
-
-	//
-	// if the user is in a defined lake polygon
-	//	
-	if (e.resourceId != 0) {
-		Ti.API.info('Got Lake: ' + e.resourceName + " " + e.resourceState + " ID: " + e.resourceId);
-		var lake = { name: e.resourceName, state: e.resourceState, id: e.resourceId, 
-			numOfLazyLakers: e.numOfLazyLakers, localCount: e.numOfLocalLakers };
-		model.setCurrentLake(lake);
-		Ti.App.fireEvent('LOCATION_CHANGED', {});
-		var client = new RestClient();
-		client.getLocalMsgEvents(e.resourceId);
+Titanium.App.addEventListener('PING_RESPONSE_DATA', function(e) {
+	Ti.API.info('Handling event -- PING_RESPONSE_DATA --> ' + e);
+	
+	if (e.status == 0) {
+		var pingResp = e.result;
+		if (pingResp != null) {
+			//
+			// if the user is in a defined lake polygon
+			//	
+			if (pingResp.resourceId != 0) {
+				Ti.API.info('Got Lake: ' + pingResp.resourceName + " " + pingResp.resourceState + " ID: " + pingResp.resourceId);
+				var lake = {
+					name: pingResp.resourceName,
+					state: pingResp.resourceState,
+					id: pingResp.resourceId,
+					numOfLazyLakers: pingResp.numOfLazyLakers,
+					localCount: pingResp.numOfLocalLakers
+				};
+				model.setCurrentLake(lake);
+				Ti.App.fireEvent('LOCATION_CHANGED', {});
+				var client = new RestClient();
+				client.getLocalMsgEvents(pingResp.resourceId);
+			}
+			else {
+				Ti.API.info('*** User is not within one of our polygons ***');
+				model.setCurrentLake(null);
+				Ti.App.fireEvent('LOCATION_CHANGED', {});
+				Ti.App.fireEvent('LOCAL_MSG_EVENTS_RECD', {
+					result: [],
+					status: 0
+				});
+			}
+		}
+		else {
+			model.setCurrentLake(null);
+		}
 	}
 	else {
-		Ti.API.info('*** User is not within one of our polygons ***');
 		model.setCurrentLake(null);
-		Ti.App.fireEvent('LOCATION_CHANGED', {});
-		Ti.App.fireEvent('LOCAL_MSG_EVENTS_RECD', { result:[] });	
+		Tools.reportMsg(model.getAppName(), e.errorMsg);
 	}
 });
 
 function handleInitialUserPosition(e) {
 	if (e.error) {
-		currentLocation.text = 'error: ' + JSON.stringify(e.error);
-		alert('error ' + JSON.stringify(e.error));
+		Tools.reportMsg(model.getAppName(), 'System Error :: ' + JSON.stringify(e.error));
 		return;
 	}
 	
@@ -304,23 +318,33 @@ Titanium.App.addEventListener('GOOGLE_MAP_LOADED', function(e) {
 });
 
 Titanium.App.addEventListener('UPDATED_PROFILE_URL', function(e) { 
-	Ti.API.info('*** UPDATED_PROFILE_URL -->' + e.profileUrl);
+	if (e.status == 0) {
+		Ti.API.info('*** UPDATED_PROFILE_URL -->' + e.profileUrl);
+	}
+	else {
+		Tools.reportMsg(model.getAppName(), e.errorMsg);
+	}
 });
 
 Titanium.App.addEventListener('UPDATED_DISPLAY_NAME', function(e) { 
-	Ti.API.info('*** UPDATED_DISPLAY_NAME -->' + e.displayName);
-	var displayName = Titanium.Network.decodeURIComponent(e.displayName);
-	model.getCurrentUser().displayName = displayName;
-	updateDisplayName(displayName);
-	
-	if (promptDisplayNameWin != null) {
-		promptDisplayNameWin.close();
-		tabGroup.setActiveTab(0);
-		tabGroup.open();
-		//
-		// start geo positioning
-		//
-		Titanium.Geolocation.getCurrentPosition(handleInitialUserPosition);
+	if (e.status == 0) {
+		Ti.API.info('*** UPDATED_DISPLAY_NAME -->' + e.displayName);
+		var displayName = Titanium.Network.decodeURIComponent(e.displayName);
+		model.getCurrentUser().displayName = displayName;
+		updateDisplayName(displayName);
+		
+		if (promptDisplayNameWin != null) {
+			promptDisplayNameWin.close();
+			tabGroup.setActiveTab(0);
+			tabGroup.open();
+			//
+			// start geo positioning
+			//
+			Titanium.Geolocation.getCurrentPosition(handleInitialUserPosition);
+		}
+	}
+	else {
+		Tools.reportMsg(model.getAppName(), e.errorMsg);
 	}
 });
 

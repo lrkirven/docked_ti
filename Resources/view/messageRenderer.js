@@ -1,5 +1,6 @@
 Ti.include('../model/modelLocator.js');
 Ti.include('../client/restClient.js');
+Ti.include('../util/tools.js');
 
 /**
  * local variables
@@ -379,23 +380,30 @@ function updateDisplayList() {
  * Initial entry to renderer
  */
 function init() {
+	
 	Ti.API.info('messageRenderer.init(): Current User :: ' + model.getCurrentUser().profileUrl);
 	
 	Ti.App.addEventListener('NEW_COMMENT_ADDED', function(e) {
-		// bump counter
-		msgEvent.commentCounter++;
 		
-		// adding recently added comment to list
-		if (msgEvent.comments == null) {
-			msgEvent.comments = [];
+		if (e.status == 0) {
+			// bump counter
+			msgEvent.commentCounter++;
+			
+			// adding recently added comment to list
+			if (msgEvent.comments == null) {
+				msgEvent.comments = [];
+			}
+			// add comment to list
+			msgEvent.comments.push(e.newComment);
+			
+			// refresh display
+			updateDisplayList();
+			
+			check4MsgEvents();
 		}
-		// add comment to list
-		msgEvent.comments.push(e.newComment);
-		
-		// refresh display
-		updateDisplayList();
-		
-		check4MsgEvents();
+		else {
+			Tools.reportMsg(model.getAppName(), e.errorMsg);	
+		}
 	});
 	
 	appendProfilePhoto(msgEvent);

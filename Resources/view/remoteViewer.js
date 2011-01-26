@@ -1,5 +1,6 @@
 Ti.include('../model/modelLocator.js');
 Ti.include('../client/restClient.js');
+Ti.include('../util/tools.js');
 
 var win = Ti.UI.currentWindow;
 var model = win.model;
@@ -687,16 +688,26 @@ function init() {
 	// setup event listeners
 	//
 	Ti.App.addEventListener('REMOTE_MSG_EVENTS_RECD', function(e) {
-		Ti.API.info('Handling event -- REMOTE_MSG_EVENTS_RECD --> ' + e.result);
-		updateMsgTableViewDisplay(e.result);
-		Ti.API.info('updateMsgTableViewDisplay: DONE');	
-		Ti.API.info('Adding view=' + msgView + ' page=' + msgPage);	
-		msgPage.visible = true;
+		if (e.status == 0) {
+			Ti.API.info('Handling event -- REMOTE_MSG_EVENTS_RECD --> ' + e.result);
+			updateMsgTableViewDisplay(e.result);
+			Ti.API.info('updateMsgTableViewDisplay: DONE');
+			Ti.API.info('Adding view=' + msgView + ' page=' + msgPage);
+			msgPage.visible = true;
+		}
+		else {
+			Tools.reportMsg(model.getAppName(), e.errorMsg);
+		}
 	});
 	
 	Ti.App.addEventListener('SEARCH_RESULTS_RECD', function(e) {
-		Ti.API.info('Handling event -- SEARCH_RESULTS_RECD --> ' + e.result);
-		updateSearchTableViewDisplay(e.result);
+		if (e.status == 0) {
+			Ti.API.info('Handling event -- SEARCH_RESULTS_RECD --> ' + e.result);
+			updateSearchTableViewDisplay(e.result);
+		}
+		else {
+			Tools.reportMsg(model.getAppName(), e.errorMsg);
+		}
 	});
 	
 	//

@@ -21,8 +21,10 @@ function RestClient() {
                 // error
                 //
                 xhr.onerror = function(e) {
-                	alert('postMessage: onerror: Unable to connect to remote services -- ' + e.error); 
                 	Titanium.API.info("some error");
+					Ti.App.fireEvent('NEW_MSG_EVENT_ADDED', { status:69,
+						errorMsg: 'Unable to connect to remote services -- Please check your network connection'	
+					});
                 }; 
             
                 // 
@@ -78,8 +80,10 @@ function RestClient() {
                 // error
                 //
                 xhr.onerror = function(e) {
-                	alert('postComment: onerror: Unable to connect to remote services -- ' + e.error); 
                 	Titanium.API.info("some error");
+					Ti.App.fireEvent('NEW_COMMENT_ADDED', { status:69,
+						errorMsg: 'Unable to connect to remote services -- Please check your network connection'	
+					});
                 }; 
             
                 // 
@@ -90,10 +94,12 @@ function RestClient() {
 					var jsonNodeData = JSON.parse(this.responseText);
 					if (jsonNodeData != null) {
 						Titanium.API.info('postComment: onload: SUCCESS');
-						Ti.App.fireEvent('NEW_COMMENT_ADDED', { newComment:jsonNodeData });
+						Ti.App.fireEvent('NEW_COMMENT_ADDED', { newComment:jsonNodeData, status:0 });
 					}
 					else {
-						alert('Server unable to complete request -- Support has been contacted.');
+						Ti.App.fireEvent('NEW_COMMENT_ADDED', { status:99,
+							errorMsg: 'Unable to complete request at this time'	
+						});
 					}
                 };
 
@@ -126,9 +132,10 @@ function RestClient() {
                 // error
                 //
                 xhr.onerror = function(e) {
-                	alert('updateDisplayName: onerror: Unable to connect to remote services -- ' + e.error); 
                 	Titanium.API.info("some error");
-					alert('Unable to connect to remote services');
+					Ti.App.fireEvent('UPDATED_DISPLAY_NAME', { status:69,
+						errorMsg: 'Unable to connect to remote services -- Please check your network connection'	
+					});
                 }; 
             
                 // 
@@ -139,10 +146,12 @@ function RestClient() {
 					var jsonNodeData = JSON.parse(this.responseText);
 					if (jsonNodeData != null && jsonNodeData.result > 0) {
 						Titanium.API.info('updateDisplayName: onload: SUCCESS');
-						Ti.App.fireEvent('UPDATED_DISPLAY_NAME', { displayName:jsonNodeData.value });
+						Ti.App.fireEvent('UPDATED_DISPLAY_NAME', { displayName:jsonNodeData.value, status:0 });
 					}
 					else {
-						alert('Server unable to complete request -- Support has been contacted.');
+						Ti.App.fireEvent('UPDATED_DISPLAY_NAME', { status:99,
+							errorMsg: 'Unable to complete request at this time'	
+						});
 					}
                 };
 
@@ -177,9 +186,9 @@ function RestClient() {
                 // error
                 //
                 xhr.onerror = function(e) {
-                	alert('updateProfileUrl: onerror: Unable to connect to remote services -- ' + e.error); 
-                	Titanium.API.info("some error");
-					alert('Unable to connect to remote services');
+					Ti.App.fireEvent('UPDATED_PROFILE_URL', { status:69,
+						errorMsg: 'Unable to connect to remote services -- Please check your network connection'	
+					});
                 }; 
             
                 // 
@@ -193,7 +202,9 @@ function RestClient() {
 						Ti.App.fireEvent('UPDATED_PROFILE_URL', { profileUrl:jsonNodeData.value });
 					}
 					else {
-						alert('Server unable to complete request -- Support has been contacted.');
+						Ti.App.fireEvent('UPDATED_PROFILE_URL', { status:99,
+							errorMsg: 'Unable to complete request at this time'	
+						});
 					}
                 };
 
@@ -227,8 +238,9 @@ function RestClient() {
                 // error
                 //
                 xhr.onerror = function(e) {
-                	alert('getLocalMsgEvents: onerror: Unable to connect to remote services -- ' + e.error); 
-                	Titanium.API.info("some error");
+					Ti.App.fireEvent('LOCAL_MSG_EVENTS_RECD', { status:69,
+						errorMsg: 'Unable to connect to remote services -- Please check your network connection'	
+					});
                 }; 
             
                 // 
@@ -238,21 +250,25 @@ function RestClient() {
 					Titanium.API.info('getLocalMsgEvents: onload: Entered - [' + this.responseText + ']');
 					if (this.responseText == 'null' || this.responseText == undefined) {
 						Titanium.API.info('getLocalMsgEvents: onload: Returning empty set');
-						Ti.App.fireEvent('LOCAL_MSG_EVENTS_RECD', { result:[] });
+						Ti.App.fireEvent('LOCAL_MSG_EVENTS_RECD', { result:[], status:0 });
 						return;
 					}
 					if (this.responseText != null) {
 						var jsonNodeData = JSON.parse(this.responseText);
 						if (jsonNodeData != null) {
 							Titanium.API.info('getLocalMsgEvents: onload: SUCCESS');
-							Ti.App.fireEvent('LOCAL_MSG_EVENTS_RECD', { result: jsonNodeData });
+							Ti.App.fireEvent('LOCAL_MSG_EVENTS_RECD', { result: jsonNodeData, status:0 });
 						}
 						else {
-							alert('Server unable to complete request -- Support has been contacted.');
+							Ti.App.fireEvent('LOCAL_MSG_EVENTS_RECD', { status:99,
+								errorMsg: 'Unable to complete request at this time'	
+							});
 						}
 					}
 					else {
-						alert('Server unable to complete request -- Support has been contacted.');
+						Ti.App.fireEvent('LOCAL_MSG_EVENTS_RECD', { status:99,
+							errorMsg: 'Unable to complete request at this time'	
+						});
 					}
                 };
 
@@ -278,8 +294,10 @@ function RestClient() {
                 // error
                 //
                 xhr.onerror = function(e) {
-                	alert('getRemoteMsgEvents: onerror: Unable to connect to remote services -- ' + e.error); 
                 	Titanium.API.info("some error");
+					Ti.App.fireEvent('REMOTE_MSG_EVENTS_RECD', { status:69,
+						errorMsg: 'Unable to connect to remote services -- Please check your network connection'	
+					});
                 }; 
             
                 // 
@@ -289,21 +307,25 @@ function RestClient() {
 					Titanium.API.info('getRemoteMsgEvents: onload: Entered - [' + this.responseText + ']');
 					if (this.responseText == 'null' || this.responseText == undefined) {
 						Titanium.API.info('getRemoteMsgEvents: onload: Returning empty set');
-						Ti.App.fireEvent('REMOTE_MSG_EVENTS_RECD', { result:[] });
+						Ti.App.fireEvent('REMOTE_MSG_EVENTS_RECD', { result:[], status:0 });
 						return;
 					}
 					if (this.responseText != null) {
 						var jsonNodeData = JSON.parse(this.responseText);
 						if (jsonNodeData != null) {
 							Titanium.API.info('getRemoteMsgEvents: onload: SUCCESS');
-							Ti.App.fireEvent('REMOTE_MSG_EVENTS_RECD', { result: jsonNodeData });
+							Ti.App.fireEvent('REMOTE_MSG_EVENTS_RECD', { result:jsonNodeData, status:0 });
 						}
 						else {
-							alert('Server unable to complete request -- Support has been contacted.');
+							Ti.App.fireEvent('REMOTE_MSG_EVENTS_RECD', { status:99,
+								errorMsg: 'Unable to complete request at this time'	
+							});
 						}
 					}
 					else {
-						alert('Server unable to complete request -- Support has been contacted.');
+						Ti.App.fireEvent('REMOTE_MSG_EVENTS_RECD', { status:99,
+							errorMsg: 'Unable to complete request at this time'	
+						});
 					}
                 };
 
@@ -332,8 +354,9 @@ function RestClient() {
                 // error
                 //
                 xhr.onerror = function(e) {
-                	alert('searchLakesByKeyword: onerror: Unable to connect to remote services -- ' + e.error); 
-                	Titanium.API.info("some error");
+					Ti.App.fireEvent('SEARCH_RESULTS_RECD', { status:69,
+						errorMsg: 'Unable to connect to remote services -- Please check your network connection'	
+					});
                 }; 
             
                 // 
@@ -343,21 +366,25 @@ function RestClient() {
 					Titanium.API.info('searchLakesByKeyword: onload: Entered - [' + this.responseText + ']');
 					if (this.responseText == 'null' || this.responseText == undefined) {
 						Titanium.API.info('searchLakesByKeyword: onload: Returning empty set');
-						Ti.App.fireEvent('SEARCH_RESULTS_RECD', { result:[] });
+						Ti.App.fireEvent('SEARCH_RESULTS_RECD', { result:[], status:0 });
 						return;
 					}
 					if (this.responseText != null) {
 						var jsonNodeData = JSON.parse(this.responseText);
 						if (jsonNodeData != null) {
 							Titanium.API.info('searchLakesByKeyword: onload: SUCCESS');
-							Ti.App.fireEvent('SEARCH_RESULTS_RECD', { result: jsonNodeData });
+							Ti.App.fireEvent('SEARCH_RESULTS_RECD', { result:jsonNodeData, status:0 });
 						}
 						else {
-							alert('Server unable to complete request -- Support has been contacted.');
+							Ti.App.fireEvent('SEARCH_RESULTS_RECD', { status:99,
+								errorMsg: 'Unable to complete request at this time'	
+							});
 						}
 					}
 					else {
-						alert('Server unable to complete request -- Support has been contacted.');
+						Ti.App.fireEvent('SEARCH_RESULTS_RECD', { status:99,
+							errorMsg: 'Unable to complete request at this time'	
+						});
 					}
                 };
 
@@ -386,8 +413,10 @@ function RestClient() {
                 // error
                 //
                 xhr.onerror = function(e) {
-                	alert('ping: onerror: Unable to connect to remote services -- ' + e.error); 
                 	Titanium.API.info("some error");
+					Ti.App.fireEvent('PING_RESPONSE_DATA', { status:69,
+						errorMsg: 'Unable to connect to remote services -- Please check your network connection'	
+					});
                 }; 
             
                 // 
@@ -396,26 +425,33 @@ function RestClient() {
                 xhr.onload = function() {
 					Titanium.API.info('ping: onload: Entered - [' + this.responseText + ']');
 					if (this.responseText == 'null' || this.responseText == undefined) {
-						Ti.App.fireEvent('BEST_RESOURCE_MATCH_RECD', { MsgEvent:[] });
+						Ti.App.fireEvent('PING_RESPONSE_DATA', { result:null, status:0 });
 						return;
 					}
 					if (this.responseText == 'null' || this.responseText == undefined) {
 						Titanium.API.info('ping: onload: Returning empty set');
-						Ti.App.fireEvent('BEST_RESOURCE_MATCH_RECD', { MsgEvent:[] });
+						Ti.App.fireEvent('PING_RESPONSE_DATA', { result:null, status:0 });
 						return;
 					}
 					if (this.responseText != null) {
 						var jsonNodeData = JSON.parse(this.responseText);
 						if (jsonNodeData != null) {
 							Titanium.API.info('ping: onload: SUCCESS');
-							Ti.App.fireEvent('BEST_RESOURCE_MATCH_RECD', jsonNodeData);
+							Ti.App.fireEvent('PING_RESPONSE_DATA', {
+								result: jsonNodeData,
+								status: 0
+							});
 						}
 						else {
-							alert('Server unable to complete request -- Support has been contacted.');
+							Ti.App.fireEvent('PING_RESPONSE_DATA', { status:99,
+								errorMsg: 'Unable to complete request at this time'	
+							});
 						}
 					}
 					else {
-						alert('Server unable to complete request -- Support has been contacted.');
+						Ti.App.fireEvent('PING_RESPONSE_DATA', { status:99,
+							errorMsg: 'Unable to complete request at this time'	
+						});
 					}
                 };
 

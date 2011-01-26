@@ -15,3 +15,12 @@
 		var dInMiles = (d/0.621371192);
 		return dInMiles;
 	};
+	
+	Tools.reportMsg = function(title, msg) {
+		var alertDialog = Titanium.UI.createAlertDialog({
+			message: msg,
+			title: title,
+			buttonNames: ['OK']
+		});
+		alertDialog.show();
+	};

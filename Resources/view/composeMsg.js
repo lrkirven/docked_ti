@@ -1,6 +1,7 @@
 Ti.include('../model/modelLocator.js');
 Ti.include('../client/picasaClient.js');
 Ti.include('../client/restClient.js');
+Ti.include('../util/tools.js');
 
 var win = Ti.UI.currentWindow;
 var model = win.model;
@@ -353,12 +354,7 @@ function handleNewMsgPosted(e) {
 	}
 	else {
 		postingInd.visible = false;
-		var alertDialog = Titanium.UI.createAlertDialog({
-			message: e.errorMsg,
-			title: model.getAppName(),
-			buttonNames: ['OK']
-		});
-		alertDialog.show();
+		Tools.reportMsg(model.getAppName(), e.errorMsg);
 		performExit();
 		win.close();
 	}
@@ -377,7 +373,7 @@ function handleUploadedPic(e) {
 		
 	}
 	else {
-		alert('Unable to save message to network. Support has been informed and will investigate this failure.');
+		Tools.reportMsg(model.getAppName(), 'Unable to complete request at this time');
 		postingInd.hide();
 		Ti.App.removeEventListener('NEW_MSG_EVENT_ADDED', handleNewMsgPosted);
 		win.close();
@@ -393,7 +389,7 @@ function init() {
 	Titanium.App.addEventListener('PHOTO_UPLOADED', handleUploadedPic);
 
 	Titanium.App.addEventListener('FOUND_LAST_BUCKET', function(e) {
-		Ti.API.info('Got event FOUND_LAST_BUCKET ...');
+		Ti.API.info('Got event FOUND_LAST_BUCKET .. lastBucket=' + e.lastBucket);
 		model.setLastBucket(e.lastBucket);
 		if (composeMsgWinSubmitBtn != null) {
 			Ti.API.info('Enabling submitBtn ...');
