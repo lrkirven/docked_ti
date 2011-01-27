@@ -22,7 +22,7 @@ function buildForm() {
 
 	var panel = Ti.UI.createView({ 
 		backgroundColor:'#cccccc',
-		top:100,
+		top:122,
 		left:10,
 		width:300,
 		height:200,

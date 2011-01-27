@@ -31,6 +31,12 @@ function RestClient() {
                 // success    
                 //
                 xhr.onload = function() {
+					if (Tools.test4NotFound(this.responseText)) {
+						Ti.App.fireEvent('NEW_MSG_EVENT_ADDED', { status:89,
+							errorMsg: 'Unable complete request at this time -- Apologize for the service failure.'	
+						});
+						return;
+					}
 					Titanium.API.info('postMessage: onload: Entered - ' + this.responseText);
 					if (this.responseText != null) {
 						var jsonNodeData = JSON.parse(this.responseText);
@@ -90,6 +96,12 @@ function RestClient() {
                 // success    
                 //
                 xhr.onload = function() {
+					if (Tools.test4NotFound(this.responseText)) {
+						Ti.App.fireEvent('NEW_COMMENT_ADDED', { status:89,
+							errorMsg: 'Unable complete request at this time -- Apologize for the service failure.'	
+						});
+						return;
+					}
 					Titanium.API.info('postComment: onload: Entered - ' + this.responseText);
 					var jsonNodeData = JSON.parse(this.responseText);
 					if (jsonNodeData != null) {
@@ -123,6 +135,66 @@ function RestClient() {
 			//
 			// This method updates display name
 			//
+			registerUser : function(emailAddr, displayName) {
+               	Titanium.API.info("registerUser: Entered");
+				var xhr = Ti.Network.createHTTPClient();
+                xhr.setTimeout(90000);
+				
+                // 
+                // error
+                //
+                xhr.onerror = function(e) {
+                	Titanium.API.info("some error");
+					Ti.App.fireEvent('USER_REGISTERED', { status:69,
+						errorMsg: 'Unable to connect to remote services -- Please check your network connection'	
+					});
+                }; 
+            
+                // 
+                // success    
+                //
+                xhr.onload = function() {
+					if (Tools.test4NotFound(this.responseText)) {
+						Ti.App.fireEvent('USER_REGISTERED', { status:89,
+							errorMsg: 'Unable complete registration at this time -- Apologize for the service failure.'	
+						});
+						return;
+					}
+					Titanium.API.info('registerUser: onload: Entered - ' + this.responseText);
+					var jsonNodeData = JSON.parse(this.responseText);
+					if (jsonNodeData != null && jsonNodeData.result > 0) {
+						Titanium.API.info('registerUser: onload: SUCCESS');
+						Ti.App.fireEvent('USER_REGISTERED', { displayName:jsonNodeData.value, status:0 });
+					}
+					else {
+						Ti.App.fireEvent('USER_REGISTERED', { status:99,
+							errorMsg: 'Unable to complete request at this time'	
+						});
+					}
+                };
+
+                //
+                // create connection
+                //
+				var userUrl = '/resources/users/register';
+				var targetURL = secureBaseUrl + userUrl;
+				Titanium.API.info('registerUser: REST URL: ' + targetURL);
+                xhr.open('POST', targetURL);
+				xhr.setRequestHeader('Content-Type', 'application/json');
+				xhr.setRequestHeader('Accept', 'application/json');
+                //
+                // send HTTP request
+                //
+                Titanium.API.info('registerUser: Posting to server ... ' + displayName);
+				var email = Titanium.Network.encodeURIComponent(emailAddr);
+				var name = Titanium.Network.encodeURIComponent(displayName);
+				var registerToken = { emailAddr:email, displayName:name, result: 0 };
+				var str = JSON.stringify(registerToken);
+                xhr.send(str);	
+			},
+			//
+			// This method updates display name
+			//
 			updateDisplayName : function(from, displayName) {
                	Titanium.API.info("updateDisplayName: Entered");
 				var xhr = Ti.Network.createHTTPClient();
@@ -142,6 +214,12 @@ function RestClient() {
                 // success    
                 //
                 xhr.onload = function() {
+					if (Tools.test4NotFound(this.responseText)) {
+						Ti.App.fireEvent('UPDATED_DISPLAY_NAME', { status:89,
+							errorMsg: 'Unable complete request at this time -- Apologize for the service failure.'	
+						});
+						return;
+					}
 					Titanium.API.info('updateDisplayName: onload: Entered - ' + this.responseText);
 					var jsonNodeData = JSON.parse(this.responseText);
 					if (jsonNodeData != null && jsonNodeData.result > 0) {
@@ -195,6 +273,12 @@ function RestClient() {
                 // success    
                 //
                 xhr.onload = function() {
+					if (Tools.test4NotFound(this.responseText)) {
+						Ti.App.fireEvent('UPDATED_PROFILE_URL', { status:89,
+							errorMsg: 'Unable complete request at this time -- Apologize for the service failure.'	
+						});
+						return;
+					}
 					Titanium.API.info('updateProfileUrl: onload: Entered - ' + this.responseText);
 					var jsonNodeData = JSON.parse(this.responseText);
 					if (jsonNodeData != null && jsonNodeData.result > 0) {
@@ -247,6 +331,12 @@ function RestClient() {
                 // success    
                 //
                 xhr.onload = function() {
+					if (Tools.test4NotFound(this.responseText)) {
+						Ti.App.fireEvent('LOCAL_MSG_EVENTS_RECD', { status:89,
+							errorMsg: 'Unable complete request at this time -- Apologize for the service failure.'	
+						});
+						return;
+					}
 					Titanium.API.info('getLocalMsgEvents: onload: Entered - [' + this.responseText + ']');
 					if (this.responseText == 'null' || this.responseText == undefined) {
 						Titanium.API.info('getLocalMsgEvents: onload: Returning empty set');
@@ -304,6 +394,12 @@ function RestClient() {
                 // success    
                 //
                 xhr.onload = function() {
+					if (Tools.test4NotFound(this.responseText)) {
+						Ti.App.fireEvent('REMOTE_MSG_EVENTS_RECD', { status:89,
+							errorMsg: 'Unable complete request at this time -- Apologize for the service failure.'	
+						});
+						return;
+					}
 					Titanium.API.info('getRemoteMsgEvents: onload: Entered - [' + this.responseText + ']');
 					if (this.responseText == 'null' || this.responseText == undefined) {
 						Titanium.API.info('getRemoteMsgEvents: onload: Returning empty set');
@@ -363,6 +459,12 @@ function RestClient() {
                 // success    
                 //
                 xhr.onload = function() {
+					if (Tools.test4NotFound(this.responseText)) {
+						Ti.App.fireEvent('SEARCH_RESULTS_RECD', { status:89,
+							errorMsg: 'Unable complete request at this time -- Apologize for the service failure.'	
+						});
+						return;
+					}
 					Titanium.API.info('searchLakesByKeyword: onload: Entered - [' + this.responseText + ']');
 					if (this.responseText == 'null' || this.responseText == undefined) {
 						Titanium.API.info('searchLakesByKeyword: onload: Returning empty set');
@@ -423,6 +525,9 @@ function RestClient() {
                 // success    
                 //
                 xhr.onload = function() {
+					if (Tools.test4NotFound(this.responseText)) {
+						return;
+					}
 					Titanium.API.info('ping: onload: Entered - [' + this.responseText + ']');
 					if (this.responseText == 'null' || this.responseText == undefined) {
 						Ti.App.fireEvent('PING_RESPONSE_DATA', { result:null, status:0 });

@@ -1,12 +1,12 @@
 // this sets the background color of the master UIView (when there are no windows/tab groups on it)
 Titanium.UI.setBackgroundColor('#000');
 
+Ti.include('util/tools.js');
 Ti.include('model/modelLocator.js');
 Ti.include('client/picasaClient.js');
 Ti.include('client/restClient.js');
 Ti.include('props/cssMgr.js');
 Ti.include('util/tea.js');
-Ti.include('util/tools.js');
 
 
 //////////////////////////////////////////////////////////////////////////////////
@@ -20,7 +20,7 @@ Ti.Geolocation.purpose = "Recieve User Location";
 
 var myFont = 'Verdana';
 var db = Titanium.Database.open('db.lazylaker.net');
-// db.execute('DROP TABLE IF EXISTS AppParams');
+db.execute('DROP TABLE IF EXISTS AppParams');
 db.execute('CREATE TABLE IF NOT EXISTS AppParams (id INTEGER PRIMARY KEY, name VARCHAR(30), valueStr TEXT, valueInt INTEGER)');
 var tabGroup = null;
 var buzzTab = null;
@@ -348,6 +348,15 @@ Titanium.App.addEventListener('UPDATED_DISPLAY_NAME', function(e) {
 	}
 });
 
+Titanium.App.addEventListener('USER_REGISTERED', function(e) { 
+	if (e.status == 0) {
+		
+	}
+	else {
+		Tools.reportMsg(model.getAppName(), e.errorMsg);
+	}
+});
+
 Titanium.App.addEventListener('REGISTER_COMPLETE', function(e) { 
 	if (registerWin != null) {
 		registerWin.close();
@@ -376,7 +385,7 @@ Titanium.App.addEventListener('PROMPT_USER_TO_REGISTER_COMPLETE', function(e) {
 			font: { fontSize: 20, fontFamily: myFont },
 			backgroundColor: css.getColor0(),
 			barColor: css.getColor0(),
-			url: 'view/registerUser.js'
+			url: 'view/basicRegisterUser.js'
 		});
 		registerWin.model = model;
 		registerWin.db = db;
@@ -386,7 +395,12 @@ Titanium.App.addEventListener('PROMPT_USER_TO_REGISTER_COMPLETE', function(e) {
 	else {
 		model.setCurrentUser(null);
 		markUserDeclineRegistration();	
-		promptWin.close();
+		if (registerWin != null) {
+			registerWin.close();
+		}
+		if (promptWin != null) {
+			promptWin.close();	
+		}
 		tabGroup.setActiveTab(0);
 		tabGroup.open();
 		//
