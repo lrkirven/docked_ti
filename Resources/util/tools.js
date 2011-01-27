@@ -27,12 +27,10 @@
 	
 	Tools.test4NotFound = function(response) {
 		var flag = false;
-		Titanium.API.info('test4NotFound(): ' + response);
 		var pattern = /.*404 NOT_FOUND.*/g;
 		if (pattern.test(response)) {
 			flag = true;
 		}
-		Titanium.API.info('test4NotFound(): flag=' + flag);
 		return flag;
 	}
 	

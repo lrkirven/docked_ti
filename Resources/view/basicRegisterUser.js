@@ -13,6 +13,12 @@ var displayNameText = null;
 var enteredDisplayName = null;
 var emailAddrText = null;
 var enteredEmailAddr = null;
+var preloader = null;
+
+
+Titanium.App.addEventListener('USER_REGISTERED', function(e) { 
+	preloader.hide();
+});
 
 /**
  * This method lays out the UI format and sets up the event listeners to 
@@ -167,9 +173,12 @@ function buildForm() {
 		width: 100
 	});
 	registerBtn.addEventListener('click', function() {
+		if (preloader != null) {
+			preloader.show();
+		}
 		var str = displayNameText.value;	
 		var client = new RestClient();
-		client.registerUser(enteredEmailAddr, enteredDisplayName);	
+		client.registerUser(enteredEmailAddr, enteredDisplayName, model.getPW3());	
 	});
 	
 	var laterBtn = Titanium.UI.createButton({
@@ -220,6 +229,17 @@ function init() {
     	emailAddrText.focus();
 	});
 	buildForm();
+	
+	preloader = Titanium.UI.createActivityIndicator({
+		top: 140,
+		left: 100,
+		height: 150,
+		width: 100,
+		font: { fontFamily: model.myFont, fontSize: 15, fontWeight: 'bold' },
+		style: Titanium.UI.iPhone.ActivityIndicatorStyle.DARK
+	});
+	preloader.color = css.getColor3();
+	win.add(preloader);
 };
 
 //

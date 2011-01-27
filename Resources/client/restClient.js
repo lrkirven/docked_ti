@@ -135,7 +135,7 @@ function RestClient() {
 			//
 			// This method updates display name
 			//
-			registerUser : function(emailAddr, displayName) {
+			registerUser : function(emailAddr, displayName, registerSecret) {
                	Titanium.API.info("registerUser: Entered");
 				var xhr = Ti.Network.createHTTPClient();
                 xhr.setTimeout(90000);
@@ -154,6 +154,12 @@ function RestClient() {
                 // success    
                 //
                 xhr.onload = function() {
+					if (this.responseText == null) {
+						Ti.App.fireEvent('USER_REGISTERED', { status:77,
+							errorMsg: 'Unable complete registration at this time -- Apologize for the service failure.'	
+						});
+						return;
+					}
 					if (Tools.test4NotFound(this.responseText)) {
 						Ti.App.fireEvent('USER_REGISTERED', { status:89,
 							errorMsg: 'Unable complete registration at this time -- Apologize for the service failure.'	
@@ -162,9 +168,9 @@ function RestClient() {
 					}
 					Titanium.API.info('registerUser: onload: Entered - ' + this.responseText);
 					var jsonNodeData = JSON.parse(this.responseText);
-					if (jsonNodeData != null && jsonNodeData.result > 0) {
-						Titanium.API.info('registerUser: onload: SUCCESS');
-						Ti.App.fireEvent('USER_REGISTERED', { displayName:jsonNodeData.value, status:0 });
+					if (jsonNodeData != null) {
+						Titanium.API.info('registerUser: onload: SUCCESS ---> ' + jsonNodeData);
+						Ti.App.fireEvent('USER_REGISTERED', { token:jsonNodeData, status:jsonNodeData.status });
 					}
 					else {
 						Ti.App.fireEvent('USER_REGISTERED', { status:99,
@@ -188,7 +194,8 @@ function RestClient() {
                 Titanium.API.info('registerUser: Posting to server ... ' + displayName);
 				var email = Titanium.Network.encodeURIComponent(emailAddr);
 				var name = Titanium.Network.encodeURIComponent(displayName);
-				var registerToken = { emailAddr:email, displayName:name, result: 0 };
+				var secret = Titanium.Network.encodeURIComponent(registerSecret); 
+				var registerToken = { emailAddr:email, displayName:name, registerSecret:secret };
 				var str = JSON.stringify(registerToken);
                 xhr.send(str);	
 			},

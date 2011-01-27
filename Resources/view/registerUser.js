@@ -17,7 +17,7 @@ function addRegistration(llId, emailAddr, displayName, fbKey, fbSecret, pUser, p
     rows += db.execute("INSERT INTO AppParams (name, valueStr, valueInt) VALUES ('PPASSWORD', '" + pPassword + "', 0)");
     rows += db.execute("INSERT INTO AppParams (name, valueStr, valueInt) VALUES ('SERVERSECRET', '" + serverSecret + "', 0)");
 	Ti.API.info("addRegistration():  rows --> " +  rows);
-}
+};
 
 function init() {
 	var loginPage = Ti.UI.createWebView();

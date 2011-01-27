@@ -43,7 +43,20 @@ function hasUserRegistered() {
         rowcpt.next();
     }
     return (count > 0);
-}
+};
+
+function addRegistration(llId, emailAddr, displayName, fbKey, fbSecret, pUser, pPassword, serverSecret) {
+	var rows = 0;
+    rows += db.execute("INSERT INTO AppParams (name, valueStr, valueInt) VALUES ('LLID', '" + llId + "', 0)");
+    rows += db.execute("INSERT INTO AppParams (name, valueStr, valueInt) VALUES ('EMAILADDR', '" + emailAddr + "', 0)");
+    rows += db.execute("INSERT INTO AppParams (name, valueStr, valueInt) VALUES ('DISPLAYNAME', '" + displayName + "', 0)");
+    rows += db.execute("INSERT INTO AppParams (name, valueStr, valueInt) VALUES ('FBKEY', '" + fbKey + "', 0)");
+    rows += db.execute("INSERT INTO AppParams (name, valueStr, valueInt) VALUES ('FBSECRET', '" + fbSecret + "', 0)");
+    rows += db.execute("INSERT INTO AppParams (name, valueStr, valueInt) VALUES ('PUSER', '" + pUser + "', 0)");
+    rows += db.execute("INSERT INTO AppParams (name, valueStr, valueInt) VALUES ('PPASSWORD', '" + pPassword + "', 0)");
+    rows += db.execute("INSERT INTO AppParams (name, valueStr, valueInt) VALUES ('SERVERSECRET', '" + serverSecret + "', 0)");
+	Ti.API.info("addRegistration():  rows --> " +  rows);
+};
 
 /**
  * Loads the user registration data from the local database
@@ -349,11 +362,75 @@ Titanium.App.addEventListener('UPDATED_DISPLAY_NAME', function(e) {
 });
 
 Titanium.App.addEventListener('USER_REGISTERED', function(e) { 
+
+	Ti.API.info('Registration complete --> ' + e.status);
+	
 	if (e.status == 0) {
 		
+		if (registerWin != null) {
+			registerWin.close();
+		}
+	
+		var token = e.token;
+		// server secret
+		var serverSecret = token.serverSecret;
+		var serverSecretStr = Tea.decrypt(serverSecret, model.getPW1());
+		Ti.API.info('Server Secret: [' + serverSecretStr + ']');
+		model.setPW2(serverSecretStr);
+		
+		// email address
+		var emailAddr = token.emailAddr;
+		var emailAddrStr = Tea.decrypt(emailAddr, model.getPW1());
+		Ti.API.info('Email Address: [' + emailAddrStr + ']');
+					
+		// displayName
+		var nickname = token.nickname;
+			
+		// ll id
+		var llid = token.llId;
+		var llIdStr = Tea.decrypt(llid, model.getPW1());
+		Ti.API.info('LL Id: [' + llIdStr + ']');
+		
+		// encrypt id for client to server key
+		Ti.API.info('Encrypting clear id=' + llIdStr + ' with key [' + serverSecretStr + ']');
+		var llIdCrypted = Tea.encrypt(llIdStr, serverSecretStr);
+		Ti.API.info('NEW llId for sending to server [' + llIdCrypted + ']');
+		var d = Tea.decrypt(llIdCrypted, serverSecretStr);
+		Ti.API.info('----------------> ' + d);
+		
+		var u = { emailAddr:emailAddrStr, displayName:nickname.text, idClear:llIdStr, id:llIdCrypted };
+		model.setCurrentUser(u);
+				
+		// facebook key
+		var fbKey = token.fbKey;
+		var fbKeyStr = Tea.decrypt(fbKey, model.getPW1());
+		Ti.API.info('FB Key: [' + fbKeyStr + ']');
+		model.setFBAPIKey(fbKey.text);
+			
+		// facebook secret	
+		var fbSecret = token.fbSecret;
+		var fbSecretStr = Tea.decrypt(fbSecret, model.getPW1());
+		Ti.API.info('FB Secret: [' + fbSecretStr + ']');
+		model.setFBSecret(fbSecretStr);
+		
+		// picasa user	
+		var pUser = token.picaseUser;
+		var pUserStr = Tea.decrypt(pUser, model.getPW1());
+		Ti.API.info('Picasa User: [' + pUserStr + ']');
+		model.setPicasaUser(pUserStr);
+				
+		// picasa password	
+		var pPassword = token.picasaPassword;
+		var pPasswordStr = Tea.decrypt(pPassword, model.getPW1());
+		Ti.API.info('Picasa Password: [' + pPasswordStr + ']');
+		model.setPicasaPassword(pPassword.text);
+			
+		addRegistration(llid.text, emailAddr.text, nickname, fbKey.text, fbSecret.text, pUser.text, pPassword.text, serverSecret.text);
+				
+		Tools.reportMsg(model.getAppName(), "Registration Complete.");
 	}
 	else {
-		Tools.reportMsg(model.getAppName(), e.errorMsg);
+		Tools.reportMsg(model.getAppName(), e.token.errorMsg);
 	}
 });
 
@@ -561,10 +638,16 @@ function init() {
 	db.execute("DELETE FROM AppParams WHERE name = 'DECLINE_REGISTRATION'");
 
 	//
-	// set personal device id
+	// encrypt registration key woth anonymous key
+	//
+	var regSecretClear = model.getPW3();
+	var regSecret = Tea.encrypt(regSecretClear, model.getPW4());
+	model.setPW3(regSecret);
+	//
+	// set personal device id with encrypted anonymous key
 	//
 	var anonymousUserId = 'MY_DEVICE_ID' + '=' + Titanium.Platform.id;
-	var cipherText = Tea.encrypt(anonymousUserId, model.getAnonymousPassword());
+	var cipherText = Tea.encrypt(anonymousUserId, model.getPW4());
 	model.setDeviceId(cipherText);
 	
 	//

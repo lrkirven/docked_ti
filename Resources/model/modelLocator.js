@@ -26,8 +26,9 @@ function ModelLocator() {
 	var logoutUrl = null;
 	var pw1 = "the harder you work; the luckier you get";
 	var pw2 = null;
+	var pw3 = "dont worry be happy 137103";
+	var pw4 = 'ABCDEF7891011121314';
 	var anonymousUser = 'ABC123';
-	var anonymousPassword = 'ABCDEF7891011121314';
 	var deviceId = null;
 	var lastPing = 0;
 	
@@ -57,9 +58,6 @@ function ModelLocator() {
 			getDeviceId : function() {
 				return deviceId;
 			},
-			getAnonymousPassword : function() {
-				return anonymousPassword;
-			},
 			getSecureBaseUrl : function() {
 				return secureBaseUrl;
 			},
@@ -77,6 +75,15 @@ function ModelLocator() {
 			},
 			getPW2 : function() {
 				return pw2;
+			},
+			setPW3 : function (p) {
+				pw3 = p;	
+			},
+			getPW3 : function() {
+				return pw3
+			},
+			getPW4 : function() {
+				return pw4;
 			},
 			getLogoutUrl : function() {
 				return logoutUrl;
