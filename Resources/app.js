@@ -370,7 +370,7 @@ Titanium.App.addEventListener('USER_REGISTERED', function(e) {
 		if (registerWin != null) {
 			registerWin.close();
 		}
-	
+		
 		var token = e.token;
 		// server secret
 		var serverSecret = token.serverSecret;
@@ -414,7 +414,7 @@ Titanium.App.addEventListener('USER_REGISTERED', function(e) {
 		model.setFBSecret(fbSecretStr);
 		
 		// picasa user	
-		var pUser = token.picaseUser;
+		var pUser = token.picasaUser;
 		var pUserStr = Tea.decrypt(pUser, model.getPW1());
 		Ti.API.info('Picasa User: [' + pUserStr + ']');
 		model.setPicasaUser(pUserStr);
@@ -425,15 +425,24 @@ Titanium.App.addEventListener('USER_REGISTERED', function(e) {
 		Ti.API.info('Picasa Password: [' + pPasswordStr + ']');
 		model.setPicasaPassword(pPassword.text);
 			
-		addRegistration(llid.text, emailAddr.text, nickname, fbKey.text, fbSecret.text, pUser.text, pPassword.text, serverSecret.text);
+		addRegistration(llid, emailAddr, nickname, fbKey, fbSecret, pUser, pPassword, serverSecret);
 				
+		
 		Tools.reportMsg(model.getAppName(), "Registration Complete.");
+		
+		tabGroup.setActiveTab(0);
+		tabGroup.open();
+		//
+		// start geo positioning
+		//
+		Titanium.Geolocation.getCurrentPosition(handleInitialUserPosition);
 	}
 	else {
 		Tools.reportMsg(model.getAppName(), e.token.errorMsg);
 	}
 });
 
+/*
 Titanium.App.addEventListener('REGISTER_COMPLETE', function(e) { 
 	if (registerWin != null) {
 		registerWin.close();
@@ -452,9 +461,13 @@ Titanium.App.addEventListener('REGISTER_COMPLETE', function(e) {
 	promptDisplayNameWin.open();
 	
 });
+*/
 
 Titanium.App.addEventListener('PROMPT_USER_TO_REGISTER_COMPLETE', function(e) { 
 	Ti.API.info('registerFlag -->' + e.registerFlag);
+	if (promptWin != null) {
+		promptWin.close();	
+	}
 	if (e.registerFlag) {
 		registerWin = Titanium.UI.createWindow({
 			title: model.getAppName(),
@@ -474,9 +487,6 @@ Titanium.App.addEventListener('PROMPT_USER_TO_REGISTER_COMPLETE', function(e) {
 		markUserDeclineRegistration();	
 		if (registerWin != null) {
 			registerWin.close();
-		}
-		if (promptWin != null) {
-			promptWin.close();	
 		}
 		tabGroup.setActiveTab(0);
 		tabGroup.open();
@@ -687,7 +697,6 @@ function init() {
 				backgroundColor: css.getColor0(),
 				barColor: css.getColor0(),
 				url: 'view/promptUserToRegister.js'
-				// url: 'view/promptUser4Displayname.js'
 			});
 			promptWin.model = model;
 			promptWin.db = db;
