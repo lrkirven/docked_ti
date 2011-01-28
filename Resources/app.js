@@ -398,7 +398,7 @@ Titanium.App.addEventListener('USER_REGISTERED', function(e) {
 		var d = Tea.decrypt(llIdCrypted, serverSecretStr);
 		Ti.API.info('----------------> ' + d);
 		
-		var u = { emailAddr:emailAddrStr, displayName:nickname.text, idClear:llIdStr, id:llIdCrypted };
+		var u = { emailAddr:emailAddrStr, displayName:nickname, idClear:llIdStr, id:llIdCrypted };
 		model.setCurrentUser(u);
 				
 		// facebook key

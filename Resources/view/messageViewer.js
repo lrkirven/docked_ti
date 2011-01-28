@@ -25,7 +25,7 @@ var newPostBtn = null;
 
 Ti.App.addEventListener('LOCATION_CHANGED', function(e) {
 	if (model.getCurrentLake() != null) {
-		var countDisplay = model.getCurrentLake().localCount + ' Laker(s)';	
+		var countDisplay = model.getCurrentLake().localCount + ' active user(s)';	
 		userCountLbl.text = countDisplay;
 		if (newPostBtn != null) {
 			newPostBtn.enabled = true;

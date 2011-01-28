@@ -110,7 +110,7 @@ function init() {
 			currentLocationLabel.text = model.getCurrentLake().name;
 			currentLocationLabel.color = css.getColor4();
 			buzzMenu.data = (model.getCurrentUser() == null ? inPolygonAnonymousMM : inPolygonMM);
-			var countDisplay = model.getCurrentLake().localCount + ' Laker(s)';
+			var countDisplay = model.getCurrentLake().localCount + ' active user(s)';
 			userCountLbl.text = countDisplay;
 			win.touchEnabled = true;
 		}
