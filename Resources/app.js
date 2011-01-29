@@ -20,7 +20,7 @@ Ti.Geolocation.purpose = "Recieve User Location";
 
 var myFont = 'Verdana';
 var db = Titanium.Database.open('db.lazylaker.net');
-// db.execute('DROP TABLE IF EXISTS AppParams');
+db.execute('DROP TABLE IF EXISTS AppParams');
 db.execute('CREATE TABLE IF NOT EXISTS AppParams (id INTEGER PRIMARY KEY, name VARCHAR(30), valueStr TEXT, valueInt INTEGER)');
 var tabGroup = null;
 var buzzTab = null;
@@ -55,6 +55,8 @@ function addRegistration(llId, emailAddr, displayName, fbKey, fbSecret, pUser, p
     rows += db.execute("INSERT INTO AppParams (name, valueStr, valueInt) VALUES ('PUSER', '" + pUser + "', 0)");
     rows += db.execute("INSERT INTO AppParams (name, valueStr, valueInt) VALUES ('PPASSWORD', '" + pPassword + "', 0)");
     rows += db.execute("INSERT INTO AppParams (name, valueStr, valueInt) VALUES ('SERVERSECRET', '" + serverSecret + "', 0)");
+    rows += db.execute("INSERT INTO AppParams (name, valueStr, valueInt) VALUES ('SYNC_TO_FB', '', 0)");
+    rows += db.execute("INSERT INTO AppParams (name, valueStr, valueInt) VALUES ('USE_FB_PIC', '', 0)");
 	Ti.API.info("addRegistration():  rows --> " +  rows);
 };
 
