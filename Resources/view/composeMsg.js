@@ -73,7 +73,7 @@ function buildForm() {
 	});
 	win.add(msgLbl);
 	
-	if (model.getFBProfileUrl() != null) {
+	if (model.getUseFBProfilePic() && model.getFBProfileUrl() != null) {
 		var userProfilePhoto = Ti.UI.createImageView({
 			image: model.getFBProfileUrl(),
 			backgroundColor: css.getColor0(),
