@@ -30,6 +30,7 @@ var settingsTab = null;
 var registerWin = null;
 var promptWin = null;
 var promptDisplayNameWin = null;
+var posListenerSet = false;
 
 //////////////////////////////////////////////////////////////////////////////////
 // DB related methods
@@ -262,6 +263,7 @@ function handleInitialUserPosition(e) {
 			else {
 				oldLat = model.getUserLat();
 				oldLng = model.getUserLng();
+				Ti.API.info('Calc dist: oldLat=' +  oldLat + ' oldLng=' + oldLng + ' lat=' + lat + ' lng=' + lng);
 				diff = Tools.distanceFromAB(oldLat, oldLng, lat, lng);
 				if (diff > 1) {
 					bUpdateServer = true;
@@ -278,6 +280,7 @@ function handleInitialUserPosition(e) {
 			else {
 				oldLat = model.getUserLat();
 				oldLng = model.getUserLng();
+				Ti.API.info('Calc dist: oldLat=' +  oldLat + ' oldLng=' + oldLng + ' lat=' + lat + ' lng=' + lng);
 				diff = Tools.distanceFromAB(oldLat, oldLng, lat, lng);
 				if (diff > 2) {
 					bUpdateServer = true;
@@ -355,7 +358,10 @@ Titanium.App.addEventListener('UPDATED_DISPLAY_NAME', function(e) {
 			//
 			// start geo positioning
 			//
-			Titanium.Geolocation.getCurrentPosition(handleInitialUserPosition);
+			if (!posListenerSet) {
+				posListenerSet = true;
+				Titanium.Geolocation.getCurrentPosition(handleInitialUserPosition);
+			}
 		}
 	}
 	else {
@@ -432,12 +438,11 @@ Titanium.App.addEventListener('USER_REGISTERED', function(e) {
 		
 		Tools.reportMsg(model.getAppName(), "Registration Complete.");
 		
+		resetTabs();
 		tabGroup.setActiveTab(0);
 		tabGroup.open();
-		//
-		// start geo positioning
-		//
-		Titanium.Geolocation.getCurrentPosition(handleInitialUserPosition);
+		
+		posListenerSet = false;
 	}
 	else {
 		Tools.reportMsg(model.getAppName(), e.token.errorMsg);
@@ -471,6 +476,7 @@ Titanium.App.addEventListener('PROMPT_USER_TO_REGISTER_COMPLETE', function(e) {
 		promptWin.close();	
 	}
 	if (e.registerFlag) {
+		tabGroup.close();
 		registerWin = Titanium.UI.createWindow({
 			title: model.getAppName(),
 			color: css.getColor2(),
@@ -495,7 +501,10 @@ Titanium.App.addEventListener('PROMPT_USER_TO_REGISTER_COMPLETE', function(e) {
 		//
 		// start geo positioning
 		//
-		Titanium.Geolocation.getCurrentPosition(handleInitialUserPosition);
+		if (!posListenerSet) {
+			posListenerSet = true;
+			Titanium.Geolocation.getCurrentPosition(handleInitialUserPosition);
+		}
 	}
 });
 
@@ -641,6 +650,27 @@ function buildAppTabs() {
 	});
 };
 
+function resetTabs() {
+	if (buzzTab != null) {
+		tabGroup.removeTab(buzzTab);
+	}
+	if (hotspotTab != null) {
+		tabGroup.removeTab(hotspotTab);
+	}
+	if (reportsTab != null) {
+		tabGroup.removeTab(reportsTab);
+	}
+	if (settingsTab != null) {
+		tabGroup.removeTab(settingsTab);
+	}
+	buildAppTabs();
+	tabGroup = Titanium.UI.createTabGroup();
+	tabGroup.addTab(buzzTab);
+	tabGroup.addTab(hotspotTab);
+	tabGroup.addTab(reportsTab);
+	tabGroup.addTab(settingsTab);
+};
+
 //
 // application init
 //
@@ -665,12 +695,7 @@ function init() {
 	//
 	// build init UI
 	//
-	buildAppTabs();
-	tabGroup = Titanium.UI.createTabGroup();
-	tabGroup.addTab(buzzTab);
-	tabGroup.addTab(hotspotTab);
-	tabGroup.addTab(reportsTab);
-	tabGroup.addTab(settingsTab);
+	resetTabs();
 	
 	//
 	// check if user has registered as an user of the app
@@ -688,7 +713,10 @@ function init() {
 		//
 		// start geo positioning
 		//
-		Titanium.Geolocation.getCurrentPosition(handleInitialUserPosition);
+		if (!posListenerSet) {
+			posListenerSet = true;
+			Titanium.Geolocation.getCurrentPosition(handleInitialUserPosition);
+		}
 	}
 	else {
 		if (!hasUserDeclined()) {
@@ -715,7 +743,10 @@ function init() {
 			//
 			// start geo positioning
 			//
-			Titanium.Geolocation.getCurrentPosition(handleInitialUserPosition);
+			if (!posListenerSet) {
+				posListenerSet = true;
+				Titanium.Geolocation.getCurrentPosition(handleInitialUserPosition);
+			}
 		}
 	}
 	

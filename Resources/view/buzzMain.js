@@ -110,7 +110,7 @@ function init() {
 			currentLocationLabel.text = model.getCurrentLake().name;
 			currentLocationLabel.color = css.getColor4();
 			buzzMenu.data = (model.getCurrentUser() == null ? inPolygonAnonymousMM : inPolygonMM);
-			var countDisplay = model.getCurrentLake().localCount + ' active user(s)';
+			var countDisplay = model.getCurrentLake().localCount + ' Local(s)';
 			userCountLbl.text = countDisplay;
 			win.touchEnabled = true;
 		}
@@ -201,7 +201,7 @@ function init() {
 	});
 	var countDisplay = '';
 	if (model.getCurrentLake() != null) {
-		countDisplay = model.getCurrentLaAke().localCount + ' Laker(s)';
+		countDisplay = model.getCurrentLake().localCount + ' Local(s)';
 	}
 	userCountLbl = Ti.UI.createLabel({
 		text: countDisplay,
@@ -277,6 +277,10 @@ function init() {
 	win.add(mainInd);
 	Ti.API.info('Show buzzMain indicator ...');
 	mainInd.show();
+	
+	if (model.getCurrentLake() != null) {
+		Ti.App.fireEvent('LOCATION_CHANGED', {});
+	}
 };
 
 init();

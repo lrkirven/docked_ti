@@ -19,6 +19,7 @@ function ModelLocator() {
 	var fbName = null;
 	var fbStatus = null;
 	var fbProfileUrl = null;
+	var useFbProfilePic = false;
 	var fbAPIKey = '8851fedb7bd7eef10c642cdaffa7faa9';
 	var fbSecret = '4a4cbd0adac0c8ead93f848f93083ad6';
 	var picasaUser = 'lazylaker71@gmail.com';
@@ -115,6 +116,12 @@ function ModelLocator() {
 			},
 			setPicasaPassword : function (p) {
 				picasaPassword = p;	
+			},
+			getUseFBProfilePic : function() {
+				return useFbProfilePic;
+			},
+			setUseFBProfilePic : function (flag) {
+				useFbProfilePic = flag;	
 			},
 			getFBProfileUrl : function() {
 				return fbProfileUrl;

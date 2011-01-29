@@ -566,7 +566,7 @@ function buildPanelHeader(){
 
 	var countDisplay = '';
 	if (model.getCurrentLake() != null) {
-		countDisplay = model.getCurrentLake().localCount + ' Laker(s)';	
+		countDisplay = model.getCurrentLake().localCount + ' Local(s)';	
 	}
 	userCountLbl = Ti.UI.createLabel({
 		text: countDisplay,

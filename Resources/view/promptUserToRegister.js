@@ -79,7 +79,7 @@ function buildForm() {
 	// submit button
 	//
 	var registerBtn = Titanium.UI.createButton({
-		title: 'Register',
+		title: 'Sign Up',
 		enabled: true,
 		color: css.getColor0(),
 		systemButton: Titanium.UI.iPhone.SystemButton.FLEXIBLE_SPACE,
