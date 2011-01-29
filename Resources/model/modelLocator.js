@@ -31,6 +31,7 @@ function ModelLocator() {
 	var anonymousUser = 'ABC123';
 	var deviceId = null;
 	var lastPing = 0;
+	var sync2Fb = false;
 	
     this.singletonInstance = null;
 
@@ -51,6 +52,12 @@ function ModelLocator() {
         return {
 			getAppName : function() {
 				return 'Docked';
+			},
+			setSync2Fb : function (d) {
+				sync2Fb = d;	
+			},
+			getSync2Fb : function() {
+				return sync2Fb;
 			},
 			setDeviceId : function (d) {
 				deviceId = d;	

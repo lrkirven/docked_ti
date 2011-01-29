@@ -25,10 +25,10 @@ function init() {
 			title: 'Share with Facebook',
 			hasChild: true,
 			leftImage: '../phone_playmovie.png',
-			ptr: 'facebookLogin.js'
+			ptr: 'fbSettings.js'
 		}, 
 		{
-			title: 'User Preference',
+			title: 'User Preferences',
 			hasChild: true,
 			leftImage: '../phone_playmovie.png',
 			ptr: 'composeMsg.js'
@@ -40,10 +40,10 @@ function init() {
 			title: 'Share with Facebook',
 			hasChild: true,
 			leftImage: '../phone_playmovie.png',
-			ptr: 'facebookLogin.js'
+			ptr: 'fbSettings.js'
 		}, 
 		{
-			title: 'User Preference',
+			title: 'User Preferences',
 			hasChild: true,
 			leftImage: '../phone_playmovie.png',
 			ptr: 'composeMsg.js'
