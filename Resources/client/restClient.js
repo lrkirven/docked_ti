@@ -535,6 +535,11 @@ function RestClient() {
 					if (Tools.test4NotFound(this.responseText)) {
 						return;
 					}
+					if (Tools.test4ServerDown(this.responseText)) {
+						Ti.App.fireEvent('PING_RESPONSE_DATA', { status:59,
+							errorMsg: 'Unable to communicate with the server at this time. Please try again in a little while'	
+						});
+					}
 					Titanium.API.info('ping: onload: Entered - [' + this.responseText + ']');
 					if (this.responseText == 'null' || this.responseText == undefined) {
 						Ti.App.fireEvent('PING_RESPONSE_DATA', { result:null, status:0 });

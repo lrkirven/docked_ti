@@ -56,33 +56,34 @@ function buildForm() {
 
 	var fbFlag = Titanium.Facebook.isLoggedIn();
 	
+	var panel = Ti.UI.createView({
+		backgroundColor: '#cccccc',
+		top: 15,
+		bottom: 15,
+		left: 10,
+		width: 300,
+		borderColor:css.getColor0(),
+		borderRadius: 20,
+		clickName: 'bg'
+	});
+	
 	var defaultIDImage = Ti.UI.createImageView({
 		image: '../user.png',
 		backgroundColor:css.getColor0(),
 		borderColor:css.getColor2(),
 		top:10,
-		left:20,
+		left:10,
 		width:50,
 		height:50,
 		clickName:'defaultIDImage'
 	});
-	win.add(defaultIDImage);
-	
-	var panel = Ti.UI.createView({
-		backgroundColor: '#cccccc',
-		top: 70,
-		left: 10,
-		width: 300,
-		height: 350,
-		borderRadius: 20,
-		clickName: 'bg'
-	});
+	panel.add(defaultIDImage);
 	
 	var fbLbl = Titanium.UI.createLabel({
 		color: css.getColor0(),
 		text: 'Click button below to connect to your Facebook account: ',
 		font: { fontFamily: model.myFont, fontSize: 15, fontWeight:'bold' },
-		top: 0,
+		top: 70,
 		left: 10,
 		width: 280,
 		textAlign: 'left',
@@ -97,7 +98,7 @@ function buildForm() {
 		'style': 'wide',
 		'apikey': model.getFBAPIKey(),
 		'secret': model.getFBSecret(),
-		top: 50,
+		top: 120,
 		left: 0,
 		height: 30,
 		width: 200
@@ -127,7 +128,7 @@ function buildForm() {
 		color: css.getColor0(),
 		text: 'Use Facebook Profile Picture: ',
 		font: { fontFamily: model.myFont, fontSize: 15, fontWeight:'bold' },
-		top: 100,
+		top: 170,
 		left: 10,
 		width: 280,
 		textAlign: 'left',
@@ -137,7 +138,7 @@ function buildForm() {
 	
 	switchBtn0 = Titanium.UI.createSwitch({
 		value: false,
-		top: 125,
+		top: 195,
 		left: 10,
 		enabled: fbFlag
 	});
@@ -152,7 +153,7 @@ function buildForm() {
 		color: css.getColor0(),
 		text: 'Sync Docked Buzz to Facebook: ',
 		font: { fontFamily: model.myFont, fontSize: 15, fontWeight:'bold' },
-		top: 170,
+		top: 240,
 		left: 10,
 		width: 280,
 		textAlign: 'left',
@@ -162,7 +163,7 @@ function buildForm() {
 	
 	switchBtn1 = Titanium.UI.createSwitch({
 		value: false,
-		top: 198,
+		top: 265,
 		left: 10,
 		enabled: fbFlag
 	});

@@ -105,7 +105,7 @@ function init(){
 	var h = Ti.UI.createView({
 		height: 50,
 		top: 0,
-		borderColor: css.getColor2(),
+		borderColor: css.getColor0(),
 		backgroundColor: css.getColor0()
 	});
 	
@@ -115,11 +115,7 @@ function init(){
 		top: 0,
 		left: 10,
 		height: 20,
-		font: {
-			fontFamily: model.myFont,
-			fontSize: 11,
-			fontWeight: 'normal'
-		},
+		font: { fontFamily: model.myFont, fontSize: 11, fontWeight: 'normal' },
 		color: '#fff'
 	});
 	
@@ -168,11 +164,7 @@ function init(){
 		right: 10,
 		height: 20,
 		textAlign: 'right',
-		font: {
-			fontFamily: model.myFont,
-			fontSize: 11,
-			fontWeight: 'normal'
-		},
+		font: { fontFamily: model.myFont, fontSize: 11, fontWeight: 'normal' },
 		color: '#fff'
 	});
 	var countDisplay = '';
@@ -198,13 +190,25 @@ function init(){
 
 	var baseColor = css.getColor0();
 	
+	var tblHeader = Ti.UI.createView({ height:30, width:320 });
+	var label = Ti.UI.createLabel({ 
+		top:5,
+		left:10,
+   		text:'HotSpots', 
+		font: { fontFamily:model.myFont, fontSize:20, fontWeight:'bold' },
+   		// color:'#ffffff'
+		color:css.getColor2()
+	});
+	tblHeader.add(label);
+	
 	// create table view
 	hsMenu = Titanium.UI.createTableView({
 		top:45,
+		headerView:tblHeader,
 		style:Titanium.UI.iPhone.TableViewStyle.GROUPED,
 		selectionStyle:Ti.UI.iPhone.TableViewCellSelectionStyle.GRAY,
-		backgroundColor:css.getColor2(),
 		rowBackgroundColor:css.getColor2()
+		// rowBackgroundColor:'#ffffff'
 	});
 
 	// create table view event listener
@@ -251,6 +255,7 @@ function init(){
 	if (Titanium.Facebook.isLoggedIn()) {
 		getMyFacebookInfo();
 	}
+	hsMenu.backgroundImage = '../dockedbg.png';
 	
 };
 

@@ -45,12 +45,27 @@ function init() {
 		}];
 	}
 	
-	var settingsMenu = Titanium.UI.createTableView({
+	var tblHeader = Ti.UI.createView({ height:30, width:320 });
+	var label = Ti.UI.createLabel({ 
 		top:5,
+		left:10,
+   		text:'Settings', 
+		font: { fontFamily:model.myFont, fontSize:20, fontWeight:'bold' },
+   		// color:'#ffffff'
+		color:css.getColor2()
+	});
+	tblHeader.add(label);
+	
+	var settingsMenu = Titanium.UI.createTableView({
+		top:0,
 		data: menuProvider,
+		headerView:tblHeader,
+		scrollable:false,
+		moving:false,
 		style:Titanium.UI.iPhone.TableViewStyle.GROUPED,
-		backgroundColor:css.getColor2(),
+		selectionStyle:Ti.UI.iPhone.TableViewCellSelectionStyle.GRAY,
 		rowBackgroundColor:css.getColor2()
+		// rowBackgroundColor:'#ffffff'
 	});
 	settingsMenu.addEventListener('click', function(e){
 		if (e.rowData.ptr) {
@@ -89,7 +104,7 @@ function init() {
 			top: 195,
 			left: 10,
 			height: 30,
-			width: 100,
+			width: 100
 		});
 		button0.addEventListener('click', function(e) {
 			Ti.API.info('Start register process ....');
@@ -111,6 +126,7 @@ function init() {
 		});
 		win.add(button0);
 	}
+	settingsMenu.backgroundImage = '../dockedbg.png';
 	
 };
 

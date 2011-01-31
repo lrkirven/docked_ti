@@ -14,7 +14,9 @@ var userCountLbl = null;
 var mainInd = null;
 
 
-
+/**
+ * This method goes to server to check for Buzz messages in your current lake zone.
+ */
 function check4NewMsgEvents() {
 	var client = new RestClient();
 	var activeLake = model.getCurrentLake();
@@ -28,6 +30,10 @@ function check4NewMsgEvents() {
 	}
 };
 
+/**
+ * This method goes to Facebook to get your profile pic and other facebook information of 
+ * logged in user.
+ */
 function getMyFacebookInfo() {
 	var query = "SELECT uid, name, pic_square, status FROM user where uid = " + Titanium.Facebook.getUserId() ;
 	Ti.API.info('user id ' + Titanium.Facebook.getUserId());
@@ -59,17 +65,17 @@ function init() {
 	win.touchEnabled = false;
 	
 	inPolygonMM = [{
-		title: 'Browse Buzz',
+		title: 'Browse',
 		hasChild: true,
 		leftImage: '../phone_playmovie.png',
 		ptr: 'messageViewer.js'
 	}, {
-		title: 'Map Buzz',
+		title: 'Map',
 		hasChild: true,
 		leftImage: '../phone_playmovie.png',
 		ptr: 'buzzOnMapViewer.js'
 	}, {
-		title: 'Post Buzz',
+		title: 'Post',
 		hasChild: true,
 		leftImage: '../phone_playmovie.png',
 		ptr: 'composeMsg.js'
@@ -81,12 +87,12 @@ function init() {
 	}];
 	
 	inPolygonAnonymousMM = [{
-		title: 'Browse Buzz',
+		title: 'Browse',
 		hasChild: true,
 		leftImage: '../phone_playmovie.png',
 		ptr: 'messageViewer.js'
 	}, {
-		title: 'Map Buzz',
+		title: 'Map',
 		hasChild: true,
 		leftImage: '../phone_playmovie.png',
 		ptr: 'buzzOnMapViewer.js'
@@ -127,9 +133,10 @@ function init() {
 	Ti.API.info('buzzMain.init(): Entered ');
 	
 	var h = Ti.UI.createView({
-		height: 50,
-		top: 0,
-		borderColor: css.getColor2(),
+		height:50,
+		left:0,
+		top:0,
+		borderColor: css.getColor0(),
 		backgroundColor: css.getColor0()
 	});
 	
@@ -222,13 +229,32 @@ function init() {
 
 	var baseColor = css.getColor0();
 	
+	var tblHeader = Ti.UI.createView({ height:30, width:320 });
+	var label = Ti.UI.createLabel({ 
+		top:5,
+		left:10,
+   		text:'Buzz', 
+		font: { fontFamily:model.myFont, fontSize:20, fontWeight:'bold' },
+   		// color:'#ffffff'
+		color:css.getColor2()
+	});
+	tblHeader.add(label);
+
 	// create table view
 	buzzMenu = Titanium.UI.createTableView({
-		top:45,
+		top:50,
+		headerView:tblHeader,
+		/*
+		font: { fontFamily:model.myFont, fontSize:15, fontWeight:'normal', color:css.getColor2() },
+		fontWeight:'normal',
+		fontSize:12,
+		*/
+		scrollable:false,
+		moving:false,
 		style:Titanium.UI.iPhone.TableViewStyle.GROUPED,
 		selectionStyle:Ti.UI.iPhone.TableViewCellSelectionStyle.GRAY,
-		backgroundColor:css.getColor2(),
 		rowBackgroundColor:css.getColor2()
+		// rowBackgroundColor:'#ffffff'
 	});
 
 	// create table view event listener
@@ -271,8 +297,9 @@ function init() {
 		left: 135,
 		height: 150,
 		width: 50,
+		color:'#ffffff',
 		message: 'Initializing ...',
-		style: Titanium.UI.iPhone.ActivityIndicatorStyle.DARK
+		style: Titanium.UI.iPhone.ActivityIndicatorStyle.PLAIN
 	});
 	win.add(mainInd);
 	Ti.API.info('Show buzzMain indicator ...');
@@ -281,6 +308,7 @@ function init() {
 	if (model.getCurrentLake() != null) {
 		Ti.App.fireEvent('LOCATION_CHANGED', {});
 	}
+	buzzMenu.backgroundImage = '../dockedbg.png';
 };
 
 init();

@@ -20,7 +20,7 @@ Ti.Geolocation.purpose = "Recieve User Location";
 
 var myFont = 'Verdana';
 var db = Titanium.Database.open('db.lazylaker.net');
-db.execute('DROP TABLE IF EXISTS AppParams');
+// db.execute('DROP TABLE IF EXISTS AppParams');
 db.execute('CREATE TABLE IF NOT EXISTS AppParams (id INTEGER PRIMARY KEY, name VARCHAR(30), valueStr TEXT, valueInt INTEGER)');
 var tabGroup = null;
 var buzzTab = null;
@@ -149,9 +149,33 @@ function loadRegistration() {
 		model.setPicasaPassword(pPasswordStr);
     }
 	
+	// sync to facebook
+	rowcpt = db.execute("SELECT * FROM AppParams WHERE name = 'SYNC_TO_FB'");
+	var sync2Fb = null;
+    if (rowcpt.isValidRow()) {
+        var val = rowcpt.fieldByName('valueInt');
+		if (val > 0) {
+			model.setSync2Fb(true);	
+		}
+		else {
+			model.setSync2Fb(false);	
+		}
+    }
+	
+	rowcpt = db.execute("SELECT * FROM AppParams WHERE name = 'USE_FB_PIC'");
+	var sync2Fb = null;
+    if (rowcpt.isValidRow()) {
+        var val = rowcpt.fieldByName('valueInt');
+		if (val > 0) {
+			model.setUseFBProfilePic(true);	
+		}
+		else {
+			model.setUseFBProfilePic(false);	
+		}
+    }
 	
 	Ti.API.info("loadRegistration(): Done");
-}
+};
 
 function hasUserDeclined() {
 	var count = 0;
@@ -161,17 +185,17 @@ function hasUserDeclined() {
         rowcpt.next();
     }
     return (count > 0);
-}
+};
 
 function markUserDeclineRegistration() {
 	var count = 0;
     var rowcpt = db.execute("INSERT INTO AppParams (name, valueStr, valueInt) VALUES ('DECLINE_REGISTRATION', 'Y', 0)");
-}
+};
 
 function updateDisplayName(displayName) {
 	var count = 0;
     var rowcpt = db.execute("UPDATE AppParams SET valueStr = '" + displayName + "' WHERE name = 'DISPLAYNAME'");
-}
+};
 
 
 //////////////////////////////////////////////////////////////////////////////////
@@ -449,27 +473,10 @@ Titanium.App.addEventListener('USER_REGISTERED', function(e) {
 	}
 });
 
-/*
-Titanium.App.addEventListener('REGISTER_COMPLETE', function(e) { 
-	if (registerWin != null) {
-		registerWin.close();
-	}
-	promptDisplayNameWin = Titanium.UI.createWindow({
-		title: model.getAppName(),
-		color: css.getColor2(),
-		font: { fontSize: 20, fontFamily: myFont },
-		backgroundColor: css.getColor0(),
-		barColor: css.getColor0(),
-		url: 'view/promptUser4Displayname.js'
-	});
-	promptDisplayNameWin.model = model;
-	promptDisplayNameWin.db = db;
-	promptDisplayNameWin.css = css;
-	promptDisplayNameWin.open();
-	
-});
-*/
-
+/**
+ * This method handles user response if they want to become a registered user on Docked
+ * @param {Object} e
+ */
 Titanium.App.addEventListener('PROMPT_USER_TO_REGISTER_COMPLETE', function(e) { 
 	Ti.API.info('registerFlag -->' + e.registerFlag);
 	if (promptWin != null) {
@@ -523,13 +530,9 @@ function buildAppTabs() {
 	////////////////////////////////////////////////////////////
 	
 	var win1 = Titanium.UI.createWindow({
-		title: 'Buzz',
+		title: model.getAppName(),
 		color: css.getColor2(),
-		font: {
-			fontSize: 20,
-			fontFamily: myFont
-		},
-		backgroundColor: css.getColor0(),
+		font: { fontSize: 20, fontFamily: myFont },
 		barColor: css.getColor0(),
 		url: 'view/buzzMain.js'
 	});
@@ -540,7 +543,6 @@ function buildAppTabs() {
 	win1.css = css;
 	buzzTab = Titanium.UI.createTab({
 		icon: 'KS_nav_ui.png',
-		title: 'Buzz',
 		window: win1
 	});
 	
@@ -551,12 +553,8 @@ function buildAppTabs() {
 	////////////////////////////////////////////////////////////
 	
 	var win2 = Titanium.UI.createWindow({
-		title: 'HotSpots',
-		font: {
-			fontSize: 20,
-			fontFamily: myFont
-		},
-		backgroundColor: css.getColor0(),
+		title: model.getAppName(),
+		font: { fontSize: 20, fontFamily: myFont },
 		barColor: css.getColor0(),
 		url: 'view/hotSpotMain.js'
 	});
@@ -567,7 +565,6 @@ function buildAppTabs() {
 	win2.css = css;
 	hotspotTab = Titanium.UI.createTab({
 		icon: 'KS_nav_ui.png',
-		title: 'HotSpots',
 		window: win2
 	});
 	var label2 = Titanium.UI.createLabel({
@@ -590,12 +587,8 @@ function buildAppTabs() {
 	////////////////////////////////////////////////////////////
 	
 	var win3 = Titanium.UI.createWindow({
-		title: 'Fishing Reports',
-		font: {
-			fontSize: 20,
-			fontFamily: myFont
-		},
-		backgroundColor: css.getColor0(),
+		title: model.getAppName(),
+		font: { fontSize: 20, fontFamily: myFont },
 		barColor: css.getColor0(),
 		url: 'view/reportViewer.js'
 	});
@@ -606,7 +599,6 @@ function buildAppTabs() {
 	win3.css = css;
 	reportsTab = Titanium.UI.createTab({
 		icon: 'KS_nav_ui.png',
-		title: 'Reports',
 		window: win3
 	});
 	var label3 = Titanium.UI.createLabel({
@@ -629,12 +621,8 @@ function buildAppTabs() {
 	////////////////////////////////////////////////////////////
 	
 	var win4 = Titanium.UI.createWindow({
-		title: 'Settings',
-		font: {
-			fontSize: 20,
-			fontFamily: myFont
-		},
-		backgroundColor: css.getColor2(),
+		title: model.getAppName(),
+		font: { fontSize: 20, fontFamily: myFont },
 		barColor: css.getColor0(),
 		url: 'view/settingsMain.js'
 	});
@@ -645,7 +633,6 @@ function buildAppTabs() {
 	win4.css = css;
 	settingsTab = Titanium.UI.createTab({
 		icon: 'KS_nav_platform.png',
-		title: 'Settings',
 		window: win4
 	});
 };

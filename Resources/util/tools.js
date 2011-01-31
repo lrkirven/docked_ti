@@ -32,6 +32,15 @@
 			flag = true;
 		}
 		return flag;
+	};
+	
+	Tools.test4ServerDown = function(response) {
+		var flag = false;
+		var pattern = /.*500 Server Error.*/g;
+		if (pattern.test(response)) {
+			flag = true;
+		}
+		return flag;
 	}
 	
 	

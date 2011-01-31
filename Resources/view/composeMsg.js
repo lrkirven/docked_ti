@@ -175,8 +175,6 @@ function buildForm() {
 			helperWin.addEventListener('close', function(e){
 				if (model.getPendingRawImage() != null) {
 					photoIndBtn.image = model.getPendingRawImage();
-					// composeMsgWinPhotoIndBtn.opacity = 1.0;
-					// composeMsgWinPhotoIndBtn.enabled = true;
 				}
 			});
 			helperWin.open();

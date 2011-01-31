@@ -50,26 +50,26 @@ var stateDP =  [
 
 function init() {
 	
-	var title  = Titanium.UI.createLabel({
-		color: css.getColor4(),
-		font: { fontFamily: model.myFont, fontWeight: 'bold' },
-		top: 5,
-		left: 0,
-		width: 300,
-		textAlign: 'center',
-		height: 'auto',
-		text:'Fishing Reports'
+	var tblHeader = Ti.UI.createView({ height:30, width:320 });
+	var label = Ti.UI.createLabel({ 
+		top:5,
+		left:10,
+   		text:'Fishing Reports', 
+		font: { fontFamily:model.myFont, fontSize:20, fontWeight:'bold' },
+   		// color:'#ffffff'
+		color:css.getColor2()
 	});
-	win.add(title);
+	tblHeader.add(label);
 	
 	// create table view
 	var reportTbl = Titanium.UI.createTableView({
 		data:stateDP, 
-		top:30,
+		headerView:tblHeader,
+		top:0,
 		style:Titanium.UI.iPhone.TableViewStyle.GROUPED,
 		selectionStyle:Ti.UI.iPhone.TableViewCellSelectionStyle.GRAY,
-		backgroundColor:css.getColor2(),
 		rowBackgroundColor:css.getColor2()
+		// rowBackgroundColor:'#ffffff'
 	});
 	
 	// create table view event listener
@@ -110,6 +110,8 @@ function init() {
 		style: Titanium.UI.iPhone.ActivityIndicatorStyle.DARK
 	});
 	win.add(mainInd);
+	
+	reportTbl.backgroundImage = '../dockedbg.png';
 };
 
 init();
