@@ -240,6 +240,7 @@ function init() {
 	});
 	preloader.color = css.getColor3();
 	win.add(preloader);
+	win.backgroundImage = '../dockedbg.png';	
 };
 
 //

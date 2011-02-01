@@ -19,7 +19,7 @@ var css = CSSMgr();
 Ti.Geolocation.purpose = "Recieve User Location";
 
 var myFont = 'Verdana';
-var db = Titanium.Database.open('db.lazylaker.net');
+var db = Titanium.Database.open('db.docked.co');
 // db.execute('DROP TABLE IF EXISTS AppParams');
 db.execute('CREATE TABLE IF NOT EXISTS AppParams (id INTEGER PRIMARY KEY, name VARCHAR(30), valueStr TEXT, valueInt INTEGER)');
 var tabGroup = null;
@@ -58,6 +58,7 @@ function addRegistration(llId, emailAddr, displayName, fbKey, fbSecret, pUser, p
     rows += db.execute("INSERT INTO AppParams (name, valueStr, valueInt) VALUES ('SERVERSECRET', '" + serverSecret + "', 0)");
     rows += db.execute("INSERT INTO AppParams (name, valueStr, valueInt) VALUES ('SYNC_TO_FB', '', 0)");
     rows += db.execute("INSERT INTO AppParams (name, valueStr, valueInt) VALUES ('USE_FB_PIC', '', 0)");
+    rows += db.execute("INSERT INTO AppParams (name, valueStr, valueInt) VALUES ('FB_PROFILE_PIC', 'NULL', 0)");
 	Ti.API.info("addRegistration():  rows --> " +  rows);
 };
 
@@ -104,7 +105,7 @@ function loadRegistration() {
         displayName = rowcpt.fieldByName('valueStr');
     }
 	
-	Ti.API.info('Creating user instance --> emailAddr=' + emailAddrStr + ' displayName=' + displayName + 'idClear=' + llIdStr);
+	Ti.API.info('loadRegistration(): Creating user instance --> emailAddr=' + emailAddrStr + ' displayName=' + displayName + 'idClear=' + llIdStr);
 	
 	var user = { emailAddr:emailAddrStr, displayName:displayName, idClear:llIdStr, id:c2sLLId };
 	model.setCurrentUser(user);
@@ -155,24 +156,34 @@ function loadRegistration() {
     if (rowcpt.isValidRow()) {
         var val = rowcpt.fieldByName('valueInt');
 		if (val > 0) {
+			Ti.API.info('loadRegistration(): SYNC_TO_FB TRUE');
 			model.setSync2Fb(true);	
 		}
 		else {
+			Ti.API.info('loadRegistration(): SYNC_TO_FB FALSE');
 			model.setSync2Fb(false);	
 		}
     }
+	else {
+		Ti.API.info('loadRegistration(): SYNC_TO_FB -- NOT FOUND');
+	}
 	
 	rowcpt = db.execute("SELECT * FROM AppParams WHERE name = 'USE_FB_PIC'");
 	var sync2Fb = null;
     if (rowcpt.isValidRow()) {
         var val = rowcpt.fieldByName('valueInt');
 		if (val > 0) {
+			Ti.API.info('loadRegistration(): USE_FB_PIC TRUE');
 			model.setUseFBProfilePic(true);	
 		}
 		else {
+			Ti.API.info('loadRegistration(): USE_FB_PIC FALSE');
 			model.setUseFBProfilePic(false);	
 		}
     }
+	else {
+		Ti.API.info('loadRegistration(): USE_FB_PIC -- NOT FOUND');
+	}
 	
 	Ti.API.info("loadRegistration(): Done");
 };
@@ -465,8 +476,7 @@ Titanium.App.addEventListener('USER_REGISTERED', function(e) {
 		resetTabs();
 		tabGroup.setActiveTab(0);
 		tabGroup.open();
-		
-		posListenerSet = false;
+		Titanium.Geolocation.getCurrentPosition(handleInitialUserPosition);
 	}
 	else {
 		Tools.reportMsg(model.getAppName(), e.token.errorMsg);
@@ -529,21 +539,22 @@ function buildAppTabs() {
 	//
 	////////////////////////////////////////////////////////////
 	
-	var win1 = Titanium.UI.createWindow({
+	var buzzWin = Titanium.UI.createWindow({
 		title: model.getAppName(),
 		color: css.getColor2(),
 		font: { fontSize: 20, fontFamily: myFont },
 		barColor: css.getColor0(),
 		url: 'view/buzzMain.js'
 	});
-	win1.addEventListener('focus', function(e){
+	buzzWin.addEventListener('focus', function(e){
 		Ti.API.info('win1 is active -- ' + (e.source).url);
 	});
-	win1.model = model;
-	win1.css = css;
+	buzzWin.model = model;
+	buzzWin.css = css;
+	buzzWin.db = db;
 	buzzTab = Titanium.UI.createTab({
 		icon: 'KS_nav_ui.png',
-		window: win1
+		window: buzzWin
 	});
 	
 	////////////////////////////////////////////////////////////
@@ -552,32 +563,30 @@ function buildAppTabs() {
 	//
 	////////////////////////////////////////////////////////////
 	
-	var win2 = Titanium.UI.createWindow({
+	var hsWin = Titanium.UI.createWindow({
 		title: model.getAppName(),
 		font: { fontSize: 20, fontFamily: myFont },
 		barColor: css.getColor0(),
 		url: 'view/hotSpotMain.js'
 	});
-	win2.addEventListener('focus', function(e){
+	hsWin.addEventListener('focus', function(e){
 		Ti.API.info('win2 is active -- ' + (e.source).url);
 	});
-	win2.model = model;
-	win2.css = css;
+	hsWin.model = model;
+	hsWin.css = css;
+	hsWin.db = db;
 	hotspotTab = Titanium.UI.createTab({
 		icon: 'KS_nav_ui.png',
-		window: win2
+		window: hsWin
 	});
 	var label2 = Titanium.UI.createLabel({
 		color: '#BDBB99',
 		text: 'HotSpot',
 		textAlign: 'left',
-		font: {
-			fontSize: 20,
-			fontFamily: myFont
-		},
+		font: { fontSize: 20, fontFamily: myFont },
 		width: 'auto'
 	});
-	win2.add(label2);
+	hsWin.add(label2);
 	
 	
 	////////////////////////////////////////////////////////////
@@ -586,32 +595,29 @@ function buildAppTabs() {
 	//
 	////////////////////////////////////////////////////////////
 	
-	var win3 = Titanium.UI.createWindow({
+	var reportsWin = Titanium.UI.createWindow({
 		title: model.getAppName(),
 		font: { fontSize: 20, fontFamily: myFont },
 		barColor: css.getColor0(),
 		url: 'view/reportViewer.js'
 	});
-	win3.addEventListener('focus', function(e){
+	reportsWin.addEventListener('focus', function(e){
 		Ti.API.info('win3 is active -- ' + (e.source).url);
 	});
-	win3.model = model;
-	win3.css = css;
+	reportsWin.model = model;
+	reportsWin.css = css;
 	reportsTab = Titanium.UI.createTab({
 		icon: 'KS_nav_ui.png',
-		window: win3
+		window: reportsWin
 	});
 	var label3 = Titanium.UI.createLabel({
 		color: '#BDBB99',
 		text: 'Fishing Reports',
-		font: {
-			fontSize: 20,
-			fontFamily: 'Verdana'
-		},
+		font: { fontSize: 20, fontFamily: myFont },
 		textAlign: 'center',
 		width: 'auto'
 	});
-	win3.add(label3);
+	reportsWin.add(label3);
 	
 	
 	////////////////////////////////////////////////////////////
@@ -620,20 +626,21 @@ function buildAppTabs() {
 	//
 	////////////////////////////////////////////////////////////
 	
-	var win4 = Titanium.UI.createWindow({
+	var settingsWin = Titanium.UI.createWindow({
 		title: model.getAppName(),
 		font: { fontSize: 20, fontFamily: myFont },
 		barColor: css.getColor0(),
 		url: 'view/settingsMain.js'
 	});
-	win4.addEventListener('focus', function(e){
+	settingsWin.addEventListener('focus', function(e){
 		Ti.API.info('win4 is active -- ' + (e.source).url);
 	});
-	win4.model = model;
-	win4.css = css;
+	settingsWin.model = model;
+	settingsWin.css = css;
+	settingsWin.db = db;
 	settingsTab = Titanium.UI.createTab({
 		icon: 'KS_nav_platform.png',
-		window: win4
+		window: settingsWin
 	});
 };
 

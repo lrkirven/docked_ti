@@ -1,11 +1,87 @@
+Ti.include('../util/tools.js');
 Ti.include('../model/modelLocator.js');
 Ti.include('../client/restClient.js');
 
 var win = Ti.UI.currentWindow;
 var model = win.model;
 var css = win.css;
+var db = win.db;
 var switchBtn0 = null;
 var switchBtn1 = null;
+var tempFlag = false;
+var initFlag = true;
+
+//////////////////////////////////////////////////////////////////////////////////
+// DB related methods
+//////////////////////////////////////////////////////////////////////////////////
+
+
+
+function dbUpdateSync2Fb(flag) {
+	var count = 0;
+    var rowcpt = 0;
+	db.rowsAffected = 0;
+	if (flag) {
+		db.execute("UPDATE AppParams SET valueInt = 1 WHERE name = 'SYNC_TO_FB'");
+	}
+	else {
+		db.execute("UPDATE AppParams SET valueInt = 0 WHERE name = 'SYNC_TO_FB'");
+	}
+	if (db.rowsAffected == 0) {
+		Ti.API.error('dbUpdateSync2Fb(): FAILED');	
+	}
+	else {
+		Ti.API.info('dbUpdateSync2Fb(): SUCCESS');	
+	}
+};
+
+function dbUpdateUseFbProfilePic(flag) {
+	var count = 0;
+    var rowcpt = 0;
+	db.rowsAffected = 0;
+	if (flag) {
+		db.execute("UPDATE AppParams SET valueInt = 1 WHERE name = 'USE_FB_PIC'");
+	}
+	else {
+		db.execute("UPDATE AppParams SET valueInt = 0 WHERE name = 'USE_FB_PIC'");
+	}
+	if (db.rowsAffected == 0) {
+		Ti.API.error('dbUpdateUseFbProfilePic(): FAILED');	
+	}
+	else {
+		Ti.API.info('dbUpdateUseFbProfilePic(): SUCCESS');	
+	}
+};
+
+function dbUpdateFbProfilePic(url) {
+	var count = 0;
+    var rowcpt = 0;
+	db.rowsAffected = 0;
+	db.execute("UPDATE AppParams SET valueStr='" + url + "' WHERE name = 'FB_PROFILE_PIC'");
+	if (db.rowsAffected == 0) {
+		Ti.API.error('dbUpdateUseFbProfilePic(): FAILED');	
+	}
+	else {
+		Ti.API.info('dbUpdateUseFbProfilePic(): SUCCESS');	
+	}
+};
+
+
+//////////////////////////////////////////////////////////////////////////////////
+// Event listeners 
+//////////////////////////////////////////////////////////////////////////////////
+
+/**
+ * Listener to handle event to determine user's location to local lakes.
+ * 
+ * @param {Object} e
+ */
+Titanium.App.addEventListener('UPDATED_PROFILE_URL', function(e) {
+	Ti.API.info('Got UPDATED_PROFILE_URL event ...');
+	model.setUseFBProfilePic(tempFlag);
+	dbUpdateUseFbProfilePic(tempFlag);
+});
+
 
 function getMyFacebookInfo() {
 	var query = "SELECT uid, name, pic_square, status FROM user where uid = " + Titanium.Facebook.getUserId() ;
@@ -17,6 +93,7 @@ function getMyFacebookInfo() {
 			if (info.pic_square != null) {
 				Ti.API.info('fb profile url ---> ' + info.pic_square);
 				model.setFBProfileUrl(info.pic_square);
+				dbUpdateFbProfilePic(info.pic_square);
 			}
 			if (info.status != null && info.status.message != null) {
 				Ti.API.info('fb status ---> ' + info.status.message);
@@ -30,31 +107,12 @@ function getMyFacebookInfo() {
 	});	
 };
 
-function dbUpdateSync2Fb(flag) {
-	var count = 0;
-    var rowcpt = 0;
-	if (flag) {
-		rowcpt = db.execute("UPDATE AppParams SET valueInt = 1 WHERE name = 'SYNC_TO_FB'");
-	}
-	else {
-		rowcpt = db.execute("UPDATE AppParams SET valueInt = 0 WHERE name = 'SYNC_TO_FB'");
-	}
-};
-
-function dbUpdateUseFbProfilePic(flag) {
-	var count = 0;
-    var rowcpt = 0;
-	if (flag) {
-		rowcpt = db.execute("UPDATE AppParams SET valueInt = 1 WHERE name = 'USE_FB_PIC'");
-	}
-	else {
-		rowcpt = db.execute("UPDATE AppParams SET valueInt = 0 WHERE name = 'USE_FB_PIC'");
-	}
-};
-
 function buildForm() {
 
-	var fbFlag = Titanium.Facebook.isLoggedIn();
+	// var fbFlag = Titanium.Facebook.isLoggedIn();
+	var fbFlag = true;
+	
+	Ti.API.info('fbFlag --> ' + fbFlag);
 	
 	var panel = Ti.UI.createView({
 		backgroundColor: '#cccccc',
@@ -106,7 +164,7 @@ function buildForm() {
 	panel.add(fbButton);
 	
 	fbButton.addEventListener('login', function(){
-		// label.text = 'Logged In = ' + Titanium.Facebook.isLoggedIn();
+		Ti.API.info('Logged In = ' + Titanium.Facebook.isLoggedIn());
 		var flag = Titanium.Facebook.isLoggedIn();
 		switchBtn0.enabled = flag;
 		switchBtn1.enabled = flag;
@@ -118,7 +176,7 @@ function buildForm() {
 	});
 	
 	fbButton.addEventListener('logout', function(){
-		// label.text = 'Logged In = ' + Titanium.Facebook.isLoggedIn();	
+		Ti.API.info('Logged In = ' + Titanium.Facebook.isLoggedIn());
 		var flag = Titanium.Facebook.isLoggedIn();
 		switchBtn0.enabled = flag;
 		switchBtn1.enabled = flag;
@@ -136,16 +194,34 @@ function buildForm() {
 	});
 	panel.add(lbl0);
 	
+	var useFbFlag = model.getUseFBProfilePic();
+	Ti.API.info('useFbFlag = ' + useFbFlag);
 	switchBtn0 = Titanium.UI.createSwitch({
-		value: false,
+		value: useFbFlag,
 		top: 195,
 		left: 10,
 		enabled: fbFlag
 	});
+	switchBtn0.value = useFbFlag;
 	switchBtn0.addEventListener('change', function(e) {
-		model.setUseFBProfilePic(e.value);
-		dbUpdateUseFbProfilePic(e.value);
-		Ti.API.info('-------------------> Posting to Facebook? ' + e.value);
+		if (!initFlag) {
+			Ti.API.info('Use FB Profile Pic? ' + e.value);
+			var client = new RestClient();
+			var user = model.getCurrentUser();
+			Ti.API.info('Current FBprofileURL --> ' + model.getFBProfileUrl());
+			if (model.getFBProfileUrl() != null) {
+				if (e.value) {
+					client.updateProfileUrl(user.id, model.getFBProfileUrl());
+				}
+				else {
+					client.updateProfileUrl(user.id, 'NULL');
+				}
+				tempFlag = e.value;
+			}
+			else {
+				Tools.reportMsg(model.getAppName(), 'Please login into Facebook to synchronize your profile');	
+			}
+		}
 	});
 	panel.add(switchBtn0);
 	
@@ -161,24 +237,30 @@ function buildForm() {
 	});
 	panel.add(lbl1);
 	
+	var sync2Fb = model.getSync2Fb(); 
+	Ti.API.info('sync2Fb = ' + useFbFlag);
 	switchBtn1 = Titanium.UI.createSwitch({
-		value: false,
+		value:sync2Fb,
 		top: 265,
 		left: 10,
 		enabled: fbFlag
 	});
 	switchBtn1.addEventListener('change', function(e) {
-		model.setSync2Fb(e.value);
-		dbUpdateSync2Fb(e.value);
-		Ti.API.info('-------------------> Sync Docked Buzz to FB? ' + e.value);
+		if (!initFlag) {
+			Ti.API.info('Sync Docked Buzz to FB? ' + e.value);
+			model.setSync2Fb(e.value);
+			dbUpdateSync2Fb(e.value);
+		}
 	});
 	panel.add(switchBtn1);
 	
 	win.add(panel);
+	win.backgroundImage = '../dockedbg.png';
 };
 
 function init() {
-	buildForm();	
+	buildForm();
+	initFlag = false;	
 };
 
 

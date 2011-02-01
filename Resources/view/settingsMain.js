@@ -10,6 +10,7 @@ var win = Ti.UI.currentWindow;
 var model = win.model;
 var picasa = win.picasa;
 var css = win.css;
+var db = win.db;
 var windowList = [];
 
 function init() {
@@ -77,6 +78,7 @@ function init() {
 			});
 			w.model = model;
 			w.css = css;
+			w.db = db;
 			Titanium.UI.currentTab.open(w, {animated:true});
 			windowList.push(w);
 		}

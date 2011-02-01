@@ -77,7 +77,7 @@ function createNewCommentsSection(m) {
 	
 	var p = null;
 	var u = model.getCurrentUser();
-	if (u.profileUrl == undefined) {
+	if (u == null || !model.getUseFBProfilePic()) {
 		p = Ti.UI.createImageView({
 			image: '../user.png',
 			backgroundColor: css.getColor0(),
@@ -91,7 +91,7 @@ function createNewCommentsSection(m) {
 	}
 	else {
 		p = Ti.UI.createImageView({
-			image: u.profileUrl,
+			image: model.getFBProfileUrl(),
 			backgroundColor: css.getColor0(),
 			borderColor: css.getColor1(),
 			top: 0,
@@ -380,8 +380,13 @@ function updateDisplayList() {
  * Initial entry to renderer
  */
 function init() {
-	
-	Ti.API.info('messageRenderer.init(): Current User :: ' + model.getCurrentUser().profileUrl);
+	var user = model.getCurrentUser();
+	if (user != null) {
+		Ti.API.info('messageRenderer.init(): Current User :: ' + user.displayName);
+	}
+	else {
+		Ti.API.info('messageRenderer.init(): Anonymous User');
+	}
 	
 	Ti.App.addEventListener('NEW_COMMENT_ADDED', function(e) {
 		

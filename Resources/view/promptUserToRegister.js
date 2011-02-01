@@ -112,6 +112,7 @@ function buildForm() {
 	postingInd.color = css.getColor3();
 	win.add(postingInd);
 	*/
+	win.backgroundImage = '../dockedbg.png';
 };
 
 function performExit() {

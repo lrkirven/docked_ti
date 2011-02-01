@@ -290,7 +290,7 @@ function RestClient() {
 					var jsonNodeData = JSON.parse(this.responseText);
 					if (jsonNodeData != null && jsonNodeData.result > 0) {
 						Titanium.API.info('updateProfileUrl: onload: SUCCESS');
-						Ti.App.fireEvent('UPDATED_PROFILE_URL', { profileUrl:jsonNodeData.value });
+						Ti.App.fireEvent('UPDATED_PROFILE_URL', { status:0, profileUrl:jsonNodeData.value });
 					}
 					else {
 						Ti.App.fireEvent('UPDATED_PROFILE_URL', { status:99,
@@ -302,7 +302,7 @@ function RestClient() {
                 //
                 // create connection
                 //
-				var userUrl = '/resources/user/update';
+				var userUrl = '/resources/users/update';
 				var targetURL = secureBaseUrl + userUrl;
 				Titanium.API.info('updateProfileUrl: REST URL: ' + targetURL);
                 xhr.open('POST', targetURL);

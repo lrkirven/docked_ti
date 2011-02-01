@@ -395,7 +395,7 @@ function init() {
 		}
 		else {
 			Ti.API.info('Disabling submitBtn ...');
-			composeMsgWinSubmitBtn.enabled = false;
+			compWinSubmitBtn.enabled = false;
 		}
 	});
 	

@@ -199,11 +199,7 @@ function init() {
 		right: 10,
 		height: 20,
 		textAlign: 'right',
-		font: {
-			fontFamily: model.myFont,
-			fontSize: 11,
-			fontWeight: 'normal'
-		},
+		font: { fontFamily: model.myFont, fontSize: 13, fontWeight: 'bold' },
 		color: '#fff'
 	});
 	var countDisplay = '';
@@ -274,6 +270,7 @@ function init() {
 		}
 	});
 	win.add(buzzMenu);
+	buzzMenu.backgroundImage = '../dockedbg.png';
 	
 	// iAd integration	
 	var iads = Ti.UI.iOS.createAdView({
@@ -305,10 +302,9 @@ function init() {
 	Ti.API.info('Show buzzMain indicator ...');
 	mainInd.show();
 	
-	if (model.getCurrentLake() != null) {
-		Ti.App.fireEvent('LOCATION_CHANGED', {});
-	}
-	buzzMenu.backgroundImage = '../dockedbg.png';
+	setTimeout(function () { 
+		Ti.App.fireEvent('LOCATION_CHANGED', {});	
+    }, 10000);
 };
 
 init();
