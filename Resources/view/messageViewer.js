@@ -25,7 +25,7 @@ var newPostBtn = null;
 
 Ti.App.addEventListener('LOCATION_CHANGED', function(e) {
 	if (model.getCurrentLake() != null) {
-		var countDisplay = model.getCurrentLake().localCount + ' active user(s)';	
+		var countDisplay = model.getCurrentLake().localCount + ' USER(S)';	
 		userCountLbl.text = countDisplay;
 		if (newPostBtn != null) {
 			newPostBtn.enabled = true;
@@ -531,8 +531,8 @@ function buildPanelHeader(){
 	var h = Ti.UI.createView({
 		height: 50,
 		width: 320,
-		top: 0,
-		borderColor: css.getColor2(),
+		top: -100,
+		borderColor: css.getColor0(),
 		backgroundColor: css.getColor0()
 	});
 	
@@ -566,7 +566,7 @@ function buildPanelHeader(){
 
 	var countDisplay = '';
 	if (model.getCurrentLake() != null) {
-		countDisplay = model.getCurrentLake().localCount + ' Local(s)';	
+		countDisplay = model.getCurrentLake().localCount + ' USER(S)';	
 	}
 	userCountLbl = Ti.UI.createLabel({
 		text: countDisplay,
@@ -1083,7 +1083,9 @@ function init() {
 			// update to data
 			//
 			if (headerView == null) {
+				var t2 = Titanium.UI.createAnimation({top:0, duration:750});
 				headerView = buildPanelHeader();
+				headerView.animate(t2);
 				win.add(headerView);
 			}
 			if (tableView != null) {

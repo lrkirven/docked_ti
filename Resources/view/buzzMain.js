@@ -1,6 +1,6 @@
+Ti.include('../util/tools.js');
 Ti.include('../model/modelLocator.js');
 Ti.include('../client/restClient.js');
-Ti.include('../util/tools.js');
 
 var win = Ti.UI.currentWindow;
 var model = win.model;
@@ -116,7 +116,7 @@ function init() {
 			currentLocationLabel.text = model.getCurrentLake().name;
 			currentLocationLabel.color = css.getColor4();
 			buzzMenu.data = (model.getCurrentUser() == null ? inPolygonAnonymousMM : inPolygonMM);
-			var countDisplay = model.getCurrentLake().localCount + ' Local(s)';
+			var countDisplay = model.getCurrentLake().localCount + ' USER(S)';
 			userCountLbl.text = countDisplay;
 			win.touchEnabled = true;
 		}
@@ -135,10 +135,11 @@ function init() {
 	var h = Ti.UI.createView({
 		height:50,
 		left:0,
-		top:0,
+		top:-100,
 		borderColor: css.getColor0(),
 		backgroundColor: css.getColor0()
 	});
+	var t2 = Titanium.UI.createAnimation({top:0, duration:750});
 	
 	var headerLbl0 = 'My Location: ';
 	var label0 = Ti.UI.createLabel({
@@ -146,11 +147,7 @@ function init() {
 		top: 0,
 		left: 10,
 		height: 20,
-		font: {
-			fontFamily: model.myFont,
-			fontSize: 11,
-			fontWeight: 'normal'
-		},
+		font: { fontFamily: model.myFont, fontSize: 11, fontWeight: 'normal' },
 		color: '#fff'
 	});
 	
@@ -162,11 +159,7 @@ function init() {
 			top: 15,
 			left: 10,
 			height: 25,
-			font: {
-				fontFamily: model.myFont,
-				fontSize: 16,
-				fontWeight: 'bold'
-			},
+			font: { fontFamily: model.myFont, fontSize: 16, fontWeight: 'bold' },
 			color: css.getColor2()
 		});
 	}
@@ -176,11 +169,7 @@ function init() {
 			top: 15,
 			left: 10,
 			height: 25,
-			font: {
-				fontFamily: model.myFont,
-				fontSize: 16,
-				fontWeight: 'bold'
-			},
+			font: { fontFamily: model.myFont, fontSize: 16, fontWeight: 'bold' },
 			color: css.getColor3()
 		});
 	}
@@ -204,7 +193,7 @@ function init() {
 	});
 	var countDisplay = '';
 	if (model.getCurrentLake() != null) {
-		countDisplay = model.getCurrentLake().localCount + ' Local(s)';
+		countDisplay = model.getCurrentLake().localCount + ' USER(S)';
 	}
 	userCountLbl = Ti.UI.createLabel({
 		text: countDisplay,
@@ -221,6 +210,7 @@ function init() {
 	h.add(currentLocationLabel);
 	h.add(userLabel);
 	h.add(userCountLbl);
+    h.animate(t2);
 	win.add(h);
 
 	var baseColor = css.getColor0();
@@ -238,13 +228,8 @@ function init() {
 
 	// create table view
 	buzzMenu = Titanium.UI.createTableView({
-		top:50,
+		top:45,
 		headerView:tblHeader,
-		/*
-		font: { fontFamily:model.myFont, fontSize:15, fontWeight:'normal', color:css.getColor2() },
-		fontWeight:'normal',
-		fontSize:12,
-		*/
 		scrollable:false,
 		moving:false,
 		style:Titanium.UI.iPhone.TableViewStyle.GROUPED,
@@ -271,6 +256,7 @@ function init() {
 	});
 	win.add(buzzMenu);
 	buzzMenu.backgroundImage = '../dockedbg.png';
+	// win.backgroundImage = '../dockedbg.png';
 	
 	// iAd integration	
 	var iads = Ti.UI.iOS.createAdView({
@@ -279,7 +265,7 @@ function init() {
     	bottom: -100,
     	borderColor: '#000000',
     	backgroundColor: '#000000'});
-    t1 = Titanium.UI.createAnimation({bottom:0, duration:750});
+    var t1 = Titanium.UI.createAnimation({bottom:0, duration:750});
     iads.addEventListener('load', function(){
         iads.animate(t1);
     });
@@ -290,7 +276,7 @@ function init() {
 	}
 	
 	mainInd = Titanium.UI.createActivityIndicator({
-		top: 125,
+		top: 120,
 		left: 135,
 		height: 150,
 		width: 50,
@@ -304,7 +290,7 @@ function init() {
 	
 	setTimeout(function () { 
 		Ti.App.fireEvent('LOCATION_CHANGED', {});	
-    }, 10000);
+    }, 20000);
 };
 
 init();

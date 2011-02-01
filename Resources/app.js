@@ -185,6 +185,17 @@ function loadRegistration() {
 		Ti.API.info('loadRegistration(): USE_FB_PIC -- NOT FOUND');
 	}
 	
+	rowcpt = db.execute("SELECT * FROM AppParams WHERE name = 'FB_PROFILE_PIC'");
+	var sync2Fb = null;
+    if (rowcpt.isValidRow()) {
+        var val = rowcpt.fieldByName('valueStr');
+		Ti.API.info('loadRegistration(): FB Profile Url: ' + val);
+		model.setFBProfileUrl(val);	
+    }
+	else {
+		Ti.API.info('loadRegistration(): FB_PROFILE_PIC -- NOT FOUND');
+	}
+	
 	Ti.API.info("loadRegistration(): Done");
 };
 
@@ -579,14 +590,6 @@ function buildAppTabs() {
 		icon: 'KS_nav_ui.png',
 		window: hsWin
 	});
-	var label2 = Titanium.UI.createLabel({
-		color: '#BDBB99',
-		text: 'HotSpot',
-		textAlign: 'left',
-		font: { fontSize: 20, fontFamily: myFont },
-		width: 'auto'
-	});
-	hsWin.add(label2);
 	
 	
 	////////////////////////////////////////////////////////////
