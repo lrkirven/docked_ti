@@ -42,7 +42,7 @@ function init() {
 			title: 'User Preferences',
 			hasChild: true,
 			leftImage: '../phone_playmovie.png',
-			ptr: 'composeMsg.js'
+			ptr: 'userPrefs.js'
 		}];
 	}
 	

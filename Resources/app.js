@@ -410,9 +410,7 @@ Titanium.App.addEventListener('UPDATED_DISPLAY_NAME', function(e) {
 			}
 		}
 	}
-	else {
-		Tools.reportMsg(model.getAppName(), e.errorMsg);
-	}
+	
 });
 
 Titanium.App.addEventListener('USER_REGISTERED', function(e) { 

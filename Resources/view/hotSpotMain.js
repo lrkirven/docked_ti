@@ -12,6 +12,7 @@ var inPolygonMM = null;
 var outPolygonMM = null;
 var userCountLbl = null;
 var mainInd = null;
+var userLabel = null;
 
 function check4NewMsgEvents() {
 	var client = new RestClient();
@@ -44,6 +45,12 @@ Titanium.App.addEventListener('LOCATION_CHANGED', function(e){
 		win.touchEnabled = true;
 	}
 	mainInd.hide();
+});
+
+Titanium.App.addEventListener('UPDATED_DISPLAY_NAME', function(e) { 
+	if (e.status == 0) {
+		userLabel.text = e.displayName;
+	}
 });
 
 /**
@@ -136,7 +143,7 @@ function init(){
 		else {
 			displayName = "Anonymous";
 		}
-		var userLabel = Ti.UI.createLabel({
+		userLabel = Ti.UI.createLabel({
 			text: displayName,
 			top: 0,
 			width: 100,

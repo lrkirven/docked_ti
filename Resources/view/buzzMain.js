@@ -12,6 +12,7 @@ var inPolygonMM = null;
 var outPolygonMM = null;
 var userCountLbl = null;
 var mainInd = null;
+var userLabel = null;
 
 
 /**
@@ -56,6 +57,12 @@ function getMyFacebookInfo() {
 		}
 	});	
 };
+
+Titanium.App.addEventListener('UPDATED_DISPLAY_NAME', function(e) { 
+	if (e.status == 0) {
+		userLabel.text = e.displayName;
+	}
+});
 
 /**
  * This method initializes the buzz main menu for user selections.
@@ -181,7 +188,7 @@ function init() {
 	else {
 		displayName = "Anonymous";
 	}
-	var userLabel = Ti.UI.createLabel({
+	userLabel = Ti.UI.createLabel({
 		text: displayName,
 		top: 0,
 		width: 150,
