@@ -85,7 +85,7 @@ function init(){
 			hasChild: true,
 			leftImage: '../phone_playmovie.png',
 			ptr: 'navigateViewer.js'
-		}, ];
+		}];
 		
 		
 		var h = Ti.UI.createView({

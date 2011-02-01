@@ -76,16 +76,17 @@ function init() {
 	reportTbl.addEventListener('click', function(e) {
 		Ti.API.info('User selected to go here: ' + e.rowData.ptr);
 		var w = Titanium.UI.createWindow({
-			url:'listLakes.js',
+			url:'showLakeList.js',
 			backgroundColor:css.getColor0(),
    			barColor:css.getColor0(),
 			state:e.rowData.state,
-			title:e.rowData.title
+			stateTitle:e.rowData.title,
+			title:model.getAppName()
 		});
 		w.model = model;
 		w.css = css;
 		Titanium.UI.currentTab.open(w, {animated:true});
-		windowList.push(w);
+		// windowList.push(w);
 	});
 	win.add(reportTbl);
 	

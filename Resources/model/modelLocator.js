@@ -6,6 +6,7 @@ function ModelLocator() {
 	// var currentUser = { displayName:'John Boyd', id:'1515151514141163228', emailAddr:'john@yahoo.com' };
 	var currentUser = null;
     var responseMap = {};
+	var reportTable = {};
 	var centerLat = 0;
 	var centerLng = 0;
 	var lastBucket = null;
@@ -59,6 +60,12 @@ function ModelLocator() {
 			},
 			getSync2Fb : function() {
 				return sync2Fb;
+			},
+			setReportTable : function (t) {
+				reportTable = t;	
+			},
+			getReportTable : function() {
+				return reportTable;
 			},
 			setDeviceId : function (d) {
 				deviceId = d;	
