@@ -1,30 +1,64 @@
 <html>
+<head>
+	<style type="text/css">
+  		.reportLbl {
+  			margin-left:5pt;
+			margin-bottom:10pt;
+			font-family:bold;
+			font-family:Verdana;
+			font-size:30pt;
+			color:#CCCCCC; 
+		}
+		.reportData {
+  			margin-left:20pt;
+			margin-right:5pt;
+			font-family:normal;
+			font-family:Verdana;
+			font-size:30pt;
+			color:#232928; 
+		}
+		.actualReportData  {
+  			margin-left:20pt;
+			margin-right:20pt;
+			font-family:normal;
+			font-family:Verdana;
+			font-size:30pt;
+			color:#232928; 
+		}
+ 	</style>
+	<script type="text/javascript"> 
+	    
+		// document.getElementById('myDiv').innerText = '';
+		Titanium.App.addEventListener('LOAD_REPORT',function(e) {
+				document.getElementById('reportLake').innerText = e.title;
+				document.getElementById('reportTimeStamp').innerText = e.timeDisplay;
+				document.getElementById('reportBody').innerHTML = e.reportBody;
+    			// alert('REPORT :: ' + e.reportBody);
+		});
 	
-	<body topmargin="0" leftmargin="0" rightmargin="0">
-		<p style="background-color:#84854B" width="100%" padding="0" align="center" margin="0">
-		<img src="AGLOGOLFT.jpg" />
+	</script>
+</head>
+	<body topmargin="20" bottommargin="20" leftmargin="20" rightmargin="20" background="../dockedbg.png">
+		<table width="100%" bgcolor="#FFFFFF"><tr><td>
+		
+		<p class="reportlbl" width="100%">
+			<b>Lake:</b>&nbsp;<b><div id="reportLake" class="reportData" style="width:100%; height:100%">test</div></b>
 		</p>
 		
-		<p style="margin-left:10pt;font-family:bold;font-family:Verdana; font-size:30pt;" width="100%">
-			<i>Reports tabulated by: AnglerGuide.com</i>
+		<p class="reportlbl" width="100%">
+			<b>Timestamp:</b>&nbsp;<b><div class="reportData" id="reportTimeStamp" style="width:100%; height:100%">test</div></b>
 		</p>
 		
-		<p style="margin-left:10pt;font-family:bold;font-family:Verdana; font-size:30pt;" width="100%">
-			<b>Lake:</b><br>
-			Jimmy Smith
-		</p>
-		
-		<p style="margin-left:10pt;font-weight:normal;font-family:Verdana;font-size:30pt;"  width="100%">
-			<b>Date:</b><br>
-			04-Jun-08
-		</p>
-		
-		<p style="margin-left:10pt;font-weight:normal;font-family:Verdana;font-size:30pt;"  width="100%">
+		<p class="reportlbl" width="100%">
 			<b>Report:</b><br>
-			Jimmy Smith Lake is ice-free and anglers report good fishing from the bank for trout. Most high mountain lakes are still inaccessible due to snow
-			Reported by: IDFG
+			<div class="actualReportData" id="reportBody" style="width:100%; height:100%">test</div>
 		</p>
-		
+		<p class="reportlbl" width="100%">
+			<b>Reported by:</b>&nbsp;<div id="reportBy" class="reportData" style="width:100%; height:100%">test</div>
+		</p>
+		</td>
+		</tr>
+		</table>
 	</body>
 	
 </html>

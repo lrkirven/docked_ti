@@ -51,7 +51,7 @@ Titanium.App.addEventListener('REPORT_DATA_RECD', function(e) {
 		 * load incoming data into table
 		 */
 		if (e.result == null || e.result.length == 0) {
-			Tools.reportMsg(model.getAppName(), 'Unable able to find any report data for requested state');
+			Tools.reportMsg(model.getAppName(), 'No fishing report data for requested state ... Comming soon.');
 		}
 		else {
 			var reports = convertRawData2TableItems(e.result);
@@ -64,16 +64,17 @@ Titanium.App.addEventListener('REPORT_DATA_RECD', function(e) {
 			lakeTbl.addEventListener('click', function(e){
 				var w = Titanium.UI.createWindow({
 					url: 'reportDetails.js',
-					backgroundColor: css.getColor0(),
-					barColor: css.getColor0(),
-					title: e.rowData.title
+					backgroundColor:css.getColor0(),
+					barColor:css.getColor0(),
+					title:e.rowData.title,
+					report:e.rowData
 				});
 				w.model = model;
 				w.css = css;
 				Titanium.UI.currentTab.open(w, {
 					animated: true
 				});
-				windowList.push(w);
+				// windowList.push(w);
 			});
 		}
 	}
