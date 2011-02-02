@@ -538,7 +538,7 @@ function RestClient() {
 						});
 						return;
 					}
-					Titanium.API.info('searchLakesByKeyword: onload: Entered - [' + this.responseText + ']');
+					Titanium.API.info('getReportsByState: onload: Entered - [' + this.responseText + ']');
 					if (this.responseText == 'null' || this.responseText == undefined) {
 						Titanium.API.info('getReportsByState: onload: Returning empty set');
 						Ti.App.fireEvent('REPORT_DATA_RECD', { result:[], status:0 });
@@ -574,6 +574,130 @@ function RestClient() {
                 // send HTTP request
                 //
                 Titanium.API.info('getReportsByState: Trying to get msgs from server ... ');
+                xhr.send();	
+			},
+			getShortReportsByState : function(state) {
+               	Titanium.API.info("getShortReportsByState: Entered");
+				var xhr = Ti.Network.createHTTPClient();
+                xhr.setTimeout(90000);
+				
+                // 
+                // error
+                //
+                xhr.onerror = function(e) {
+					Ti.App.fireEvent('SHORT_REPORT_DATA_RECD', { status:69,
+						errorMsg: 'Unable to connect to remote services -- Please check your network connection'	
+					});
+                }; 
+            
+                // 
+                // success    
+                //
+                xhr.onload = function() {
+					if (Tools.test4NotFound(this.responseText)) {
+						Ti.App.fireEvent('SHORT_REPORT_DATA_RECD', { status:89,
+							errorMsg: 'Unable complete request at this time -- Apologize for the service failure.'	
+						});
+						return;
+					}
+					Titanium.API.info('getShortReportsByState: onload: Entered - [' + this.responseText + ']');
+					if (this.responseText == 'null' || this.responseText == undefined) {
+						Titanium.API.info('getShortReportsByState: onload: Returning empty set');
+						Ti.App.fireEvent('SHORT_REPORT_DATA_RECD', { result:[], status:0 });
+						return;
+					}
+					if (this.responseText != null) {
+						var jsonNodeData = JSON.parse(this.responseText);
+						if (jsonNodeData != null) {
+							Titanium.API.info('getShortReportsByState: onload: SUCCESS');
+							Ti.App.fireEvent('SHORT_REPORT_DATA_RECD', { result:jsonNodeData, status:0 });
+						}
+						else {
+							Ti.App.fireEvent('SHORT_REPORT_DATA_RECD', { status:99,
+								errorMsg: 'Unable to complete request at this time'	
+							});
+						}
+					}
+					else {
+						Ti.App.fireEvent('SHORT_REPORT_DATA_RECD', { status:99,
+							errorMsg: 'Unable to complete request at this time'	
+						});
+					}
+                };
+
+                //
+                // create connection
+                //
+				var targetURL = myReportRestURL + 'lakes/' + state;
+				Titanium.API.info('getShortReportsByState: REST URL: ' + targetURL);
+                xhr.open('GET', targetURL);
+				xhr.setRequestHeader('Accept', 'application/json');
+                //
+                // send HTTP request
+                //
+                Titanium.API.info('getShortReportsByState: Trying to get msgs from server ... ');
+                xhr.send();	
+			},
+			getReportByReportId : function(reportId) {
+               	Titanium.API.info("getReportByReportId: Entered");
+				var xhr = Ti.Network.createHTTPClient();
+                xhr.setTimeout(90000);
+				
+                // 
+                // error
+                //
+                xhr.onerror = function(e) {
+					Ti.App.fireEvent('ONE_REPORT_RECD', { status:69,
+						errorMsg: 'Unable to connect to remote services -- Please check your network connection'	
+					});
+                }; 
+            
+                // 
+                // success    
+                //
+                xhr.onload = function() {
+					if (Tools.test4NotFound(this.responseText)) {
+						Ti.App.fireEvent('ONE_REPORT_RECD', { status:89,
+							errorMsg: 'Unable complete request at this time -- Apologize for the service failure.'	
+						});
+						return;
+					}
+					Titanium.API.info('getReportByReportId: onload: Entered - [' + this.responseText + ']');
+					if (this.responseText == 'null' || this.responseText == undefined) {
+						Titanium.API.info('getShortReportsByState: onload: Returning empty set');
+						Ti.App.fireEvent('ONE_REPORT_RECD', { result:[], status:0 });
+						return;
+					}
+					if (this.responseText != null) {
+						var jsonNodeData = JSON.parse(this.responseText);
+						if (jsonNodeData != null) {
+							Titanium.API.info('getReportByReportId: onload: SUCCESS');
+							Ti.App.fireEvent('ONE_REPORT_RECD', { result:jsonNodeData, status:0 });
+						}
+						else {
+							Ti.App.fireEvent('ONE_REPORT_RECD', { status:99,
+								errorMsg: 'Unable to complete request at this time'	
+							});
+						}
+					}
+					else {
+						Ti.App.fireEvent('ONE_REPORT_RECD', { status:99,
+							errorMsg: 'Unable to complete request at this time'	
+						});
+					}
+                };
+
+                //
+                // create connection
+                //
+				var targetURL = myReportRestURL + 'reportId/' + reportId 
+				Titanium.API.info('getReportByReportId: REST URL: ' + targetURL);
+                xhr.open('GET', targetURL);
+				xhr.setRequestHeader('Accept', 'application/json');
+                //
+                // send HTTP request
+                //
+                Titanium.API.info('getReportByReportId: Trying to get msgs from server ... ');
                 xhr.send();	
 			},
 			//

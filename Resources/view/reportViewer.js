@@ -69,7 +69,6 @@ function init() {
 		style:Titanium.UI.iPhone.TableViewStyle.GROUPED,
 		selectionStyle:Ti.UI.iPhone.TableViewCellSelectionStyle.GRAY,
 		rowBackgroundColor:css.getColor2()
-		// rowBackgroundColor:'#ffffff'
 	});
 	
 	// create table view event listener

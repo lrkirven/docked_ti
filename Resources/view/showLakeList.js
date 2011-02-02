@@ -29,7 +29,7 @@ function convertRawData2TableItems(list) {
 		obj = { 
 			title:val.keyword, 
 			state:val.state, 
-			reportBody:val.reportBody, 
+			reportId:val.reportId, 
 			timeDisplay:val.timeDisplay, 
 			hasChild:true, 
 			leftImage:'../phone_playmovie.png' };	
@@ -38,20 +38,33 @@ function convertRawData2TableItems(list) {
 	return dp;
 };
 
+Titanium.App.addEventListener('ONE_REPORT_RECD', function(e) { 
+	var w = Titanium.UI.createWindow({
+		url: 'reportDetails.js',
+		backgroundColor:css.getColor0(),
+		barColor:css.getColor0(),
+		title:e.result.keyword,
+		report:{ title:e.result.keyword, timeDisplay:e.result.timeDisplay, reportBody:e.result.reportBody }
+	});
+	w.model = model;
+	w.css = css;
+	Titanium.UI.currentTab.open(w, { animated:true });
+});
+
 /**
  * This listener handles incoming requested report has been received.
  * 
  * @param {Object} e
  */
-Titanium.App.addEventListener('REPORT_DATA_RECD', function(e) { 
+Titanium.App.addEventListener('SHORT_REPORT_DATA_RECD', function(e) { 
 	preloader.hide();
-	Ti.API.info('showLakeList: Got REPORT_DATA_RECD event -- status=' + e.status);
+	Ti.API.info('showLakeList: Got SHORT_REPORT_DATA_RECD event -- status=' + e.status);
 	if (e.status == 0) {
 		/*
 		 * load incoming data into table
 		 */
 		if (e.result == null || e.result.length == 0) {
-			Tools.reportMsg(model.getAppName(), 'No fishing report data for requested state ... Comming soon.');
+			Tools.reportMsg(model.getAppName(), 'No fishing report data for requested state ... Coming soon.');
 		}
 		else {
 			var reports = convertRawData2TableItems(e.result);
@@ -61,22 +74,15 @@ Titanium.App.addEventListener('REPORT_DATA_RECD', function(e) {
 			/*
 	 		 * create table view event listener
 	 		 */
-			lakeTbl.addEventListener('click', function(e){
-				var w = Titanium.UI.createWindow({
-					url: 'reportDetails.js',
-					backgroundColor:css.getColor0(),
-					barColor:css.getColor0(),
-					title:e.rowData.title,
-					report:e.rowData
-				});
-				w.model = model;
-				w.css = css;
-				Titanium.UI.currentTab.open(w, {
-					animated: true
-				});
-				// windowList.push(w);
+			lakeTbl.addEventListener('click', function(e) {
+				var client = new RestClient();
+				var shortReport = e.rowData;
+				client.getReportByReportId(shortReport.reportId);
 			});
 		}
+	}
+	else {
+		Tools.reportMsg(model.getAppName(), e.errorMsg);
 	}
 });
 
@@ -84,7 +90,7 @@ Titanium.App.addEventListener('REPORT_DATA_RECD', function(e) {
 /**
  * Initial entry of the component
  */
-function init(){
+function init() {
 	Ti.API.info('showLakeList.init(): Entered ');
 	
 	var tblHeader = Ti.UI.createView({
@@ -122,7 +128,6 @@ function init(){
 			height: 150,
 			width: 50,
 			color: '#ffffff',
-			message: 'Retrieving reports ...',
 			style: Titanium.UI.iPhone.ActivityIndicatorStyle.PLAIN
 		});
 		win.add(preloader);
@@ -130,7 +135,7 @@ function init(){
 	
 		var client = new RestClient();
 		Ti.API.info('showLakeList.init(): Going to get report data for state=' + state);
-		client.getReportsByState(state);
+		client.getShortReportsByState(state);
 	}
 	/*
 	 * if we have it, just show what we have 
