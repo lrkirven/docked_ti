@@ -31,6 +31,12 @@ var searchPage = null;
 var selectedLake = null;
 var remoteLake = null;
 
+var b = Titanium.UI.createButton({title:'BACK'});
+b.addEventListener('click', function() {
+	win.close();
+});
+win.leftNavButton = b;
+
 
 Ti.App.addEventListener('LOCATION_CHANGED', function(e) {
 	if (localFlag) {
@@ -842,7 +848,7 @@ function init() {
 		//	
 		// start refresh timer
 		//
-		setInterval(check4MsgEvents, 120000);
+		setInterval(check4LocalMsgEvents, 120000);
 		//
 		// get messages	
 		//

@@ -1,7 +1,7 @@
+Ti.include('../util/tools.js');
 Ti.include('../model/modelLocator.js');
 Ti.include('../client/picasaClient.js');
 Ti.include('../client/restClient.js');
-Ti.include('../util/tools.js');
 
 var win = Ti.UI.currentWindow;
 var model = win.model;
@@ -9,10 +9,15 @@ var css = win.css;
 var composeMsgWinPhotoIndBtn = null;
 var post2FB = false;
 
+var b = Titanium.UI.createButton({title:'BACK'});
+b.addEventListener('click', function() {
+	win.close();
+});
+win.leftNavButton = b;
+
 function postMessage2FB(m) {
 	if (Titanium.Facebook.isLoggedIn()) {
 		var fbRec = null;
-		
 		if (m.photoUrl != null) {
 			fbRec = {
 				name: m.displayName + " via " + model.getAppName(),
@@ -55,6 +60,19 @@ function postMessage2FB(m) {
  * handle user interaction.
  */
 function buildForm() {
+	
+	var panel = Ti.UI.createView({ 
+		backgroundColor:'#cccccc',
+		top:20,
+		left:20,
+		right:20,
+		bottom:10,
+		width:300,
+		height:300,
+		borderRadius:20,
+		clickName:'bg'
+	});
+	
 	//
 	// label
 	//
@@ -62,7 +80,7 @@ function buildForm() {
 	var hint = "Buzz on '" + currentLake + "'?";
 	var prompt1 = currentLake;
 	var msgLbl = Titanium.UI.createLabel({
-		color: '#fff',
+		color: css.getColor5(),
 		text: prompt1,
 		font: { fontFamily: model.myFont, fontWeight: 'bold' },
 		top: 10,
@@ -71,7 +89,7 @@ function buildForm() {
 		textAlign: 'right',
 		height: 'auto'
 	});
-	win.add(msgLbl);
+	panel.add(msgLbl);
 	
 	if (model.getUseFBProfilePic() && model.getFBProfileUrl() != null) {
 		var userProfilePhoto = Ti.UI.createImageView({
@@ -84,7 +102,7 @@ function buildForm() {
 			height: 50,
 			clickName: 'photo'
 		});
-		win.add(userProfilePhoto);
+		panel.add(userProfilePhoto);
 	}
 	else {
 		var defaultIDImage = Ti.UI.createImageView({
@@ -97,7 +115,7 @@ function buildForm() {
 			height:50,
 			clickName:'defaultIDImage'
 		});
-		win.add(defaultIDImage);
+		panel.add(defaultIDImage);
 	}
 	
 	//
@@ -106,7 +124,7 @@ function buildForm() {
 	var msgText = Titanium.UI.createTextField({
 		hintText: hint,
 		height: 50,
-		width: 300,
+		width: 280,
 		left: 10,
 		top: 75,
 		font: { fontFamily: model.myFont, fontWeight: 'normal' },
@@ -124,43 +142,43 @@ function buildForm() {
 			composeMsgWinSubmitBtn.enabled = true;
 		}
 	});
-	win.add(msgText);
+	panel.add(msgText);
 	
 	//
 	// icon to indicate if the photo is loaded
 	//
 	var photoIndBtn = Ti.UI.createImageView({
 		image: '../commentButton.png',
-		backgroundColor: css.getColor0(),
+		backgroundColor: css.getColor2(),
 		borderColor: css.getColor2(),
-		top: 145,
+		top: 175,
 		left: 10,
 		width: 75,
 		height: 75,
 		clickName: 'addPhotoBtn'
 	});
-	win.add(photoIndBtn);
+	panel.add(photoIndBtn);
 	composeMsgWinPhotoIndBtn = photoIndBtn;
 	
 	//
 	// photo menu
 	//
 	var photoMenuList = [
-		{ title: 'Take a picture', color: '#fff', url: 'takePhoto.js' }, 
-		{ title: 'From gallery', color: '#fff', url: 'browseGallery.js' }
+		{ title: 'Take a picture', color: css.getColor5(), url: 'takePhoto.js' }, 
+		{ title: 'From gallery', color: css.getColor5(), url: 'browseGallery.js' }
 	];
 	var photoMenu = Titanium.UI.createTableView({
 		data: photoMenuList,
 		scrollable: false,
-		separatorColor: css.getColor2(),
+		separatorColor: css.getColor5(),
 		style: Titanium.UI.iPhone.TableViewStyle.PLAIN,
-		top: 135,
+		top: 165,
 		right: 10,
 		height: 100,
 		width: 200,
-		color: '#fff',
+		color: css.getColor5(),
 		font: { fontFamily: model.myFont, fontWeight: 'normal' },
-		backgroundColor: css.getColor0()
+		backgroundColor: css.getColor2()
 	});
 	photoMenu.addEventListener('click', function(e){
 		if (e.rowData.url) {
@@ -180,11 +198,9 @@ function buildForm() {
 			helperWin.open();
 		}
 	});
-	win.add(photoMenu);
-	
-	//
-	// switch label and component
-	//	
+	panel.add(photoMenu);
+
+	/*	
 	if (Titanium.Facebook.isLoggedIn()) {
 		var prompt3 = "Facebook?";
 		var msgLbl3 = Titanium.UI.createLabel({
@@ -200,7 +216,6 @@ function buildForm() {
 			height: 'auto'
 		});
 		win.add(msgLbl3);
-		
 		var switchBtn = Titanium.UI.createSwitch({
 			value: false,
 			top: 255,
@@ -212,9 +227,11 @@ function buildForm() {
 		});
 		win.add(switchBtn);
 	}
-	//
-	// submit button
-	//
+	*/
+	
+	/*
+	 * submit button
+	 */
 	var submitBtn = Titanium.UI.createButton({
 		title: 'Post!',
 		style: Titanium.UI.iPhone.SystemButtonStyle.BORDERED,
@@ -237,7 +254,6 @@ function buildForm() {
 		//
 		// uploading image and posting message
 		//
-		var resId = 258006;
 		var currentUser = model.getCurrentUser();
 		if (rawImage != null) {
 			postingInd.message = "";
@@ -266,11 +282,19 @@ function buildForm() {
 			}
 			model.setPendingMsgEvent(msgEvent);
 			Ti.API.info('Pending msgEvent: ' + msgEvent);
-			//
-			// upload photo
-			//
+			
+			/*
 			var imgClient = new PicasaClient('lazylaker71@gmail.com', '19lazylaker');
 			imgClient.upload('lazylaker71@gmail.com', '19lazylaker', rawImage);
+			*/
+			
+			/*
+			 * Upload photo
+			 */
+			var pUser = model.getPicasaUser();
+			var pPassword = model.getPicasaPassword();
+			var imgClient = new PicasaClient(pUser, pPassword);
+			imgClient.upload(pUser, pPassword, rawImage);
 		}
 		//
 		// just posting message
@@ -305,8 +329,8 @@ function buildForm() {
 			restClient.postMessage(currentUser.id, msgEvent);
 		}
 	});
+	win.add(panel);
 	win.setRightNavButton(submitBtn);
-	// win.add(submitBtn);
 	composeMsgWinSubmitBtn = submitBtn;
 	
 	//
@@ -384,6 +408,8 @@ function handleUploadedPic(e) {
  */
 function init() {
 	
+	post2FB = model.getSync2Fb();
+	
 	Titanium.App.addEventListener('PHOTO_UPLOADED', handleUploadedPic);
 
 	Titanium.App.addEventListener('FOUND_LAST_BUCKET', function(e) {
@@ -401,6 +427,7 @@ function init() {
 	
 	Ti.App.addEventListener('NEW_MSG_EVENT_ADDED', handleNewMsgPosted);
 	buildForm();
+	win.backgroundImage = '../dockedbg.png';
 	win.open();	
 };
 

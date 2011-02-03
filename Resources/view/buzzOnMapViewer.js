@@ -3,6 +3,11 @@ Ti.include('../model/modelLocator.js');
 var win = Ti.UI.currentWindow;
 var model = win.model;
 
+var b = Titanium.UI.createButton({title:'BACK'});
+b.addEventListener('click', function() {
+	win.close();
+});
+win.leftNavButton = b;
 
 function init(){
 	var webview = Ti.UI.createWebView();

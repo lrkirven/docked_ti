@@ -263,7 +263,8 @@ function init() {
 				url:e.rowData.ptr,
 				backgroundColor:baseColor,
     			barColor:baseColor,
-				title:e.rowData.title
+				title:'Docked',
+				localFlag:e.rowData.localFlag
 			});
 			w.model = model;
 			w.css = css;

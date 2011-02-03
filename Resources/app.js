@@ -344,8 +344,8 @@ function handleInitialUserPosition(e) {
 		//
 		// hardcoding Lake Ray Roberts
 		//
-		// lat = 32.85;
-		// lng = -96.50;
+		lat = 32.85;
+		lng = -96.50;
 		
 		model.setUserLng(lng);
 		model.setUserLat(lat);

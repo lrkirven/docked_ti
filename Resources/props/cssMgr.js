@@ -11,6 +11,7 @@ function CSSMgr() {
 	// var color3 = '#EEEFB9';
 	var color4 = '#369C93';
 	// var color4 = '#B03831';
+	var color5 = '#3f0200';
 
     this.singletonInstance = null;
 
@@ -39,6 +40,9 @@ function CSSMgr() {
 			},
 			getColor4 : function() {
 				return color4;
+			},
+			getColor5 : function() {
+				return color5;
 			}
         };
     };
