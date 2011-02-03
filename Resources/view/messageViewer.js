@@ -1,6 +1,7 @@
 Ti.include('../model/modelLocator.js');
 Ti.include('../client/restClient.js');
 Ti.include('../util/tools.js');
+Ti.include('baseViewer.js');
 
 /**
  * local variables
@@ -9,6 +10,8 @@ var win = Ti.UI.currentWindow;
 var model = win.model;
 var picasa = win.picasa;
 var css = win.css;
+var localFlag = win.localFlag;
+
 var currentLake = null;
 var tableView = null;
 var headerView = null;
@@ -22,138 +25,211 @@ var initPreloader = null;
 var userCountLbl = null;
 var newPostBtn = null;
 
+var searchText = null;
+var searchView = null;
+var searchPage = null;
+var selectedLake = null;
+var remoteLake = null;
+
 
 Ti.App.addEventListener('LOCATION_CHANGED', function(e) {
-	if (model.getCurrentLake() != null) {
-		var countDisplay = model.getCurrentLake().localCount + ' USER(S)';	
-		userCountLbl.text = countDisplay;
-		if (newPostBtn != null) {
-			newPostBtn.enabled = true;
-		}	
-	}
-	else {
-		if (newPostBtn != null) {
-			newPostBtn.enabled = false;
-		}	
+	if (localFlag) {
+		if (model.getCurrentLake() != null) {
+			var countDisplay = model.getCurrentLake().localCount + Msgs.USERS;
+			userCountLbl.text = countDisplay;
+			if (newPostBtn != null) {
+				newPostBtn.enabled = true;
+			}
+		}
+		else {
+			if (newPostBtn != null) {
+				newPostBtn.enabled = false;
+			}
+		}
 	}
 });
 
-/**
- * This method is event handler to popup my photo.
- * 
- * @param {Object} e
- */
-function popupImageViewer() {
-	var currentUser = model.getCurrentUser();
-	var user = currentUser.displayName;
-	Ti.API.info('popImageViewer: Current user:' + user);
-	var t = Titanium.UI.create2DMatrix();
-	t = t.scale(0);
 
-	var w = Titanium.UI.createWindow({
-		backgroundColor:css.getColor0(),
-		borderWidth:4,
-		borderColor:css.getColor4(),
-		height:350,
-		width:300,
-		borderRadius:10,
-		opacity:0.99,
-		transform:t
+function buildSearchView(visible) {
+	searchPage = Ti.UI.createView({
+		backgroundColor: css.getColor0(),
+		left: 0,
+		top: 0,
+		visible:visible,
+		height: 'auto',
+		width: 'auto',
+		clickName: 'searchPage'
 	});
+	var searchLbl = Ti.UI.createLabel({
+		color: css.getColor2(),
+		font: { fontFamily: model.myFont, fontWeight: 'normal' },
+		left: 25,
+		top: 5,
+		height: 20,
+		width: 'auto',
+		text: 'Search and select lake to visit: '
+	});
+	searchPage.add(searchLbl);
 	
-	// create first transform to go beyond normal size
-	var t1 = Titanium.UI.create2DMatrix();
-	t1 = t1.scale(1.1);
-	var a = Titanium.UI.createAnimation();
-	a.transform = t1;
-	a.duration = 200;
-
-	// when this animation completes, scale to normal size
-	a.addEventListener('complete', function() {
-		Titanium.API.info('here in complete');
-		var t2 = Titanium.UI.create2DMatrix();
-		t2 = t2.scale(1.0);
-		w.animate({transform:t2, duration:200});
+	//
+	// Test box for user to enter search criteria
+	//
+	searchText = Titanium.UI.createTextField({
+		hintText: 'Enter full-text words to find a lake',
+		height: 40,
+		width: 280,
+		left: 20,
+		top: 30,
+		font: { fontFamily: model.myFont, fontWeight: 'normal' },
+		textAlign: 'left',
+		keyboardType: Titanium.UI.KEYBOARD_NUMBERS_PUNCTUATION,
+		borderStyle: Titanium.UI.INPUT_BORDERSTYLE_ROUNDED,
+		borderWidth: 2,
+		borderRadius: 5
 	});
-		
-	var photo = Ti.UI.createView({ 
-		backgroundImage:'../user.png',
-		top:0,
-		left:10,
-		right:10,
-		width:300,
+	searchText.addEventListener('return', function(){
+		Ti.API.info('Got return event ...');
+		searchText.blur();
+		var keyword = searchText.value;
+		Ti.API.info('User entered the following: ' + keyword);
+		var restClient = new RestClient();
+		Ti.API.info('Starting lake search with keyword=' + keyword);
+		restClient.searchLakesByKeyword(keyword);
+	});
+	searchPage.add(searchText);
+	
+	//
+	// table to display search results
+	//
+	searchView = Titanium.UI.createTableView({
+		separatorColor: css.getColor0(),
+		style: Titanium.UI.iPhone.TableViewStyle.PLAIN,
+		top: 75,
 		height:300,
-		clickName:'photo' 
+		visible:false,
+		filterAttribute: 'filter',
+		color: css.getColor2(),
+		backgroundColor: css.getColor0()
 	});
-	w.add(photo);
-	
-	// create a button to close window
-	var b = Titanium.UI.createButton({
-		title:'Close',
-		height:30,
-		width:100,
-		left:190,
-		top:w.height-30-10,
-		color:css.getColor0()
+	searchView.addEventListener('click', function(e) { 
+		Ti.API.info('User selected resource Id -- ' + e.rowData.lake.resourceId);
+		searchPage.visible = false;
+		win.remove(searchPage);
+		remoteLake = e.rowData.lake;
+		var restClient = new RestClient();
+		restClient.getRemoteMsgEvents(e.rowData.lake.resourceId);
 	});
-	w.add(b);
-	
-	var displayLbl = '   ' + user + '@' + model.getLakeDisplay();	
-	var photoLocLbl = Ti.UI.createLabel({
-		backgroundColor:'#F0EAC3',
-		color:css.color0,
-		font:{fontSize:11, fontWeight:'normal', fontFamily:'Arial'},
-		left:0,
-		top:280,
-		height:20,
-		width:w.width,
-		clickName:'photoLocLbl',
-		text:displayLbl
-	});
-	w.add(photoLocLbl);
-		
-	b.addEventListener('click', function() {
-		var t3 = Titanium.UI.create2DMatrix();
-		t3 = t3.scale(0);
-		w.close({transform:t3,duration:300});
-	});
-		
-	Ti.API.info('popImageViewer: Trying to open window');
-	w.addEventListener('close', function(e) {
-    	Ti.API.info('addNoteWindow closed');
-	});
-	// open window
-	w.open(a);
+	searchPage.add(searchView);
+	win.add(searchPage);
 };
 
-function onPhotoBtnClick(e) {
-	popupImageViewer();
-}
-
-//
-// CREATE SEARCH BAR
-//
-var searchBar = Titanium.UI.createSearchBar({
-	barColor:'#687067', 
-	opacity:'.95',
-	zIndex:10,
-	showCancel:false
-});
-
-searchBar.addEventListener('change', function(e) {
-	// search string as user types
-   Ti.API.info('search: value=' + e.value);
-});
-
-searchBar.addEventListener('return', function(e) {
-   search.blur();
-   Ti.API.info('search: return: ' + e.value);
-});
-
-searchBar.addEventListener('cancel', function(e) {
-   search.blur();
-   Ti.API.info('search: cancel: ' + e.value);
-});
+/**
+ * This method build table to search results.
+ * 
+ * @param {Object} lakeList
+ */
+function buildSearchResultsRowCollection(lakeList) {
+	var i = 0;
+	var item = null;
+	var lake = null;
+	var myDataRowList = [];
+	var currentRow = null;
+	var currentRowIndex = null;
+	var username = null;
+	var location = null;
+	var msgTitle = null;
+	
+	Ti.API.info('buildSearchResultsRowCollection: Entered');
+	
+	if (lakeList != null) {
+		Ti.API.info('buildSearchResultsRowCollection: size: ' + lakeList.length);
+		for (i=0; i<lakeList.length; i++) {
+			//
+			// data fields
+			//
+			lake = lakeList[i];
+		
+			Ti.API.info('buildSearchResultsRowCollection: name=' + lake.name);	
+			
+			//
+			// create table row
+			//
+			
+			var row = Ti.UI.createTableViewRow({
+				selectedBackgroundColor: '#fff',
+				backgroundColor: css.getColor0(),
+				height:0,
+				width:'auto',
+				lake:lake,
+				borderColor: css.getColor2(),
+				className: 'LakeRow' + i,
+				clickName: 'row'
+			});
+			Ti.API.info('buildSearchResultsRowCollection: row=' + row);
+		
+			//
+			// name of the lake
+			//	
+			var lakeNameLbl = Ti.UI.createLabel({
+				color: css.getColor2(),
+				font: {
+					fontSize: '12',
+					fontWeight: 'bold',
+					fontFamily: model.myFont
+				},
+				left: 15,
+				top: 0,
+				height: 20,
+				width: 'auto',
+				clickName: 'lakeName',
+				text: lake.name
+			});
+			row.add(lakeNameLbl);
+		
+			//
+			// number of active users
+			//	
+			var userCountLbl = Ti.UI.createLabel({
+				color: css.getColor3(),
+				font: {
+					fontSize: '10',
+					fontWeight: 'bold',
+					fontFamily: model.myFont
+				},
+				left: 25,
+				top: 15,
+				height: 20,
+				width: 120,
+				clickName: 'userCount',
+				text: 'Active Users: ' + lake.numActiveUsers
+			});
+			row.add(userCountLbl);
+		
+			//
+			// lasyUpdate timestamp
+			//	
+			var lastUpdateLbl = Ti.UI.createLabel({
+				color: css.getColor3(),
+				font: {
+					fontSize: '10',
+					fontWeight: 'bold',
+					fontFamily: model.myFont
+				},
+				left: 130,
+				top: 15,
+				height: 20,
+				width: 150,
+				clickName: 'lastUpdate',
+				text: 'Last Update: ' + lake.lastUpdateText
+			});
+			row.add(lastUpdateLbl);
+			
+			Ti.API.info('buildSearchResultsRowCollection: Adding row=' + row);
+			myDataRowList.push(row);
+		}
+	}
+	return myDataRowList;
+};
 
 function formatComments(str, len) {
 	var s = '' + str;
@@ -421,113 +497,10 @@ function appendProfilePhoto(row) {
 };
 
 /**
- * This method builds the row collection based upon the incoming data message 
- * data from the web service.
- * 
- * @param {Object} msgEventList
- */
-function buildRowCollection(msgEventList) {
-	var i = 0;
-	var msgEvent = null;
-	var myDataRowList = [];
-	// create a var to track the active row
-	var currentRow = null;
-	var currentRowIndex = null;
-	var username = null;
-	var location = null;
-	var msgTitle = null;
-	var ppUrl = 'http://philestore1.phreadz.com/_users/2d/04/e4/16/bennycrime/2010/02/19/bennycrime_1266618797_60.jpg';
-	
-	if (msgEventList != null) {
-		Ti.API.info('buildRowCollection: size: ' + msgEventList.length);
-		for (i=0; i<msgEventList.length; i++) {
-			//
-			// data fields
-			//
-			msgEvent = msgEventList[i];
-		
-			//
-			// if alot of people deem this message as obscene, just stop showing it
-			//		
-			if (msgEvent.badCounter > 3) {
-				continue;
-			}
-			
-			
-			Ti.API.info('buildRowCollection: msgEvent= ' + msgEvent);
-			username = msgEvent.username;
-			Ti.API.info('buildRowCollection: username: ' + username);
-			location = msgEvent.location;
-			Ti.API.info('buildRowCollection: location: ' + location);
-			msgTitle = 'Posted by ' + username + ' on ' + location;
-			Ti.API.info('buildRowCollection: title: ' + msgTitle);
-			
-			//
-			// create table row
-			//
-			var row = Ti.UI.createTableViewRow({
-				selectedBackgroundColor:'#fff',
-				backgroundColor:css.getColor0(),
-				height:0,
-				width:'auto',
-				borderColor:css.getColor2(),
-				className:'MsgEventRow' + i,
-				clickName:'row',
-				msgEvent:msgEvent,
-				hasChild:true,
-				renderer:'messageRenderer.js'
-			});
-			Ti.API.info('buildRowCollection: row=' + row);
-			
-			//
-			// build message body
-			//	
-			Ti.API.info('buildRowCollection: Adding profile pic');
-			appendProfilePhoto(row);
-			Ti.API.info('buildRowCollection: Done');
-			var fontSize = 14;
-			if (Titanium.Platform.name == 'android') {
-				fontSize = 13;
-			}
-			Ti.API.info('buildRowCollection: Starting msg body');
-			if (msgEvent.photoUrl == undefined) {
-				Ti.API.info('buildRowCollection: BASIC msg body ...');
-				appendMsgBody(row, fontSize);
-			}
-			else {
-				Ti.API.info('buildRowCollection: PHOTO msg body ...');
-				appendMsgBodyWithPhoto(row, fontSize);
-			}
-			
-			var replyCounter = Ti.UI.createLabel({
-				color: css.getColor3(),
-				font: { fontSize: '10', fontWeight: 'bold', fontFamily: model.myFont },
-				right: 0,
-				top: 0,
-				height: 20,
-				width: 20,
-				clickName: 'replyCounter',
-				text: ''
-			});
-			if (msgEvent.commentCounter > 0) {
-				replyCounter.text = '+' + msgEvent.commentCounter;
-			} 
-			Ti.API.info('buildRowCollection: replyCounter=' + replyCounter);
-			row.add(replyCounter);
-			// add row
-			Ti.API.info('buildRowCollection: Adding row=' + row);
-			myDataRowList.push(row);
-		}
-	}
-	return myDataRowList;
-};
-
-
-/**
  * This method builds and adds all of the listeners to handle all of the user interaction
  * at the top the window.
  */
-function buildPanelHeader(){
+function buildPanelHeader(localFlag){
 	var h = Ti.UI.createView({
 		height: 50,
 		width: 320,
@@ -536,7 +509,7 @@ function buildPanelHeader(){
 		backgroundColor: css.getColor0()
 	});
 	
-	var headerLbl0 = 'My Location: ';
+	var headerLbl0 = (localFlag ? 'My Location: ' : 'Remote Location: ');
 	var label0 = Ti.UI.createLabel({
 		text: headerLbl0,
 		top: 0,
@@ -578,355 +551,64 @@ function buildPanelHeader(){
 		font: { fontFamily: model.myFont, fontSize: 11, fontWeight: 'normal' },
 		color: '#fff'
 	});
-	
-	var target = model.getCurrentLake();
-	var label1 = undefined;
-	if (target != undefined) {
-		label1 = Ti.UI.createLabel({
-			text: target.name,
-			top: 15,
-			left: 10,
-			height: 25,
-			font: { fontFamily: model.myFont, fontSize: 16, fontWeight: 'bold' },
-			color: css.getColor4()
-		});
-		label1.addEventListener('click', function(e){
-			Ti.App.fireEvent('GOTO_TAB', {
-				nextTab: 1
+
+	/*
+	 * handle case when user is inside of a lake zone
+	 */	
+	if (localFlag) {
+		var target = model.getCurrentLake();
+		if (target != undefined) {
+			selectedLake = Ti.UI.createLabel({
+				text: target.name,
+				top: 15,
+				left: 10,
+				height: 25,
+				font: {
+					fontFamily: model.myFont,
+					fontSize: 16,
+					fontWeight: 'bold'
+				},
+				color: css.getColor4()
 			});
-		});
+			selectedLake.addEventListener('click', function(e){
+				Ti.App.fireEvent('GOTO_TAB', {
+					nextTab: 1
+				});
+			});
+		}
+		else {
+			selectedLake = Ti.UI.createLabel({
+				text: Msgs.OUT_OF_ZONE,
+				top: 15,
+				left: 10,
+				height: 25,
+				font: {
+					fontFamily: model.myFont,
+					fontSize: 16,
+					fontWeight: 'bold'
+				},
+				color: css.getColor3()
+			});
+		}
 	}
+	/*
+	 * handle user trying to visit another lake
+	 */
 	else {
-		label1 = Ti.UI.createLabel({
-			text: "[ No Lake Found ... ]",
+		selectedLake = Ti.UI.createLabel({
+			text: remoteLake.name,
 			top: 15,
 			left: 10,
 			height: 25,
-			font: { fontFamily: model.myFont, fontSize: 16, fontWeight: 'bold' },
-			color: css.getColor3()
-		});
-	}
-	
-	//
-	// watch specific area button
-	//
-	var watchBtn = Ti.UI.createView({
-		backgroundImage: '../commentButton.png',
-		top: 7,
-		right: 0,
-		width: 50,
-		clickName: 'watchBtn',
-		height: 34
-	});
-	watchBtn.addEventListener('click', function(e) { 
-		var w = Titanium.UI.createWindow({
-			height: 420,
-			backgroundColor: css.getColor0(),
-			barColor: css.getColor0(),
-			bottom: 0,
-			title: 'Find some users ...',
-			url:'searchLakes.js'
-		});
-		w.model = model;
-		w.css = css;
-		w.open();
-	});
-	
-	//
-	// submit new message button
-	//
-	newPostBtn = Ti.UI.createView({
-		backgroundImage: '../commentButton.png',
-		top: 7,
-		right: 50,
-		width: 50,
-		clickName: 'newPostBtn',
-		height: 34
-	});
-	newPostBtn.addEventListener('click', function(e){
-		currentLake = model.getCurrentLake().name;
-		var hint = "Buzz on '" + currentLake + "'?";
-		
-		//
-		// window creation
-		//
-		var w = Titanium.UI.createWindow({
-			height: 0,
-			backgroundColor: css.getColor0(),
-			barColor: css.getColor0(),
-			bottom: 0,
-			title: hint
-		});
-		
-		w.model = model;
-		w.css = css;
-		w.picasa = picasa;
-		
-		//
-		// create window open animation
-		//
-		var a = Titanium.UI.createAnimation();
-		a.height = 420;
-		a.duration = 300;
-		
-		//
-		// label
-		//
-		var prompt1 = "To: " + currentLake;
-		var msgLbl = Titanium.UI.createLabel({
-			color: '#fff',
-			text: prompt1,
-			font: { fontFamily: model.myFont, fontWeight: 'bold' },
-			top: 10,
-			left: 20,
-			width: 300,
-			textAlign: 'right',
-			height: 'auto'
-		});
-		w.add(msgLbl);
-		
-		//
-		// textfield to enter message to post
-		//
-		var msgText = Titanium.UI.createTextField({
-			hintText: hint,
-			height: 35,
-			width: 280,
-			left: 20,
-			top: 35,
-			font: { fontFamily: model.myFont, fontWeight: 'normal' },
-			textAlign: 'left',
-			keyboardType: Titanium.UI.KEYBOARD_NUMBERS_PUNCTUATION,
-			borderStyle: Titanium.UI.INPUT_BORDERSTYLE_ROUNDED,
-			borderWidth: 2,
-			borderRadius: 5
-		});
-		msgText.addEventListener('change', function(e){
-			if ((msgText.text == '' || msgText == null) && model.getPendingRawImage() == null) {
-				composeMsgWinSubmitBtn.enabled = false;
-			}
-			else {
-				composeMsgWinSubmitBtn.enabled = true;
-			}
-		});
-		w.add(msgText);
-		
-		//
-		// icon to indicate if the photo is loaded
-		//
-		var photoIndBtn = Ti.UI.createImageView({
-			image: '../commentButton.png',
-			backgroundColor: css.getColor0(),
-			opacity: 0.25,
-			top: 95,
-			left: 40,
-			width: 30,
-			height: 34,
-			clickName: 'addPhotoBtn'
-		});
-		w.add(photoIndBtn);
-		composeMsgWinPhotoIndBtn = photoIndBtn;
-		
-		//
-		// photo menu
-		//
-		var photoMenuList = [{
-			title: 'Take Photo',
-			color: '#fff',
-			url: 'takePhoto.js'
-		}, {
-			title: 'Browse Existing',
-			color: '#fff',
-			url: 'browseGallery.js'
-		}];
-		var photoMenu = Titanium.UI.createTableView({
-			data: photoMenuList,
-			separatorColor: css.getColor2(),
-			style: Titanium.UI.iPhone.TableViewStyle.PLAIN,
-			top: 130,
-			left: 20,
-			height: 100,
-			width: 280,
-			color: '#fff',
 			font: {
 				fontFamily: model.myFont,
-				fontWeight: 'normal'
-			},
-			backgroundColor: css.getColor0()
-		});
-		photoMenu.addEventListener('click', function(e){
-			if (e.rowData.url) {
-				var helperWin = Titanium.UI.createWindow({
-					url: e.rowData.url,
-					title: e.rowData.title,
-					backgroundColor: css.getColor0(),
-					barColor: css.getColor0()
-				});
-				helperWin.model = model;
-				helperWin.css = css;
-				helperWin.addEventListener('close', function(e){
-					if (model.getPendingRawImage() != null) {
-						composeMsgWinPhotoIndBtn.opacity = 1.0;
-						composeMsgWinSubmitBtn.enabled = true;
-					}
-				});
-				helperWin.open();
-			}
-		});
-		w.add(photoMenu);
-		
-		//
-		// switch label and component
-		//	
-		var prompt3 = "Post to my Facebook wall?";
-		var msgLbl3 = Titanium.UI.createLabel({
-			color: '#fff',
-			text: prompt3,
-			font: {
-				fontFamily: model.myFont,
+				fontSize: 16,
 				fontWeight: 'bold'
 			},
-			top: 245,
-			left: 20,
-			width: 300,
-			height: 'auto'
+			color: css.getColor4()
 		});
-		w.add(msgLbl3);
-		
-		var switchBtn = Titanium.UI.createSwitch({
-			value: false,
-			top: 275,
-			left: 20
-		});
-		w.add(switchBtn);
-		
-		//
-		// cancel button
-		//
-		var cancelBtn = Titanium.UI.createButton({
-			title: 'Cancel',
-			color: css.getColor0(),
-			bottom: 10,
-			right: 30,
-			height: 30,
-			width: 125
-		});
-		cancelBtn.addEventListener('click', function(){
-			a.height = 0;
-			w.close(a);
-		});
-		w.add(cancelBtn);
-		
-		//
-		// submit button
-		//
-		var submitBtn = Titanium.UI.createButton({
-			title: 'Submit',
-			enabled: false,
-			color: css.getColor0(),
-			bottom: 10,
-			left: 30,
-			height: 30,
-			width: 125
-		});
-		submitBtn.addEventListener('click', function(){
-			submitBtn.enabled = false;
-			cancelBtn.enabled = false;
-			Ti.API.info('Start save message process ...');
-			var rawImage = model.getPendingRawImage();
-			var msgEvent = null;
-			var myLocation = null;
-			var restClient = null;
-			
-			//
-			// uploading image and posting message
-			//
-			var currentUser = model.getCurrentUser();
-			if (rawImage != null) {
-				postingInd.message = "";
-				postingInd.show();
-				myLocation = model.getCurrentLake();
-				msgEvent = {
-					title: '',
-					version: 0,
-					username: currentUser.displayName,
-					resourceId: myLocation.id,
-					location: myLocation.name,
-					messageData: msgText.value,
-					lat: model.getUserLat(),
-					lng: model.getUserLng()
-				};
-				//
-				// add user's profile url to message if they have one
-				//
-				if (currentUser.profileUrl != null) {
-					msgEvent.profileUrl = currentUser.profileUrl;
-				}
-				model.setPendingMsgEvent(msgEvent);
-				Ti.API.info('Pending msgEvent: ' + msgEvent);
-				//
-				// upload photo
-				//
-				Ti.API.info('Starting 2-part process -- uploading photo ...');
-				picasa.upload(model.getPicasaUser(), model.getPicasaPassword(), rawImage);
-			}
-			//
-			// just posting message
-			//
-			else {
-				postingInd.message = "";
-				postingInd.show();
-				Ti.API.info('Starting simple process of just posting message to server ...');
-				myLocation = model.getCurrentLake();
-				msgEvent = {
-					title: '',
-					version: 0,
-					username: currentUser.displayName,
-					resourceId: myLocation.id,
-					location: myLocation.name,
-					messageData: msgText.value,
-					lat: model.getUserLat(),
-					lng: model.getUserLng(),
-					llId: currentUser.id
-				};
-				//
-				// add user's profile url to message if they have one
-				//
-				if (currentUser.profileUrl != null) {
-					msgEvent.profileUrl = currentUser.profileUrl;
-				}
-				restClient = new RestClient();
-				restClient.postMessage(msgEvent);
-			}
-		});
-		w.add(submitBtn);
-		composeMsgWinSubmitBtn = submitBtn;
-		
-		//
-		// preloader
-		//
-		postingInd = Titanium.UI.createActivityIndicator({
-			top: 50,
-			left: 140,
-			height: 150,
-			width: 50,
-			style: Titanium.UI.iPhone.ActivityIndicatorStyle.PLAIN
-		});
-		postingInd.font = {
-			fontFamily: model.myFont,
-			fontSize: 15,
-			fontWeight: 'bold'
-		};
-		postingInd.color = css.getColor3();
-		w.add(postingInd);
-		
-		//
-		// open window
-		//
-		w.open(a);
-		composeMsgWin = w;
-	});
-
+	}
+	
 	/*	
 	var refreshBtn = Titanium.UI.createButton({
 		systemButton:Titanium.UI.iPhone.SystemButton.REFRESH,
@@ -952,11 +634,32 @@ function buildPanelHeader(){
 	// add items to table header
 	//
 	h.add(label0);
-	h.add(label1);
+	h.add(selectedLake);
 	h.add(userLabel);
 	h.add(userCountLbl);
 	
 	return h;
+};
+
+/**
+ * This method updates the data display with search results from the server.
+ * 
+ * @param {Object} list
+ */
+function updateSearchTableViewDisplay(searchResults) {
+	Ti.API.info('updateSearchTableViewDisplay: # of lake matches ' + (searchResults != null ? searchResults.length : 0));
+	if (searchResults.length > 0) {
+		var dataRowList = buildSearchResultsRowCollection(searchResults);
+		Ti.API.info('updateSearchTableViewDisplay: # of results: ' + (dataRowList == null ? 0 : dataRowList.length));
+		Ti.API.info('updateSearchTableViewDisplay: searchView=' + searchView);
+		searchView.setData(dataRowList);
+		searchView.show();
+	}
+	else {
+		alert('No matching results for request.');
+		Ti.API.info('updateSearchTableViewDisplay: results are empty');
+		searchView.hide();
+	}
 };
 
 /**
@@ -970,7 +673,7 @@ function updateTableViewDisplay(list) {
 	if (list.length > 0) {
 		tableView.hide();
 		initPreloader.show();
-		var dataRowList = buildRowCollection(list);
+		var dataRowList = Base.buildRowCollection(list);
 		tableView.setData(dataRowList);
 		initPreloader.hide();
 		tableView.show();
@@ -1004,6 +707,7 @@ function buildTableView(){
 			var rendererWin = Titanium.UI.createWindow({
 				url: e.rowData.renderer,
 				title: e.rowData.title,
+				localFlag:localFlag,
 				backgroundColor: css.getColor0(),
 				barColor: css.getColor0()
 			});
@@ -1020,6 +724,108 @@ function buildTableView(){
 	return t;
 };
 
+function check4LocalMsgEvents() {
+	var client = new RestClient();
+	var activeLake = model.getCurrentLake();
+	if (activeLake != null) {
+		Ti.API.info('check4MsgEvent(): resourceId ---> ' + activeLake.id);
+		client.getLocalMsgEvents(activeLake.id);
+	}
+	else {
+		Ti.API.info('check4MsgEvent(): Not in a region to view messages!!!!');
+		updateTableViewDisplay([]);
+	}
+};
+
+function check4RemoteMsgEvents() {
+	var client = new RestClient();
+	if (remoteLake != null) {
+		Ti.API.info('check4RemoteMsgEvents(): resourceId ---> ' + remoteLake.id);
+		client.getLocalMsgEvents(remoteLake.id);
+	}
+	else {
+		Ti.API.info('check4RemoteMsgEvents(): Not in a region to view messages!!!!');
+		updateTableViewDisplay([]);
+	}
+};
+
+//////////////////////////////////////////
+//
+// Event Listeners
+//
+//////////////////////////////////////////
+
+Titanium.App.addEventListener('FOUND_LAST_BUCKET', function(e) {
+	Ti.API.info('Got event FOUND_LAST_BUCKET ...');
+	model.setLastBucket(e.lastBucket);
+	if (composeMsgWinSubmitBtn != null) {
+		Ti.API.info('Enabling submitBtn ...');
+		composeMsgWinSubmitBtn.enabled = true;
+	}
+	else {
+		Ti.API.info('Disabling submitBtn ...');
+		composeMsgWinSubmitBtn.enabled = false;
+	}
+});
+
+Ti.App.addEventListener('SEARCH_RESULTS_RECD', function(e) {
+	if (e.status == 0) {
+		Ti.API.info('Handling event -- SEARCH_RESULTS_RECD --> ' + e.result);
+		updateSearchTableViewDisplay(e.result);
+	}
+	else {
+		Tools.reportMsg(model.getAppName(), e.errorMsg);
+	}
+});
+
+Titanium.App.addEventListener('LOCAL_MSG_EVENTS_RECD', function(e) {
+	if (e.status == 0) {
+		Ti.API.info('Handling event -- LOCAL_MSG_EVENTS_RECD --> ' + e.result);
+		//
+		// update to data
+		//
+		if (headerView == null) {
+			var t2 = Titanium.UI.createAnimation({top:0, duration:750});
+			headerView = buildPanelHeader(true);
+			headerView.animate(t2);
+			win.add(headerView);
+		}
+		if (tableView != null) {
+			win.remove(tableView);
+		}
+		tableView = buildTableView();
+		win.add(tableView);
+		updateTableViewDisplay(e.result);
+	}
+	else {
+		Tools.reportMsg(model.getAppName(), e.errorMsg);			
+	}
+});
+
+Titanium.App.addEventListener('REMOTE_MSG_EVENTS_RECD', function(e) {
+	if (e.status == 0) {
+		Ti.API.info('Handling event -- REMOTE_MSG_EVENTS_RECD --> ' + e.result);
+		//
+		// update to data
+		//
+		if (headerView == null) {
+			var t2 = Titanium.UI.createAnimation({top:0, duration:750});
+			headerView = buildPanelHeader(false);
+			headerView.animate(t2);
+			win.add(headerView);
+		}
+		if (tableView != null) {
+			win.remove(tableView);
+		}
+		tableView = buildTableView();
+		win.add(tableView);
+		updateTableViewDisplay(e.result);
+	}
+	else {
+		Tools.reportMsg(model.getAppName(), e.errorMsg);			
+	}
+});
+
 
 /**
  * This is the initial entry to the functionality of this window
@@ -1028,92 +834,30 @@ function init() {
 	//
 	// initial app preloader
 	//	
-	initPreloader = Titanium.UI.createActivityIndicator({
-		top: 150,
-		left: 80,
-		height: 80,
-		width: 150,
-		color: css.getColor2(),
-		style: Titanium.UI.iPhone.ActivityIndicatorStyle.PLAIN
-	});
-	initPreloader.font = {
-		fontFamily: model.myFont,
-		fontSize: 13,
-		fontWeight: 'bold'
-	};
+	initPreloader = Base.createPreloader(null);
 	win.add(initPreloader);
 	initPreloader.show();
 
-	//////////////////////////////////////////
-	//
-	// Event Listeners
-	//
-	//////////////////////////////////////////
-
-	Titanium.App.addEventListener('FOUND_LAST_BUCKET', function(e) {
-		Ti.API.info('Got event FOUND_LAST_BUCKET ...');
-		model.setLastBucket(e.lastBucket);
-		if (composeMsgWinSubmitBtn != null) {
-			Ti.API.info('Enabling submitBtn ...');
-			composeMsgWinSubmitBtn.enabled = true;
-		}
-		else {
-			Ti.API.info('Disabling submitBtn ...');
-			composeMsgWinSubmitBtn.enabled = false;
-		}
-	});
-	
-	function check4MsgEvents() {
-		var client = new RestClient();
-		var activeLake = model.getCurrentLake();
-		if (activeLake != null) {
-			Ti.API.info('check4MsgEvent(): resourceId ---> ' + activeLake.id);
-			client.getLocalMsgEvents(activeLake.id);
-		}
-		else {
-			Ti.API.info('check4MsgEvent(): Not in a region to view messages!!!!');
-			updateTableViewDisplay([]);
-		}
-	};
-	
-	Titanium.App.addEventListener('LOCAL_MSG_EVENTS_RECD', function(e) {
-		if (e.status == 0) {
-			Ti.API.info('Handling event -- LOCAL_MSG_EVENTS_RECD --> ' + e.result);
-			//
-			// update to data
-			//
-			if (headerView == null) {
-				var t2 = Titanium.UI.createAnimation({top:0, duration:750});
-				headerView = buildPanelHeader();
-				headerView.animate(t2);
-				win.add(headerView);
-			}
-			if (tableView != null) {
-				win.remove(tableView);
-			}
-			tableView = buildTableView();
-			win.add(tableView);
-			updateTableViewDisplay(e.result);
-		}
-		else {
-			Tools.reportMsg(model.getAppName(), e.errorMsg);			
-		}
-	});
-	
-	//////////////////////////////////////////
-	//
-	// Build UI
-	//
-	//////////////////////////////////////////
-	
-	//	
-	// start refresh timer
-	//
-	setInterval(check4MsgEvents, 120000);
-	
-
-	// get messages	
-	check4MsgEvents();
+	if (localFlag) {
+		//	
+		// start refresh timer
+		//
+		setInterval(check4MsgEvents, 120000);
+		//
+		// get messages	
+		//
+		check4LocalMsgEvents();
+	}
+	else {
+		//	
+		// start refresh timer
+		//
+		setInterval(check4RemoteMsgEvents, 120000);
+		//
+		// display search form
+		//
+		buildSearchView(true);
+	}
 
 };
 

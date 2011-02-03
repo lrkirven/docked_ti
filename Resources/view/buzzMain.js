@@ -1,6 +1,9 @@
 Ti.include('../util/tools.js');
+Ti.include('../util/msgs.js');
 Ti.include('../model/modelLocator.js');
 Ti.include('../client/restClient.js');
+
+Ti.include('baseViewer.js');
 
 var win = Ti.UI.currentWindow;
 var model = win.model;
@@ -64,6 +67,26 @@ Titanium.App.addEventListener('UPDATED_DISPLAY_NAME', function(e) {
 	}
 });
 
+Titanium.App.addEventListener('LOCATION_CHANGED', function(e){
+	Ti.API.info('Handle LOCATION_CHANGED event ...');
+	if (model.getCurrentLake() != null) {
+		currentLocationLabel.text = model.getCurrentLake().name;
+		currentLocationLabel.color = css.getColor4();
+		buzzMenu.data = (model.getCurrentUser() == null ? inPolygonAnonymousMM : inPolygonMM);
+		var countDisplay = model.getCurrentLake().localCount + Msgs.USERS;
+		userCountLbl.text = countDisplay;
+		win.touchEnabled = true;
+	}
+	else {
+		currentLocationLabel.text = Msgs.OUT_OF_ZONE;
+		userCountLbl.text = '';
+		currentLocationLabel.color = css.getColor3();
+		buzzMenu.data = outPolygonMM;
+		win.touchEnabled = true;
+	}
+	mainInd.hide();
+});
+
 /**
  * This method initializes the buzz main menu for user selections.
  */
@@ -75,6 +98,7 @@ function init() {
 		title: 'Browse',
 		hasChild: true,
 		leftImage: '../phone_playmovie.png',
+		localFlag: true,
 		ptr: 'messageViewer.js'
 	}, {
 		title: 'Map',
@@ -90,13 +114,16 @@ function init() {
 		title: 'Visit other Lakers',
 		hasChild: true,
 		leftImage: '../phone_playmovie.png',
-		ptr: 'remoteViewer.js'
+		localFlag: false,
+		// ptr: 'remoteViewer.js'
+		ptr: 'messageViewer.js'
 	}];
 	
 	inPolygonAnonymousMM = [{
 		title: 'Browse',
 		hasChild: true,
 		leftImage: '../phone_playmovie.png',
+		localFlag: true,
 		ptr: 'messageViewer.js'
 	}, {
 		title: 'Map',
@@ -106,36 +133,20 @@ function init() {
 	}, {
 		title: 'Visit other Lakers',
 		hasChild: true,
+		localFlag: false,
 		leftImage: '../phone_playmovie.png',
-		ptr: 'remoteViewer.js'
+		// ptr: 'remoteViewer.js'
+		ptr: 'messageViewer.js'
 	}];
 	
 	outPolygonMM = [{
 		title: 'Visit other lakes',
 		hasChild: true,
+		localFlag: false,
 		leftImage: '../phone_playmovie.png',
-		ptr: 'remoteViewer.js'
+		// ptr: 'remoteViewer.js'
+		ptr: 'messageViewer.js'
 	}];
-	
-	Titanium.App.addEventListener('LOCATION_CHANGED', function(e){
-		Ti.API.info('Handle LOCATION_CHANGED event ...');
-		if (model.getCurrentLake() != null) {
-			currentLocationLabel.text = model.getCurrentLake().name;
-			currentLocationLabel.color = css.getColor4();
-			buzzMenu.data = (model.getCurrentUser() == null ? inPolygonAnonymousMM : inPolygonMM);
-			var countDisplay = model.getCurrentLake().localCount + ' USER(S)';
-			userCountLbl.text = countDisplay;
-			win.touchEnabled = true;
-		}
-		else {
-			currentLocationLabel.text = "[ No Lake Found ... ]";
-			userCountLbl.text = '';
-			currentLocationLabel.color = css.getColor3();
-			buzzMenu.data = outPolygonMM;
-			win.touchEnabled = true;
-		}
-		mainInd.hide();
-	});
 	
 	Ti.API.info('buzzMain.init(): Entered ');
 	
@@ -172,7 +183,7 @@ function init() {
 	}
 	else {
 		currentLocationLabel = Ti.UI.createLabel({
-			text: "[ No Lake Found ... ]",
+			text: "...",
 			top: 15,
 			left: 10,
 			height: 25,
@@ -200,7 +211,7 @@ function init() {
 	});
 	var countDisplay = '';
 	if (model.getCurrentLake() != null) {
-		countDisplay = model.getCurrentLake().localCount + ' USER(S)';
+		countDisplay = model.getCurrentLake().localCount + Msgs.USERS;
 	}
 	userCountLbl = Ti.UI.createLabel({
 		text: countDisplay,
@@ -242,7 +253,6 @@ function init() {
 		style:Titanium.UI.iPhone.TableViewStyle.GROUPED,
 		selectionStyle:Ti.UI.iPhone.TableViewCellSelectionStyle.GRAY,
 		rowBackgroundColor:css.getColor2()
-		// rowBackgroundColor:'#ffffff'
 	});
 
 	// create table view event listener
@@ -282,17 +292,8 @@ function init() {
 		getMyFacebookInfo();
 	}
 	
-	mainInd = Titanium.UI.createActivityIndicator({
-		top: 120,
-		left: 135,
-		height: 150,
-		width: 50,
-		color:'#ffffff',
-		message: 'Initializing ...',
-		style: Titanium.UI.iPhone.ActivityIndicatorStyle.PLAIN
-	});
+	mainInd = Base.createPreloader('Initializing ...');
 	win.add(mainInd);
-	Ti.API.info('Show buzzMain indicator ...');
 	mainInd.show();
 	
 	setTimeout(function () { 

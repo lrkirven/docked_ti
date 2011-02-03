@@ -2,6 +2,8 @@ Ti.include('../model/modelLocator.js');
 Ti.include('../client/restClient.js');
 Ti.include('../util/tools.js');
 
+Ti.include('baseViewer.js');
+
 var win = Ti.UI.currentWindow;
 var model = win.model;
 var css = win.css;
@@ -442,106 +444,6 @@ function buildSearchResultsRowCollection(lakeList) {
 	return myDataRowList;
 };
 
-function buildMsgRowCollection(msgEventList) {
-	var i = 0;
-	var msgEvent = null;
-	var myDataRowList = [];
-	// create a var to track the active row
-	var currentRow = null;
-	var currentRowIndex = null;
-	var username = null;
-	var location = null;
-	var msgTitle = null;
-	
-	if (msgEventList != null) {
-		Ti.API.info('buildMsgRowCollection: size: ' + msgEventList.length);
-		for (i=0; i<msgEventList.length; i++) {
-			//
-			// data fields
-			//
-			msgEvent = msgEventList[i];
-		
-			//
-			// if alot of people deem this message as obscene, just stop showing it
-			//		
-			if (msgEvent.badCounter > 3) {
-				continue;
-			}
-			
-			
-			Ti.info('buil: msgEvent= ' + msgEvent);
-			username = msgEvent.username;
-			Ti.API.info('buildMsgRowCollection: username: ' + username);
-			location = msgEvent.location;
-			Ti.API.info('buildMsgRowCollection: location: ' + location);
-			msgTitle = 'Posted by ' + username + ' on ' + location;
-			Ti.API.info('buildMsgRowCollection: title: ' + msgTitle);
-			
-			//
-			// create table row
-			//
-			var row = Ti.UI.createTableViewRow({
-				selectedBackgroundColor: '#fff',
-				backgroundColor: css.getColor0(),
-				left:0,
-				height:0,
-				width:'auto',
-				borderColor: css.getColor2(),
-				className: 'MsgEventRow' + i,
-				clickName: 'row',
-				msgEvent:msgEvent,
-				renderer: 'messageRendererReadOnly.js',
-				hasChild: true
-			});
-			Ti.API.info('buildMsgRowCollection: row=' + row);
-			
-			//
-			// build message body
-			//	
-			Ti.API.info('buildMsgRowCollection: Adding profile pic');
-			appendProfilePhoto(row);
-			Ti.API.info('buildMsgRowCollection: Done');
-			
-			var fontSize = 14;
-			if (Titanium.Platform.name == 'android') {
-				fontSize = 13;
-			}
-			Ti.API.info('buildMsgRowCollection: Starting msg body');
-			
-			if (msgEvent.photoUrl == undefined) {
-				Ti.API.info('buildMsgRowCollection: BASIC msg body ... fontSize=' + fontSize);
-				appendMsgBody(row, fontSize);
-			}
-			else {
-				Ti.API.info('buildMsgRowCollection: PHOTO msg body ... fontSize=' + fontSize);
-				appendMsgBodyWithPhoto(row, fontSize);
-			}
-			
-			var replyCounter = Ti.UI.createLabel({
-				color: css.getColor3(),
-				font: {
-					fontSize: '10',
-					fontWeight: 'bold',
-					fontFamily: model.myFont
-				},
-				right: 0,
-				top: 0,
-				height: 20,
-				width: 20,
-				clickName: 'replyCounter',
-				text: ''
-			});
-			if (msgEvent.commentCounter > 0) {
-				replyCounter.text = '+' + msgEvent.commentCounter;
-			} 
-			row.add(replyCounter);
-			// add row
-			myDataRowList.push(row);
-		}
-	}
-	return myDataRowList;
-};
-
 /**
  * This method builds a table to display messages at a remote locale.
  */
@@ -602,8 +504,8 @@ function buildMsgView(visible) {
 	
 	var h = Ti.UI.createView({
 		height: 50,
-		top: 0,
-		borderColor: css.getColor2(),
+		top: -100,
+		borderColor: css.getColor0(),
 		backgroundColor: css.getColor0()
 	});
 	var headerLbl0 = 'Remote Location: ';
@@ -612,11 +514,7 @@ function buildMsgView(visible) {
 		top: 0,
 		left: 10,
 		height: 20,
-		font: {
-			fontFamily: model.myFont,
-			fontSize: 11,
-			fontWeight: 'normal'
-		},
+		font: { fontFamily: model.myFont, fontSize: 11, fontWeight: 'normal' },
 		color: '#fff'
 	});
 	h.add(label0);
@@ -637,6 +535,8 @@ function buildMsgView(visible) {
 	Ti.API.info('buildMsgView: Adding msgView=' + msgView);
 	msgPage.add(msgView);
 	Ti.API.info('buildMsgView: win=' + win);
+	var t2 = Titanium.UI.createAnimation({top:0, duration:750});
+	h.animate(t2);
 	win.add(msgPage);	
 };
 
@@ -644,7 +544,7 @@ function updateMsgTableViewDisplay(list) {
 	Ti.API.info('updateMsgTableViewDisplay: # of msg(s): ' + (list != null ? list.length : 0));
 	if (list.length > 0) {
 		Ti.API.info('updateMsgTableViewDisplay: msgView --> ' + msgView);
-		var dataRowList = buildMsgRowCollection(list);
+		var dataRowList = Base.buildRowCollection(list);
 		Ti.API.info('updateMsgTableViewDisplay: rows -- ' + dataRowList.length);
 		msgView.setData(dataRowList);
 		msgView.visible = true;

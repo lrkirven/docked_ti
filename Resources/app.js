@@ -344,8 +344,8 @@ function handleInitialUserPosition(e) {
 		//
 		// hardcoding Lake Ray Roberts
 		//
-		lat = 32.85;
-		lng = -96.50;
+		// lat = 32.85;
+		// lng = -96.50;
 		
 		model.setUserLng(lng);
 		model.setUserLat(lat);
@@ -376,6 +376,13 @@ function handleInitialUserPosition(e) {
 		client.ping(llId, lat, lng);
 	}
 };
+
+Titanium.App.addEventListener('LOCATION_CHANGED', function(e) {
+	var now = new Date();
+	var tm = now.getTime();
+	model.setLastLocTime(tm);	
+	tabGroup.enabled = true;
+});
 
 Titanium.App.addEventListener('GOOGLE_MAP_LOADED', function(e) { 
 	Ti.API.info('My Google Map is loaded!!');
@@ -574,6 +581,7 @@ function buildAppTabs() {
 	
 	var hsWin = Titanium.UI.createWindow({
 		title: model.getAppName(),
+		color: css.getColor2(),
 		font: { fontSize: 20, fontFamily: myFont },
 		barColor: css.getColor0(),
 		url: 'view/hotSpotMain.js'
@@ -691,6 +699,7 @@ function init() {
 	// build init UI
 	//
 	resetTabs();
+	tabGroup.enabled = false;
 	
 	//
 	// check if user has registered as an user of the app

@@ -33,6 +33,7 @@ function ModelLocator() {
 	var anonymousUser = 'ABC123';
 	var deviceId = null;
 	var lastPing = 0;
+	var lastLocTime = 0;
 	var sync2Fb = false;
 	
     this.singletonInstance = null;
@@ -199,6 +200,12 @@ function ModelLocator() {
 			},
 			getUserLng : function() {
 				return userLng;
+			},
+			setLastLocTime : function(last) {
+				lastLocTime = last;	
+			},
+			getLastLocTime : function() {
+				return lastLocTime;
 			},
 			setLastBucket : function(last) {
 				lastBucket = last;	

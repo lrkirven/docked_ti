@@ -8,6 +8,8 @@ Ti.include('../util/tools.js');
 var win = Ti.UI.currentWindow;
 var model = win.model;
 var msgEvent = win.msgEvent;
+var localFlag = win.localFlag;
+
 var css = win.css;
 var newCommentBody = null;
 var initStart = 0;
@@ -361,8 +363,10 @@ function updateDisplayList() {
 	//
 	// component for user to add new comments section
 	//
-	var last = createNewCommentsSection(msgEvent);
-	commentList.push(last);
+	if (localFlag) {
+		var last = createNewCommentsSection(msgEvent);
+		commentList.push(last);
+	}
 	
 	commentVBox = Titanium.UI.createTableView({
 		data:commentList,
