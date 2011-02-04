@@ -1,4 +1,5 @@
 Ti.include('../util/tools.js');
+Ti.include('../util/msgs.js');
 Ti.include('../model/modelLocator.js');
 Ti.include('../client/picasaClient.js');
 Ti.include('../client/restClient.js');
@@ -21,17 +22,17 @@ function postMessage2FB(m) {
 		if (m.photoUrl != null) {
 			fbRec = {
 				name: m.displayName + " via " + model.getAppName(),
-				href:"http://www.lazylaker.net",
+				href:"http://www.docked.co",
 				caption:m.messageData,
 				description:"Message from " + m.displayName + " on " + m.location ,
-				media:[{ type:"image", src:m.photoUrl, href:"http://www.lazylaker.net" }],
+				media:[{ type:"image", src:m.photoUrl, href:"http://www.docked.co" }],
 				properties:{}
 			};
 		}
 		else {
 			fbRec = {
 				name: m.displayName + " via " + model.getAppName(),
-				href:"http://www.lazylaker.net",
+				href:"http://www.docked.co",
 				caption:m.messageData,
 				description:"Message from " + m.displayName + " on " + m.location ,
 				properties:{}
@@ -41,7 +42,7 @@ function postMessage2FB(m) {
 		Titanium.Facebook.publishStream(m.messageData, fbRec, null, function(r) {
 			if (r.success) {
 				var alertDialog = Titanium.UI.createAlertDialog({
-					message: 'Message posted!',
+					message: Msgs.MSG_POSTED,
 					buttonNames: ['OK']
 				});
 				alertDialog.show();
@@ -52,6 +53,16 @@ function postMessage2FB(m) {
 				Ti.API.info('Failed to post my message to FB ....');
 			}
 		});
+	}
+	else {
+		Ti.API.warn('**** User is not logged into Facebook -- Cannot post message to FB');
+		var alertDialog = Titanium.UI.createAlertDialog({
+			message: Msgs.MSG_POSTED,
+			buttonNames: ['OK']
+		});
+		alertDialog.show();
+		performExit();
+		win.close();
 	}
 };
 
@@ -80,7 +91,7 @@ function buildForm() {
 	var hint = "Buzz on '" + currentLake + "'?";
 	var prompt1 = currentLake;
 	var msgLbl = Titanium.UI.createLabel({
-		color: css.getColor5(),
+		color: css.getColor0(),
 		text: prompt1,
 		font: { fontFamily: model.myFont, fontWeight: 'bold' },
 		top: 10,
@@ -118,9 +129,7 @@ function buildForm() {
 		panel.add(defaultIDImage);
 	}
 	
-	//
-	// textfield to enter message to post
-	//
+	/*	
 	var msgText = Titanium.UI.createTextField({
 		hintText: hint,
 		height: 50,
@@ -134,8 +143,31 @@ function buildForm() {
 		borderWidth: 2,
 		borderRadius: 5
 	});
+	*/
+	var msgText = Titanium.UI.createTextArea({
+		height:80,
+		width:280,
+		left:10,
+		top:75,
+		font:{ fontSize:15, fontFamily: model.myFont, fontWeight: 'normal' },
+		appearance:Titanium.UI.KEYBOARD_APPEARANCE_ALERT,	
+		keyboardType:Titanium.UI.KEYBOARD_NUMBERS_PUNCTUATION,
+		// returnKeyType:Titanium.UI.RETURNKEY_EMERGENCY_CALL,
+		borderWidth:2,
+		borderColor:css.getColor0(),
+		borderRadius:5
+		// suppressReturn:false
+	});
 	msgText.addEventListener('change', function(e){
-		if ((msgText.text == '' || msgText == null) && model.getPendingRawImage() == null) {
+		var str = msgText.value;
+		if (str != null && str.length > 140) {
+			composeMsgWinSubmitBtn.enabled = false;
+			var modStr = str.substr(0, 140);
+			msgText.value = modStr;
+			Tools.reportMsg(model.getAppName(), 'Your message is too long!');	
+			return;
+		}
+		if ((msgText.value == '' || msgText == null) && model.getPendingRawImage() == null) {
 			composeMsgWinSubmitBtn.enabled = false;
 		}
 		else {
@@ -164,19 +196,19 @@ function buildForm() {
 	// photo menu
 	//
 	var photoMenuList = [
-		{ title: 'Take a picture', color: css.getColor5(), url: 'takePhoto.js' }, 
-		{ title: 'From gallery', color: css.getColor5(), url: 'browseGallery.js' }
+		{ title: Msgs.TAKE_PIC, color: css.getColor0(), url: 'takePhoto.js' }, 
+		{ title: Msgs.SELECT_FROM_GALLERY, color: css.getColor0(), url: 'browseGallery.js' }
 	];
 	var photoMenu = Titanium.UI.createTableView({
 		data: photoMenuList,
 		scrollable: false,
-		separatorColor: css.getColor5(),
+		separatorColor: css.getColor0(),
 		style: Titanium.UI.iPhone.TableViewStyle.PLAIN,
 		top: 165,
 		right: 10,
 		height: 100,
 		width: 200,
-		color: css.getColor5(),
+		color: css.getColor0(),
 		font: { fontFamily: model.myFont, fontWeight: 'normal' },
 		backgroundColor: css.getColor2()
 	});
