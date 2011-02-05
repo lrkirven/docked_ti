@@ -11,9 +11,9 @@ function RestClient() {
 	// create singleton instance to communicate with remote REST web service
 	//
     var myClient = {
-			//
-			// This method posts a message by the user to a specific lake resource (or region)
-			//
+			/*	
+			 * This method posts a message by the user to a specific lake resource (or region)
+			 */	
 			postMessage : function(llId, msg) {
                	Titanium.API.info("postMessage: Entered");
 				var xhr = Ti.Network.createHTTPClient();
@@ -134,9 +134,67 @@ function RestClient() {
                 Titanium.API.info('postComment: Posting JSON msg (comment) to server ... ' + str);
                 xhr.send(str);	
 			},
-			//
-			// This method updates display name
-			//
+			addHotSpot : function(userToken, hotSpot) {
+               	Titanium.API.info("addHotSpot: Entered");
+				var xhr = Ti.Network.createHTTPClient();
+                xhr.setTimeout(90000);
+				
+                // 
+                // error
+                //
+                xhr.onerror = function(e) {
+                	Titanium.API.info("some error");
+					Ti.App.fireEvent('NEW_MSG_EVENT_ADDED', { status:69,
+						errorMsg: 'Unable to connect to remote services -- Please check your network connection'	
+					});
+                }; 
+            
+                // 
+                // success    
+                //
+                xhr.onload = function() {
+					if (Tools.test4NotFound(this.responseText)) {
+						Ti.App.fireEvent('NEW_MSG_EVENT_ADDED', { status:89,
+							errorMsg: 'Unable complete request at this time -- Apologize for the service failure.'	
+						});
+						return;
+					}
+					Titanium.API.info('addHotSpot: onload: Entered - ' + this.responseText);
+					if (this.responseText != null) {
+						var jsonNodeData = JSON.parse(this.responseText);
+						if (jsonNodeData != null) {
+							Titanium.API.info('addHotSpot: onload: SUCCESS');
+							Ti.App.fireEvent('NEW_MSG_EVENT_ADDED', { newMsgEvent: jsonNodeData, origMsgEvent: msg, status:0 });
+						}
+						else {
+							Ti.App.fireEvent('NEW_MSG_EVENT_ADDED', 
+								{ status:99, errorMsg:'Remote services unable to complete request -- Support has been contacted.' });
+						}
+					}
+					else {
+						Ti.App.fireEvent('NEW_MSG_EVENT_ADDED', 
+							{ status:99, errorMsg:'Remote services unable to complete request -- Support has been contacted.' });
+					}
+                };
+
+                //
+                // create connection
+                //
+				var targetURL =  myHotSpotRestURL + msg.resourceId + '?userToken' + userToken ;
+				Titanium.API.info('addHotSpot: REST URL: ' + targetURL);
+                xhr.open('POST', targetURL);
+				xhr.setRequestHeader('Content-Type', 'application/json');
+				xhr.setRequestHeader('Accept', 'application/json');
+                //
+                // send HTTP request
+                //
+				var str = JSON.stringify(hotSpot);
+                Titanium.API.info('postMessage: Posting JSON msg (hotSpot) to server ... ' + str);
+                xhr.send(str);	
+			},
+			/*
+			 * Register user with an user account
+			 */
 			registerUser : function(emailAddr, displayName, registerSecret) {
                	Titanium.API.info("registerUser: Entered");
 				var xhr = Ti.Network.createHTTPClient();

@@ -152,11 +152,9 @@ function buildForm() {
 		font:{ fontSize:15, fontFamily: model.myFont, fontWeight: 'normal' },
 		appearance:Titanium.UI.KEYBOARD_APPEARANCE_ALERT,	
 		keyboardType:Titanium.UI.KEYBOARD_NUMBERS_PUNCTUATION,
-		// returnKeyType:Titanium.UI.RETURNKEY_EMERGENCY_CALL,
 		borderWidth:2,
 		borderColor:css.getColor0(),
 		borderRadius:5
-		// suppressReturn:false
 	});
 	msgText.addEventListener('change', function(e){
 		var str = msgText.value;

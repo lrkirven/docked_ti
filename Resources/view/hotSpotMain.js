@@ -3,11 +3,12 @@ Ti.include('../util/msgs.js');
 Ti.include('../model/modelLocator.js');
 Ti.include('../client/restClient.js');
 
+Ti.include('baseViewer.js');
+
 var win = Ti.UI.currentWindow;
 var model = win.model;
 var css = win.css;
 var windowList = [];
-var currentLocationLabel = null;
 var buzzMenu = null;
 var inPolygonMM = null;
 var outPolygonMM = null;
@@ -15,34 +16,26 @@ var userCountLbl = null;
 var mainInd = null;
 var userLabel = null;
 var hsMenu = null;
+var selectedLake = null;
 
-function check4NewMsgEvents() {
-	var client = new RestClient();
-	var activeLake = model.getCurrentLake();
-	if (activeLake != null) {
-		Ti.API.info('check4MsgEvent(): resourceId ---> ' + activeLake.id);
-		client.getLocalMsgEvents(activeLake.id);
-	}
-	else {
-		Ti.API.info('check4MsgEvent(): Not in a region to view messages!!!!');
-		Ti.App.fireEvent('LOCAL_MSG_EVENTS_RECD', { result:[] });
-	}
-};
-
+/**
+ * Handle event that the user's location has changed.
+ * @param {Object} e
+ */
 Titanium.App.addEventListener('LOCATION_CHANGED', function(e){
 	Ti.API.info('Handle LOCATION_CHANGED event ...');
 	if (model.getCurrentLake() != null) {
-		currentLocationLabel.text = model.getCurrentLake().name;
-		currentLocationLabel.color = css.getColor4();
+		selectedLake.text = model.getCurrentLake().name;
+		selectedLake.color = css.getColor4();
 		hsMenu.data = (model.getCurrentUser() == null ? inPolygonAnonymousMM : inPolygonMM);
 		var countDisplay = model.getCurrentLake().localCount + Msgs.USERS;
 		userCountLbl.text = countDisplay;
 		win.touchEnabled = true;
 	}
 	else {
-		currentLocationLabel.text = Msgs.OUT_OF_ZONE;
+		selectedLake.text = Msgs.OUT_OF_ZONE;
 		userCountLbl.text = '';
-		currentLocationLabel.color = css.getColor3();
+		selectedLake.color = css.getColor3();
 		hsMenu.data = outPolygonMM;
 		win.touchEnabled = true;
 	}
@@ -63,6 +56,7 @@ Titanium.App.addEventListener('UPDATED_DISPLAY_NAME', function(e) {
  * 
  * @param {Object} currentLake
  */
+/*
 function buildHeader(currentLake) {
 	var h = Ti.UI.createView({
 		height: 50,
@@ -148,6 +142,7 @@ function buildHeader(currentLake) {
 		
 	return h;
 };
+*/
 
 function buildMenu() {
 	var tblHeader = Ti.UI.createView({
@@ -185,7 +180,6 @@ function buildMenu() {
 			w.model = model;
 			w.css = css;
 			Titanium.UI.currentTab.open(w, { animated: true }); 
-			// windowList.push(w);
 		}
 	});
 	hsMenu.backgroundImage = '../dockedbg.png';	
@@ -235,7 +229,7 @@ function init() {
 		title:'Mark HotSpot',
 		hasChild:true,
 		leftImage:'../phone_playmovie.png',
-		ptr:'composeMsg.js'
+		ptr:'markHotSpot.js'
 	}];
 	
 	inPolygonAnonymousMM = [{
@@ -256,11 +250,14 @@ function init() {
 	
 	
 	if (currentLake != null) {
+		Ti.API.info('-----> Inside of a lake polygon!!');
 		/*
 		 * header
 		 */	
-		var header = buildHeader(currentLake);
-		win.add(header);
+		var t2 = Titanium.UI.createAnimation({top:0, duration:750});
+		headerView = Base.buildLocationHeader(true, '');
+		headerView.animate(t2);
+		win.add(headerView);
 		
 		/*
 		 * menu
@@ -280,12 +277,13 @@ function init() {
 		}
 		win.add(hsMenu);
 		
-
-		
+		/*
 		currentLocationLabel.text = currentLake.name;
 		currentLocationLabel.color = css.getColor4();
 		var countDisplay = currentLake.localCount + ' USER(S)';
 		userCountLbl.text = countDisplay;
+		*/
+		
 		win.touchEnabled = true;
 	
 		/*
@@ -296,11 +294,14 @@ function init() {
     	}, 20000);
 	}
 	else {
+		Ti.API.info('-----> Outside of a lake polygon!!');
 		/*
 		 * header
 		 */	
-		var header = buildHeader(null);
-		win.add(header);
+		var t2 = Titanium.UI.createAnimation({top:0, duration:750});
+		headerView = Base.buildLocationHeader(true, '');
+		headerView.animate(t2);
+		win.add(headerView);
 		
 		/*
 		 * menu
