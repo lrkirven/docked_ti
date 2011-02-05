@@ -1,6 +1,7 @@
+Ti.include('../util/tools.js');
+Ti.include('../util/msgs.js');
 Ti.include('../model/modelLocator.js');
 Ti.include('../client/restClient.js');
-Ti.include('../util/tools.js');
 Ti.include('baseViewer.js');
 
 /**
@@ -515,7 +516,7 @@ function buildPanelHeader(localFlag){
 		backgroundColor: css.getColor0()
 	});
 	
-	var headerLbl0 = (localFlag ? 'My Location: ' : 'Remote Location: ');
+	var headerLbl0 = (localFlag ? Msgs.MY_LOCATION : Msgs.REMOTE_LOCATION);
 	var label0 = Ti.UI.createLabel({
 		text: headerLbl0,
 		top: 0,
@@ -530,7 +531,7 @@ function buildPanelHeader(localFlag){
 		displayName = model.getCurrentUser().displayName;	
 	}
 	else {
-		displayName = 'Anonymous';
+		displayName = Msgs.ANONYMOUS;
 	}
 	var userLabel = Ti.UI.createLabel({
 		text: displayName, 
@@ -662,7 +663,7 @@ function updateSearchTableViewDisplay(searchResults) {
 		searchView.show();
 	}
 	else {
-		alert('No matching results for request.');
+		Tools.reportMsg(model.getAppName(), 'No matching results for search criteria.');
 		Ti.API.info('updateSearchTableViewDisplay: results are empty');
 		searchView.hide();
 	}
@@ -687,7 +688,7 @@ function updateTableViewDisplay(list) {
 	else {
 		if (!alertedUserOfNoMsgs) {
 			alertedUserOfNoMsgs = true;
-			alert('No messages found.');
+			Tools.reportMsg(model.getAppName(), Msgs.NO_BUZZ);
 		}
 		if (tableView != null) {
 			tableView.hide();

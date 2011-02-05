@@ -46,7 +46,9 @@ Titanium.App.addEventListener('LOCATION_CHANGED', function(e){
 		hsMenu.data = outPolygonMM;
 		win.touchEnabled = true;
 	}
-	mainInd.hide();
+	if (mainInd != null) {
+		mainInd.hide();
+	}
 });
 
 Titanium.App.addEventListener('UPDATED_DISPLAY_NAME', function(e) { 
@@ -175,9 +177,10 @@ function buildMenu() {
 		if (e.rowData.ptr) {
 			var w = Titanium.UI.createWindow({
 				url: e.rowData.ptr,
-				backgroundColor: baseColor,
-				barColor: baseColor,
-				title: e.rowData.title
+				backgroundColor: css.getColor0(),
+				barColor: css.getColor0(),
+				userHostSpotFlag:e.rowData.userHostSpotFlag,
+				title: model.getAppName() 
 			});
 			w.model = model;
 			w.css = css;
@@ -214,40 +217,43 @@ function init() {
 	Ti.API.info('hotSpotMain.init(): Entered ');
 	win.touchEnabled = false;
 	
+	var currentLake = model.getCurrentLake();
+	
 	inPolygonMM = [{
-		title: 'My HotSpots',
-		hasChild: true,
-		currentLake:null,
-		leftImage: '../phone_playmovie.png',
+		title:'My HotSpots',
+		hasChild:true,
+		userHostSpotFlag:true,
+		leftImage:'../phone_playmovie.png',
 		ptr: 'hsViewer.js'
 	}, {
-		title: 'Local HotSpots',
-		hasChild: true,
-		currentLake:currentLake,
-		leftImage: '../phone_playmovie.png',
+		title:'Local HotSpots',
+		hasChild:true,
+		userHostSpotFlag:false,
+		leftImage:'../phone_playmovie.png',
 		ptr: 'hsViewer.js'
 	}, {
-		title: 'Mark HotSpot',
-		hasChild: true,
-		leftImage: '../phone_playmovie.png',
-		ptr: 'composeMsg.js'
+		title:'Mark HotSpot',
+		hasChild:true,
+		leftImage:'../phone_playmovie.png',
+		ptr:'composeMsg.js'
 	}];
 	
 	inPolygonAnonymousMM = [{
-		title: 'Local HotSpots',
-		hasChild: true,
-		leftImage: '../phone_playmovie.png',
-		ptr: 'navigateViewer.js'
+		title:'Local HotSpots',
+		hasChild:true,
+		userHostSpotFlag:false,
+		leftImage:'../phone_playmovie.png',
+		ptr:'hsViewer.js'
 	}];
 	
 	outPolygonMM = [{
-		title: 'My HotSpots',
-		hasChild: true,
-		leftImage: '../phone_playmovie.png',
-		ptr: 'navigateViewer.js'
+		title:'My HotSpots',
+		hasChild:true,
+		userHostSpotFlag:true,
+		leftImage:'../phone_playmovie.png',
+		ptr: 'hsViewer.js'
 	}];
 	
-	var currentLake = model.getCurrentLake();
 	
 	if (currentLake != null) {
 		/*

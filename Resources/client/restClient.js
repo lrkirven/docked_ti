@@ -5,6 +5,7 @@ function RestClient() {
 	var myLakeRestURL = baseUrl + '/resources/lakes/';
 	var myUserRestURL = baseUrl + '/resources/users/';
 	var myReportRestURL = baseUrl + '/resources/reports/';
+	var myHotSpotRestURL = baseUrl + '/resources/hotspots/';
     
     // 
 	// create singleton instance to communicate with remote REST web service
@@ -392,7 +393,6 @@ function RestClient() {
                 // error
                 //
                 xhr.onerror = function(e) {
-                	Titanium.API.info("some error");
 					Ti.App.fireEvent('REMOTE_MSG_EVENTS_RECD', { status:69,
 						errorMsg: 'Unable to connect to remote services -- Please check your network connection'	
 					});
@@ -698,6 +698,130 @@ function RestClient() {
                 // send HTTP request
                 //
                 Titanium.API.info('getReportByReportId: Trying to get msgs from server ... ');
+                xhr.send();	
+			},
+			getHotSpotsByLake : function(resourceId) {
+               	Titanium.API.info("getHotSpotsByLake: Entered");
+				var xhr = Ti.Network.createHTTPClient();
+                xhr.setTimeout(90000);
+				
+                // 
+                // error
+                //
+                xhr.onerror = function(e) {
+					Ti.App.fireEvent('HOTSPOT_DATA_RECD', { status:69,
+						errorMsg: 'Unable to connect to remote services -- Please check your network connection'	
+					});
+                }; 
+            
+                // 
+                // success    
+                //
+                xhr.onload = function() {
+					if (Tools.test4NotFound(this.responseText)) {
+						Ti.App.fireEvent('HOTSPOT_DATA_RECD', { status:89,
+							errorMsg: 'Unable complete request at this time -- Apologize for the service failure.'	
+						});
+						return;
+					}
+					Titanium.API.info('getHotSpotsByLake: onload: Entered - [' + this.responseText + ']');
+					if (this.responseText == 'null' || this.responseText == undefined) {
+						Titanium.API.info('getHotSpotsByLake: onload: Returning empty set');
+						Ti.App.fireEvent('HOTSPOT_DATA_RECD', { result:[], status:0 });
+						return;
+					}
+					if (this.responseText != null) {
+						var jsonNodeData = JSON.parse(this.responseText);
+						if (jsonNodeData != null) {
+							Titanium.API.info('getHotSpotsByLake: onload: SUCCESS');
+							Ti.App.fireEvent('HOTSPOT_DATA_RECD', { result:jsonNodeData, status:0 });
+						}
+						else {
+							Ti.App.fireEvent('HOTSPOT_DATA_RECD', { status:99,
+								errorMsg: 'Unable to complete request at this time'	
+							});
+						}
+					}
+					else {
+						Ti.App.fireEvent('HOTSPOT_DATA_RECD', { status:99,
+							errorMsg: 'Unable to complete request at this time'	
+						});
+					}
+                };
+
+                //
+                // create connection
+                //
+				var targetURL = myHotSpotRestURL + 'lakes/' + resourceId;
+				Titanium.API.info('getHotSpotsByLake: REST URL: ' + targetURL);
+                xhr.open('GET', targetURL);
+				xhr.setRequestHeader('Accept', 'application/json');
+                //
+                // send HTTP request
+                //
+                Titanium.API.info('getHotSpotsByLake: Trying to get msgs from server ... ');
+                xhr.send();	
+			},
+			getHotSpotsByUserToken : function(userToken) {
+               	Titanium.API.info("getHotSpotsByUserToken: Entered");
+				var xhr = Ti.Network.createHTTPClient();
+                xhr.setTimeout(90000);
+				
+                // 
+                // error
+                //
+                xhr.onerror = function(e) {
+					Ti.App.fireEvent('HOTSPOT_DATA_RECD', { status:69,
+						errorMsg: 'Unable to connect to remote services -- Please check your network connection'	
+					});
+                }; 
+            
+                // 
+                // success    
+                //
+                xhr.onload = function() {
+					if (Tools.test4NotFound(this.responseText)) {
+						Ti.App.fireEvent('HOTSPOT_DATA_RECD', { status:89,
+							errorMsg: 'Unable complete request at this time -- Apologize for the service failure.'	
+						});
+						return;
+					}
+					Titanium.API.info('getHotSpotsByUserToken: onload: Entered - [' + this.responseText + ']');
+					if (this.responseText == 'null' || this.responseText == undefined) {
+						Titanium.API.info('getHotSpotsByUserToken: onload: Returning empty set');
+						Ti.App.fireEvent('HOTSPOT_DATA_RECD', { result:[], status:0 });
+						return;
+					}
+					if (this.responseText != null) {
+						var jsonNodeData = JSON.parse(this.responseText);
+						if (jsonNodeData != null) {
+							Titanium.API.info('getHotSpotsByUserToken: onload: SUCCESS');
+							Ti.App.fireEvent('HOTSPOT_DATA_RECD', { result:jsonNodeData, status:0 });
+						}
+						else {
+							Ti.App.fireEvent('HOTSPOT_DATA_RECD', { status:99,
+								errorMsg: 'Unable to complete request at this time'	
+							});
+						}
+					}
+					else {
+						Ti.App.fireEvent('HOTSPOT_DATA_RECD', { status:99,
+							errorMsg: 'Unable to complete request at this time'	
+						});
+					}
+                };
+
+                //
+                // create connection
+                //
+				var targetURL = myHotSpotRestURL + 'user/' + userToken;
+				Titanium.API.info('getHotSpotsByUserToken: REST URL: ' + targetURL);
+                xhr.open('GET', targetURL);
+				xhr.setRequestHeader('Accept', 'application/json');
+                //
+                // send HTTP request
+                //
+                Titanium.API.info('getHotSpotsByUserToken: Trying to get msgs from server ... ');
                 xhr.send();	
 			},
 			//

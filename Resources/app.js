@@ -239,7 +239,8 @@ Titanium.App.addEventListener('PING_RESPONSE_DATA', function(e) {
 			// if the user is in a defined lake polygon
 			//	
 			if (pingResp.resourceId != 0) {
-				Ti.API.info('Got Lake: ' + pingResp.resourceName + " " + pingResp.resourceState + " ID: " + pingResp.resourceId);
+				Ti.API.info('Got Lake: ' + pingResp.resourceName + ' state: ' + pingResp.resourceState + ' resourceId: ' + pingResp.resourceI + 
+				' UserToken: ' + pingResp.userToken + ' Locals: ' + pingResp.numOfLocalLakers);
 				var lake = {
 					name: pingResp.resourceName,
 					state: pingResp.resourceState,
@@ -247,6 +248,10 @@ Titanium.App.addEventListener('PING_RESPONSE_DATA', function(e) {
 					numOfLazyLakers: pingResp.numOfLazyLakers,
 					localCount: pingResp.numOfLocalLakers
 				};
+				var user = model.getCurrentUser();
+				if (user != null) {
+					user.userToken = pingResp.userToken;
+				}
 				model.setCurrentLake(lake);
 				Ti.App.fireEvent('LOCATION_CHANGED', {});
 				var client = new RestClient();
