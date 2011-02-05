@@ -814,7 +814,7 @@ function RestClient() {
                 //
                 // create connection
                 //
-				var targetURL = myHotSpotRestURL + 'user/' + userToken;
+				var targetURL = myHotSpotRestURL + 'users/' + userToken;
 				Titanium.API.info('getHotSpotsByUserToken: REST URL: ' + targetURL);
                 xhr.open('GET', targetURL);
 				xhr.setRequestHeader('Accept', 'application/json');

@@ -1,5 +1,5 @@
-Ti.include('../util/tools.js');
 Ti.include('../util/msgs.js');
+Ti.include('../util/tools.js');
 Ti.include('../model/modelLocator.js');
 Ti.include('../client/restClient.js');
 Ti.include('baseViewer.js');
@@ -507,146 +507,6 @@ function appendProfilePhoto(row) {
  * This method builds and adds all of the listeners to handle all of the user interaction
  * at the top the window.
  */
-function buildPanelHeader(localFlag){
-	var h = Ti.UI.createView({
-		height: 50,
-		width: 320,
-		top: -100,
-		borderColor: css.getColor0(),
-		backgroundColor: css.getColor0()
-	});
-	
-	var headerLbl0 = (localFlag ? Msgs.MY_LOCATION : Msgs.REMOTE_LOCATION);
-	var label0 = Ti.UI.createLabel({
-		text: headerLbl0,
-		top: 0,
-		left: 10,
-		height: 20,
-		font: { fontFamily: model.myFont, fontSize: 11, fontWeight: 'normal' },
-		color: '#fff'
-	});
-
-	var displayName = null;	
-	if (model.getCurrentUser() != null) {
-		displayName = model.getCurrentUser().displayName;	
-	}
-	else {
-		displayName = Msgs.ANONYMOUS;
-	}
-	var userLabel = Ti.UI.createLabel({
-		text: displayName, 
-		top: 0,
-		width: 100,
-		right: 10,
-		textAlign: 'right',
-		height: 20,
-		font: { fontFamily: model.myFont, fontSize: 11, fontWeight: 'normal' },
-		color: '#fff'
-	});
-
-	var countDisplay = '';
-	if (model.getCurrentLake() != null) {
-		countDisplay = model.getCurrentLake().localCount + ' USER(S)';	
-	}
-	userCountLbl = Ti.UI.createLabel({
-		text: countDisplay,
-		top: 25,
-		width: 100,
-		right: 10,
-		textAlign: 'right',
-		height: 20,
-		font: { fontFamily: model.myFont, fontSize: 11, fontWeight: 'normal' },
-		color: '#fff'
-	});
-
-	/*
-	 * handle case when user is inside of a lake zone
-	 */	
-	if (localFlag) {
-		var target = model.getCurrentLake();
-		if (target != undefined) {
-			selectedLake = Ti.UI.createLabel({
-				text: target.name,
-				top: 15,
-				left: 10,
-				height: 25,
-				font: {
-					fontFamily: model.myFont,
-					fontSize: 16,
-					fontWeight: 'bold'
-				},
-				color: css.getColor4()
-			});
-			selectedLake.addEventListener('click', function(e){
-				Ti.App.fireEvent('GOTO_TAB', {
-					nextTab: 1
-				});
-			});
-		}
-		else {
-			selectedLake = Ti.UI.createLabel({
-				text: Msgs.OUT_OF_ZONE,
-				top: 15,
-				left: 10,
-				height: 25,
-				font: {
-					fontFamily: model.myFont,
-					fontSize: 16,
-					fontWeight: 'bold'
-				},
-				color: css.getColor3()
-			});
-		}
-	}
-	/*
-	 * handle user trying to visit another lake
-	 */
-	else {
-		selectedLake = Ti.UI.createLabel({
-			text: remoteLake.name,
-			top: 15,
-			left: 10,
-			height: 25,
-			font: {
-				fontFamily: model.myFont,
-				fontSize: 16,
-				fontWeight: 'bold'
-			},
-			color: css.getColor4()
-		});
-	}
-	
-	/*	
-	var refreshBtn = Titanium.UI.createButton({
-		systemButton:Titanium.UI.iPhone.SystemButton.REFRESH,
-	});
-	refresh.addEventListener('click', function() {
-		
-	});
-
-	if (Ti.Platform.name == 'iPhone OS') {
-		win.rightNavButton = refreshBtn;
-	} 
-	else {
-		refreshBtn.top = 5;
-		refreshBtn.title = "Refresh";
-		refreshBtn.width = 200;
-		tableView.top = 40;
-		win.add(refreshBtn);
-	}
-	*/
-
-	
-	//
-	// add items to table header
-	//
-	h.add(label0);
-	h.add(selectedLake);
-	h.add(userLabel);
-	h.add(userCountLbl);
-	
-	return h;
-};
 
 /**
  * This method updates the data display with search results from the server.
@@ -793,7 +653,7 @@ Titanium.App.addEventListener('LOCAL_MSG_EVENTS_RECD', function(e) {
 		//
 		if (headerView == null) {
 			var t2 = Titanium.UI.createAnimation({top:0, duration:750});
-			headerView = buildPanelHeader(true);
+			headerView = Base.buildLocationHeader(true, '');
 			headerView.animate(t2);
 			win.add(headerView);
 		}
@@ -817,7 +677,7 @@ Titanium.App.addEventListener('REMOTE_MSG_EVENTS_RECD', function(e) {
 		//
 		if (headerView == null) {
 			var t2 = Titanium.UI.createAnimation({top:0, duration:750});
-			headerView = buildPanelHeader(false);
+			headerView = Base.buildLocationHeader(false, remoteLake.name);
 			headerView.animate(t2);
 			win.add(headerView);
 		}

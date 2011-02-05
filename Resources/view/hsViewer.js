@@ -1,5 +1,5 @@
-Ti.include('../util/tools.js');
 Ti.include('../util/msgs.js');
+Ti.include('../util/tools.js');
 Ti.include('../model/modelLocator.js');
 Ti.include('../client/restClient.js');
 
@@ -16,6 +16,12 @@ var msgView = null;
 var searchPage = null;
 var hsPage = null;
 var selectedLake = null;
+
+var b = Titanium.UI.createButton({title:'BACK'});
+b.addEventListener('click', function() {
+	win.close();
+});
+win.leftNavButton = b;
 
 function appendProfilePhoto(row) {
 	Ti.API.info('appendProfilePhoto: row=' + row);
@@ -454,7 +460,7 @@ function buildHotSpotTableView(){
 		separatorColor:css.getColor2(),
 		style:Titanium.UI.iPhone.TableViewStyle.PLAIN,
 		visible:false,
-		top:50,
+		top:0,
 		left:0,
 		width:325,
 		height:350,
@@ -490,55 +496,24 @@ function buildHotSpotTableView(){
  * 
  * @param {Object} visible
  */
-function buildMsgView(visible) {
+function buildHotSpotTable(visible) {
 	//
 	// empty msg view
 	//
 	hsPage = Ti.UI.createView({
 		backgroundColor: css.getColor0(),
 		visible:visible,
-		top:0,
+		top:45,
 		left:0,
 		height:'auto',
 		width:'auto',
 		clickName: 'hsPage'
 	});
 	
-	var h = Ti.UI.createView({
-		height: 50,
-		top: -100,
-		borderColor: css.getColor0(),
-		backgroundColor: css.getColor0()
-	});
-	var headerLbl0 = Msgs.MY_LOCATION;
-	var label0 = Ti.UI.createLabel({
-		text: headerLbl0,
-		top: 0,
-		left: 10,
-		height: 20,
-		font: { fontFamily: model.myFont, fontSize: 11, fontWeight: 'normal' },
-		color: '#fff'
-	});
-	h.add(label0);
-	selectedLake = Ti.UI.createLabel({
-		color: css.getColor2(),
-		font: { fontFamily: model.myFont, fontSize: 16, fontWeight: 'bold' },
-		left: 10,
-		top: 10,
-		height: 40,
-		width: 300,
-		clickName: 'userMsg',
-		text:'' 
-	});
-	h.add(selectedLake);
-	
-	hsPage.add(h);
 	msgView = buildHotSpotTableView();
-	Ti.API.info('buildMsgView: Adding msgView=' + msgView);
+	Ti.API.info('buildHotSpotTable: Adding msgView=' + msgView);
 	hsPage.add(msgView);
-	Ti.API.info('buildMsgView: win=' + win);
-	var t2 = Titanium.UI.createAnimation({top:0, duration:750});
-	h.animate(t2);
+	Ti.API.info('buildHotSpotTable: win=' + win);
 	win.add(hsPage);	
 };
 
@@ -575,9 +550,34 @@ function updateSearchTableViewDisplay(searchResults) {
 	else {
 		Ti.API.info('updateSearchTableViewDisplay: results are empty');
 		searchView.hide();
-		
 	}
 };
+
+	//
+	// setup event listeners
+	//
+Ti.App.addEventListener('HOTSPOT_DATA_RECD', function(e) {
+	if (e.status == 0) {
+		Ti.API.info('Handling event -- HOTSPOT_DATA_RECD --> ' + e.result);
+		updateHotSpotTableViewDisplay(e.result);
+		Ti.API.info('updateMsgTableViewDisplay: DONE');
+		Ti.API.info('Adding view=' + msgView + ' page=' + hsPage);
+		hsPage.visible = true;
+	}
+	else {
+		Tools.reportMsg(model.getAppName(), e.errorMsg);
+	}
+});
+
+Ti.App.addEventListener('SEARCH_RESULTS_RECD', function(e) {
+	if (e.status == 0) {
+		Ti.API.info('Handling event -- SEARCH_RESULTS_RECD --> ' + e.result);
+		updateSearchTableViewDisplay(e.result);
+	}
+	else {
+		Tools.reportMsg(model.getAppName(), e.errorMsg);
+	}
+});
 
 /**
  * Initial entry ito this component
@@ -585,41 +585,27 @@ function updateSearchTableViewDisplay(searchResults) {
 function init() {
 	Ti.API.info('searchLakes.init(): Entered ');
 	
-	//
-	// setup event listeners
-	//
-	Ti.App.addEventListener('HOTSPOT_DATA_RECD', function(e) {
-		if (e.status == 0) {
-			Ti.API.info('Handling event -- HOTSPOT_DATA_RECD --> ' + e.result);
-			updateHotSpotTableViewDisplay(e.result);
-			Ti.API.info('updateMsgTableViewDisplay: DONE');
-			Ti.API.info('Adding view=' + msgView + ' page=' + hsPage);
-			hsPage.visible = true;
-		}
-		else {
-			Tools.reportMsg(model.getAppName(), e.errorMsg);
-		}
-	});
-	
-	Ti.App.addEventListener('SEARCH_RESULTS_RECD', function(e) {
-		if (e.status == 0) {
-			Ti.API.info('Handling event -- SEARCH_RESULTS_RECD --> ' + e.result);
-			updateSearchTableViewDisplay(e.result);
-		}
-		else {
-			Tools.reportMsg(model.getAppName(), e.errorMsg);
-		}
-	});
+	/*
+	 * location header 
+	 */
+	var t2 = Titanium.UI.createAnimation({top:0, duration:750});
+	headerView = Base.buildLocationHeader(true, '');
+	headerView.animate(t2);
+	win.add(headerView);
 	
 	//
 	// display search form
 	//
 	// buildSearchView(true);
 	
-	//
-	// build msg view
-	//
-	buildMsgView(false);
+	/*
+	 * build table to display to user
+	 */
+	buildHotSpotTable(false);
+	
+	/*
+	 * load hotspot data from server
+	 */
 	var user = model.getCurrentUser();
 	var lake = model.getCurrentLake();
 	var client = new RestClient();
@@ -627,7 +613,7 @@ function init() {
 		client.getHotSpotsByUserToken(user.userToken);
 	}
 	else {
-		client.getHotSpotsByLake(lake.resourceId);	
+		client.getHotSpotsByLake(lake.id);	
 	}
 };
 
