@@ -1,6 +1,6 @@
-Ti.include('../model/modelLocator.js');
 Ti.include('../util/tea.js');
 Ti.include('../util/tools.js');
+Ti.include('../model/modelLocator.js');
 
 var win = Ti.UI.currentWindow;
 var model = win.model;

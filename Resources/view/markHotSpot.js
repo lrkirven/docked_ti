@@ -2,20 +2,35 @@ Ti.include('../util/tools.js');
 Ti.include('../util/msgs.js');
 Ti.include('../util/geo.js');
 Ti.include('../model/modelLocator.js');
+Ti.include('../props/cssMgr.js');
 Ti.include('../client/picasaClient.js');
 Ti.include('../client/restClient.js');
+
+Ti.include('baseViewer.js');
 
 var win = Ti.UI.currentWindow;
 var model = win.model;
 var css = win.css;
-var composeMsgWinPhotoIndBtn = null;
-var post2FB = false;
+var submitBtn = null;
+var notesText = null;
+var descText = null;
 
-var b = Titanium.UI.createButton({title:'BACK'});
-b.addEventListener('click', function() {
-	win.close();
-});
-win.leftNavButton = b;
+
+
+/**
+ * This method checks the form data's validity before submitting it to the server.
+ */
+function checkFormData() {
+	if (notesText.value == null || notesText.value.length == 0) {
+		submitBtn.enabled = false;
+		return;
+	}	
+	if (descText.value == null || descText.value.length == 0) {
+		submitBtn.enabled = false;
+		return;
+	}	
+	submitBtn.enabled = true;
+};
 
 /**
  * This method lays out the UI format and sets up the event listeners to 
@@ -24,7 +39,7 @@ win.leftNavButton = b;
 function buildForm() {
 	
 	var panel = Ti.UI.createView({ 
-		backgroundColor:'#cccccc',
+		backgroundColor:css.getColor2(),
 		top:20,
 		left:20,
 		right:20,
@@ -74,11 +89,10 @@ function buildForm() {
 	// label
 	//
 	var currentLake = model.getCurrentLake().name;
-	var hint = "HotSpot on '" + currentLake + "'?";
 	var prompt1 = currentLake;
 	var descLbl = Titanium.UI.createLabel({
 		color: css.getColor0(),
-		text: 'Description: ',
+		text: Msgs.DESC_LBL,
 		font: { fontFamily: model.myFont, fontWeight: 'bold' },
 		top: 70,
 		left: 10,
@@ -88,7 +102,7 @@ function buildForm() {
 	});
 	panel.add(descLbl);
 	
-	var descText = Titanium.UI.createTextField({
+	descText = Titanium.UI.createTextField({
 		height: 40,
 		width: 280,
 		left: 10,
@@ -100,11 +114,21 @@ function buildForm() {
 		borderWidth: 2,
 		borderRadius: 5
 	});
+	descText.addEventListener('change', function(e){
+		var str = notesText.value;
+		if (str != null && str.length > 100) {
+			var modStr = str.substr(0, 100);
+			notesText.value = modStr;
+			Tools.reportMsg(Msgs.APP_NAME, Msgs.MSG_TOO_LONG);	
+			return;
+		}
+		checkFormData();
+	});
 	panel.add(descText);
 	
 	var notesLbl = Titanium.UI.createLabel({
 		color: css.getColor0(),
-		text: 'Notes: ',
+		text: Msgs.NOTES_LBL,
 		font: { fontFamily: model.myFont, fontWeight: 'bold' },
 		top: 140,
 		left: 10,
@@ -114,7 +138,7 @@ function buildForm() {
 	});
 	panel.add(notesLbl);
 	
-	var notesText = Titanium.UI.createTextArea({
+	notesText = Titanium.UI.createTextArea({
 		height:80,
 		width:280,
 		left:10,
@@ -127,26 +151,20 @@ function buildForm() {
 		borderRadius:5
 	});
 	notesText.addEventListener('change', function(e){
-		var str = msgText.value;
+		var str = notesText.value;
 		if (str != null && str.length > 140) {
-			composeMsgWinSubmitBtn.enabled = false;
 			var modStr = str.substr(0, 140);
-			msgText.value = modStr;
-			Tools.reportMsg(model.getAppName(), 'Your message is too long!');	
+			notesText.value = modStr;
+			Tools.reportMsg(Msgs.APP_NAME, Msgs.MSG_TOO_LONG);	
 			return;
 		}
-		if ((msgText.value == '' || msgText == null) && model.getPendingRawImage() == null) {
-			composeMsgWinSubmitBtn.enabled = false;
-		}
-		else {
-			composeMsgWinSubmitBtn.enabled = true;
-		}
+		checkFormData();
 	});
 	panel.add(notesText);
 	
 	var categoryLbl = Titanium.UI.createLabel({
 		color: css.getColor0(),
-		text: 'Category: ',
+		text: Msgs.CATEGORY_LBL,
 		font: { fontFamily: model.myFont, fontWeight: 'bold' },
 		top: 190,
 		left: 10,
@@ -174,8 +192,8 @@ function buildForm() {
 	/*
 	 * submit button
 	 */
-	var submitBtn = Titanium.UI.createButton({
-		title: 'Mark!',
+	submitBtn = Titanium.UI.createButton({
+		title: Msgs.MARK,
 		style: Titanium.UI.iPhone.SystemButtonStyle.BORDERED,
 		enabled: false,
 		color: css.getColor0(),
@@ -186,46 +204,29 @@ function buildForm() {
 	});
 	submitBtn.addEventListener('click', function(){
 		submitBtn.enabled = false;
-		Ti.API.info('Start save message process ...');
-		var rawImage = model.getPendingRawImage();
-		var msgEvent = null;
 		var myLocation = null;
-		var restClient = null;
-		var profilePic = null;
 		
-		postingInd.message = "";
 		postingInd.show();
-		Ti.API.info('Starting simple process of just posting message to server ...');
+		Ti.API.info('Saving hotspot to server ...');
 		myLocation = model.getCurrentLake();
-		hotSpot = 
-		{
-			title: '',
-			version: 0,
+		var user = model.getCurrentUser();
+		hotSpot =  {
+			category: categoryBtn.index,
 			username: currentUser.displayName,
 			resourceId: myLocation.id,
-			location: myLocation.name,
-			desc: msgText.value,
+			llId: user.id,
+			desc: descText.value,
+			notes: notesText.value,
 			lat: model.getUserLat(),
-			lng: model.getUserLng()
+			lng: model.getUserLng(),
+			rating: 0
 		};
 		
-		/*
-		profilePic = model.getFBProfileUrl();
-		if (profilePic != null) {
-			msgEvent.profileUrl = profilePic;
-			Ti.API.info('Adding fb profile pic .... ' + profilePic);
-		}
-		else {
-			Ti.API.info('Not adding fb profile pic ....');
-		}
-		*/
-		
-		restClient = new RestClient();
+		var restClient = new RestClient();
 		restClient.addHotSpot(currentUser.userToken, hotSpot);
 	});
 	win.add(panel);
 	win.setRightNavButton(submitBtn);
-	composeMsgWinSubmitBtn = submitBtn;
 	
 	//
 	// preloader
@@ -247,30 +248,19 @@ function buildForm() {
 };
 
 function performExit() {
-	Ti.App.removeEventListener('NEW_MSG_EVENT_ADDED', handleNewMsgPosted);
+	Ti.App.removeEventListener('NEW_HOTSPOT_ADDED', handleNewMsgPosted);
 };
 
-function handleNewMsgPosted(e) {
+function handleNewHotSpotAdded(e) {
 	if (e.status == 0) {
-		if (post2FB) {
-			postingInd.visible = false;
-			Ti.API.info('handleNewMsgPosted(): Going to facebook ---> ' + e.origMsgEvent);
-			postMessage2FB(e.origMsgEvent);
-		}
-		else {
-			postingInd.visible = false;
-			var alertDialog = Titanium.UI.createAlertDialog({
-				message: 'Message posted!',
-				buttonNames: ['OK']
-			});
-			alertDialog.show();
-			performExit();
-			win.close();
-		}
+		postingInd.visible = false;
+		Tools.reportMsg(Msgs.APP_NAME, "HotSpot saved!");
+		performExit();
+		win.close();
 	}
 	else {
 		postingInd.visible = false;
-		Tools.reportMsg(model.getAppName(), e.errorMsg);
+		Tools.reportMsg(Msgs.APP_NAME, e.errorMsg);
 		performExit();
 		win.close();
 	}
@@ -281,13 +271,17 @@ function handleNewMsgPosted(e) {
  * Initialize the form
  */
 function init() {
-	Ti.App.addEventListener('NEW_HOTSPOT_ADDED', handleNewMsgPosted);
+	/*
+ 	 * Modify the 'Back' to my preference
+ 	 */
+	Base.attachMyBACKButton(win);
+	Ti.App.addEventListener('NEW_HOTSPOT_ADDED', handleNewHotSpotAdded);
 	buildForm();
 	win.backgroundImage = '../dockedbg.png';
 	win.open();	
 };
 
-//
-// initial entry
-//
+/*
+ * initial entry
+ */
 init();

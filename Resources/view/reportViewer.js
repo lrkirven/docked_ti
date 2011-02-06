@@ -82,7 +82,7 @@ function init() {
    			barColor:css.getColor0(),
 			state:e.rowData.state,
 			stateTitle:e.rowData.title,
-			title:model.getAppName()
+			title:Msgs.APP_NAME
 		});
 		w.model = model;
 		w.css = css;

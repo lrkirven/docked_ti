@@ -1,5 +1,5 @@
-Ti.include('../util/tools.js');
 Ti.include('../util/msgs.js');
+Ti.include('../util/tools.js');
 Ti.include('../model/modelLocator.js');
 Ti.include('../client/picasaClient.js');
 Ti.include('../client/restClient.js');
@@ -21,7 +21,7 @@ function postMessage2FB(m) {
 		var fbRec = null;
 		if (m.photoUrl != null) {
 			fbRec = {
-				name: m.displayName + " via " + model.getAppName(),
+				name: m.displayName + " via " + Msgs.APP_NAME,
 				href:"http://www.docked.co",
 				caption:m.messageData,
 				description:"Message from " + m.displayName + " on " + m.location ,
@@ -31,7 +31,7 @@ function postMessage2FB(m) {
 		}
 		else {
 			fbRec = {
-				name: m.displayName + " via " + model.getAppName(),
+				name: m.displayName + " via " + Msgs.APP_NAME,
 				href:"http://www.docked.co",
 				caption:m.messageData,
 				description:"Message from " + m.displayName + " on " + m.location ,
@@ -162,7 +162,7 @@ function buildForm() {
 			composeMsgWinSubmitBtn.enabled = false;
 			var modStr = str.substr(0, 140);
 			msgText.value = modStr;
-			Tools.reportMsg(model.getAppName(), 'Your message is too long!');	
+			Tools.reportMsg(Msgs.APP_NAME, 'Your message is too long!');	
 			return;
 		}
 		if ((msgText.value == '' || msgText == null) && model.getPendingRawImage() == null) {
@@ -406,7 +406,7 @@ function handleNewMsgPosted(e) {
 	}
 	else {
 		postingInd.visible = false;
-		Tools.reportMsg(model.getAppName(), e.errorMsg);
+		Tools.reportMsg(Msgs.APP_NAME, e.errorMsg);
 		performExit();
 		win.close();
 	}
@@ -425,7 +425,7 @@ function handleUploadedPic(e) {
 		
 	}
 	else {
-		Tools.reportMsg(model.getAppName(), 'Unable to complete request at this time');
+		Tools.reportMsg(Msgs.APP_NAME, 'Unable to complete request at this time');
 		postingInd.hide();
 		Ti.App.removeEventListener('NEW_MSG_EVENT_ADDED', handleNewMsgPosted);
 		win.close();

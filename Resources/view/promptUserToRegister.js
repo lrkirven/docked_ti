@@ -1,3 +1,4 @@
+Ti.include('../util/msgs.js');
 Ti.include('../model/modelLocator.js');
 Ti.include('../client/picasaClient.js');
 Ti.include('../client/restClient.js');
@@ -9,10 +10,6 @@ var db = win.db;
 var css = win.css;
 var composeMsgWinPhotoIndBtn = null;
 var post2FB = false;
-
-function trim(stringToTrim) {
-	return stringToTrim.replace(/^\s+|\s+$/g,"");
-}
 
 /**
  * This method lays out the UI format and sets up the event listeners to 
@@ -45,7 +42,7 @@ function buildForm() {
 	
 	var appName = Titanium.UI.createLabel({
 		color: css.getColor0(),
-		text: model.getAppName(),
+		text: Msgs.APP_NAME,
 		font: { fontFamily: model.myFont, fontSize:25, fontWeight: 'bold' },
 		top: 10,
 		right: 20,
@@ -79,7 +76,7 @@ function buildForm() {
 	// submit button
 	//
 	var registerBtn = Titanium.UI.createButton({
-		title: 'Sign Up',
+		title: Msgs.SIGN_UP,
 		enabled: true,
 		color: css.getColor0(),
 		systemButton: Titanium.UI.iPhone.SystemButton.FLEXIBLE_SPACE,
@@ -96,22 +93,6 @@ function buildForm() {
 	panel.add(registerBtn);
 	panel.add(laterBtn);
 
-	/*	
-	postingInd = Titanium.UI.createActivityIndicator({
-		top: 50,
-		left: 140,
-		height: 150,
-		width: 50,
-		style: Titanium.UI.iPhone.ActivityIndicatorStyle.PLAIN
-	});
-	postingInd.font = {
-		fontFamily: model.myFont,
-		fontSize: 15,
-		fontWeight: 'bold'
-	};
-	postingInd.color = css.getColor3();
-	win.add(postingInd);
-	*/
 	win.backgroundImage = '../dockedbg.png';
 };
 

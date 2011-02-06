@@ -175,7 +175,7 @@ function buildMenu() {
 				backgroundColor: css.getColor0(),
 				barColor: css.getColor0(),
 				userHostSpotFlag:e.rowData.userHostSpotFlag,
-				title: model.getAppName() 
+				title: Msgs.APP_NAME 
 			});
 			w.model = model;
 			w.css = css;
@@ -198,6 +198,7 @@ function init() {
 	inPolygonMM = [{
 		title:'My HotSpots',
 		hasChild:true,
+		writeFlag:false,
 		userHostSpotFlag:true,
 		leftImage:'../phone_playmovie.png',
 		ptr: 'hsViewer.js'
@@ -205,11 +206,13 @@ function init() {
 		title:'Local HotSpots',
 		hasChild:true,
 		userHostSpotFlag:false,
+		writeFlag:false,
 		leftImage:'../phone_playmovie.png',
 		ptr: 'hsViewer.js'
 	}, {
 		title:'Mark HotSpot',
 		hasChild:true,
+		writeFlag:true,
 		leftImage:'../phone_playmovie.png',
 		ptr:'markHotSpot.js'
 	}];
@@ -217,6 +220,7 @@ function init() {
 	inPolygonAnonymousMM = [{
 		title:'Local HotSpots',
 		hasChild:true,
+		writeFlag:false,
 		userHostSpotFlag:false,
 		leftImage:'../phone_playmovie.png',
 		ptr:'hsViewer.js'
@@ -225,6 +229,7 @@ function init() {
 	outPolygonMM = [{
 		title:'My HotSpots',
 		hasChild:true,
+		writeFlag:false,
 		userHostSpotFlag:true,
 		leftImage:'../phone_playmovie.png',
 		ptr: 'hsViewer.js'
@@ -249,9 +254,7 @@ function init() {
 			/*
 		 	 * preloader
 			 */
-			mainInd = Base.createPreloader('Initializing ...');
-			win.add(mainInd);
-			mainInd.show();
+			mainInd = Base.showPreloader(win, 'Initializing ...');
 		}
 		win.add(hsMenu);
 		
@@ -282,9 +285,7 @@ function init() {
 			/*
 		 	 * preloader
 			 */
-			mainInd = Base.createPreloader('Initializing ...');
-			win.add(mainInd);
-			mainInd.show();
+			mainInd = Base.showPreloader(win, 'Initializing ...');
 		}
 		win.add(hsMenu);
 	}

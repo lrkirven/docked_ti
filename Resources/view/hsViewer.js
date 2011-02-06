@@ -528,7 +528,7 @@ function updateHotSpotTableViewDisplay(list) {
 		Ti.API.info('updateHotSpotTableViewDisplay: msgView --> ' + msgView);
 	}
 	else {
-		Tools.reportMsg(model.getAppName(), 'No HotSpots found');
+		Tools.reportMsg(Msgs.APP_NAME, 'No HotSpots found');
 	}
 };
 
@@ -553,9 +553,9 @@ function updateSearchTableViewDisplay(searchResults) {
 	}
 };
 
-	//
-	// setup event listeners
-	//
+//
+// setup event listeners
+//
 Ti.App.addEventListener('HOTSPOT_DATA_RECD', function(e) {
 	if (e.status == 0) {
 		Ti.API.info('Handling event -- HOTSPOT_DATA_RECD --> ' + e.result);
@@ -565,7 +565,7 @@ Ti.App.addEventListener('HOTSPOT_DATA_RECD', function(e) {
 		hsPage.visible = true;
 	}
 	else {
-		Tools.reportMsg(model.getAppName(), e.errorMsg);
+		Tools.reportMsg(Msgs.APP_NAME, e.errorMsg);
 	}
 });
 
@@ -575,34 +575,14 @@ Ti.App.addEventListener('SEARCH_RESULTS_RECD', function(e) {
 		updateSearchTableViewDisplay(e.result);
 	}
 	else {
-		Tools.reportMsg(model.getAppName(), e.errorMsg);
+		Tools.reportMsg(Msgs.APP_NAME, e.errorMsg);
 	}
 });
 
 /**
- * Initial entry ito this component
+ * Goes to server to get hotSpot data.
  */
-function init() {
-	Ti.API.info('searchLakes.init(): Entered ');
-	
-	/*
-	 * location header 
-	 */
-	headerView = Base.buildLocationHeader(win, true, '');
-	
-	//
-	// display search form
-	//
-	// buildSearchView(true);
-	
-	/*
-	 * build table to display to user
-	 */
-	buildHotSpotTable(false);
-	
-	/*
-	 * load hotspot data from server
-	 */
+function getHotSpots() {
 	var user = model.getCurrentUser();
 	var lake = model.getCurrentLake();
 	var client = new RestClient();
@@ -614,4 +594,38 @@ function init() {
 	}
 };
 
+/**
+ * Initial entry ito this component
+ */
+function init() {
+	Ti.API.info('searchLakes.init(): Entered ');
+	
+	/*
+ 	 * Modify the 'Back' button
+ 	 */
+	Base.attachMyBACKButton(win);
+	
+	/*
+	 * location header 
+	 */
+	headerView = Base.buildLocationHeader(win, true, '');
+
+	/*	
+	buildSearchView(true);
+	*/
+	
+	/*
+	 * build table to display to user
+	 */
+	buildHotSpotTable(false);
+	
+	/*
+	 * get hotspot data from server
+	 */
+	getHotSpots();
+};
+
+/*
+ * entry point
+ */
 init();

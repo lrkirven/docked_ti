@@ -411,7 +411,7 @@ function init() {
 			check4MsgEvents();
 		}
 		else {
-			Tools.reportMsg(model.getAppName(), e.errorMsg);	
+			Tools.reportMsg(Msgs.APP_NAME, e.errorMsg);	
 		}
 	});
 	

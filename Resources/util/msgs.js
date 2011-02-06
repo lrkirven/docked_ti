@@ -12,4 +12,11 @@
 	Msgs.REMOTE_LOCATION = 'Remote Location: ';
 	Msgs.ANONYMOUS = 'Anonymous';
 	Msgs.NO_BUZZ = 'No buzz found in this area.';
+	Msgs.MARK = 'Mark!';
+	Msgs.CATEGORY_LBL = 'Category: ';
+	Msgs.NOTES_LBL = 'Notes: ';
+	Msgs.DESC_LBL = 'Description: ';
+	Msgs.MSG_TOO_LONG = 'Your message is too long to submit.';
+	Msgs.SIGN_UP = 'Sign Up';
+	Msgs.PREFS_UPDATED = 'User preferences updated!';
 	

@@ -1,8 +1,9 @@
+Ti.include('../util/msgs.js');
+Ti.include('../model/modelLocator.js');
+
 var win = Ti.UI.currentWindow;
 var model = win.model;
 var css = win.css;
-
-Ti.include('../model/modelLocator.js');
 
 var data = [];
 
@@ -21,7 +22,7 @@ Titanium.Media.openPhotoGallery({
 	},
 	error:function(error) {
 		// create alert
-		var a = Titanium.UI.createAlertDialog({title:model.getAppName()});
+		var a = Titanium.UI.createAlertDialog({title:Msgs.APP_NAME});
 		// set message
 		if (error.code == Titanium.Media.NO_CAMERA) {
 			a.setMessage('Device does not have video recording capabilities');

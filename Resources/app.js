@@ -1,13 +1,13 @@
-// this sets the background color of the master UIView (when there are no windows/tab groups on it)
-Titanium.UI.setBackgroundColor('#000');
-
+Ti.include('util/msgs.js');
 Ti.include('util/tools.js');
+Ti.include('util/tea.js');
 Ti.include('model/modelLocator.js');
 Ti.include('client/picasaClient.js');
 Ti.include('client/restClient.js');
 Ti.include('props/cssMgr.js');
-Ti.include('util/tea.js');
 
+
+// Titanium.UI.setBackgroundColor('#000');
 
 //////////////////////////////////////////////////////////////////////////////////
 // Globals
@@ -273,13 +273,13 @@ Titanium.App.addEventListener('PING_RESPONSE_DATA', function(e) {
 	}
 	else {
 		model.setCurrentLake(null);
-		Tools.reportMsg(model.getAppName(), e.errorMsg);
+		Tools.reportMsg(Msgs.APP_NAME, e.errorMsg);
 	}
 });
 
 function handleInitialUserPosition(e) {
 	if (e.error) {
-		Tools.reportMsg(model.getAppName(), 'System Error :: ' + JSON.stringify(e.error));
+		Tools.reportMsg(Msgs.APP_NAME, 'System Error :: ' + JSON.stringify(e.error));
 		return;
 	}
 	
@@ -398,7 +398,7 @@ Titanium.App.addEventListener('UPDATED_PROFILE_URL', function(e) {
 		Ti.API.info('*** UPDATED_PROFILE_URL -->' + e.profileUrl);
 	}
 	else {
-		Tools.reportMsg(model.getAppName(), e.errorMsg);
+		Tools.reportMsg(Msgs.APP_NAME, e.errorMsg);
 	}
 });
 
@@ -492,7 +492,7 @@ Titanium.App.addEventListener('USER_REGISTERED', function(e) {
 		addRegistration(llid, emailAddr, nickname, fbKey, fbSecret, pUser, pPassword, serverSecret);
 				
 		
-		Tools.reportMsg(model.getAppName(), "Registration Complete.");
+		Tools.reportMsg(Msgs.APP_NAME, "Registration Complete.");
 		
 		resetTabs();
 		tabGroup.setActiveTab(0);
@@ -500,7 +500,7 @@ Titanium.App.addEventListener('USER_REGISTERED', function(e) {
 		Titanium.Geolocation.getCurrentPosition(handleInitialUserPosition);
 	}
 	else {
-		Tools.reportMsg(model.getAppName(), e.token.errorMsg);
+		Tools.reportMsg(Msgs.APP_NAME, e.token.errorMsg);
 	}
 });
 
@@ -516,7 +516,7 @@ Titanium.App.addEventListener('PROMPT_USER_TO_REGISTER_COMPLETE', function(e) {
 	if (e.registerFlag) {
 		tabGroup.close();
 		registerWin = Titanium.UI.createWindow({
-			title: model.getAppName(),
+			title: Msgs.APP_NAME,
 			color: css.getColor2(),
 			font: { fontSize: 20, fontFamily: myFont },
 			backgroundColor: css.getColor0(),
@@ -561,7 +561,7 @@ function buildAppTabs() {
 	////////////////////////////////////////////////////////////
 	
 	var buzzWin = Titanium.UI.createWindow({
-		title: model.getAppName(),
+		title: Msgs.APP_NAME,
 		color: css.getColor2(),
 		font: { fontSize: 20, fontFamily: myFont },
 		barColor: css.getColor0(),
@@ -585,7 +585,7 @@ function buildAppTabs() {
 	////////////////////////////////////////////////////////////
 	
 	var hsWin = Titanium.UI.createWindow({
-		title: model.getAppName(),
+		title: Msgs.APP_NAME,
 		color: css.getColor2(),
 		font: { fontSize: 20, fontFamily: myFont },
 		barColor: css.getColor0(),
@@ -610,7 +610,7 @@ function buildAppTabs() {
 	////////////////////////////////////////////////////////////
 	
 	var reportsWin = Titanium.UI.createWindow({
-		title: model.getAppName(),
+		title: Msgs.APP_NAME,
 		font: { fontSize: 20, fontFamily: myFont },
 		barColor: css.getColor0(),
 		url: 'view/reportViewer.js'
@@ -641,7 +641,7 @@ function buildAppTabs() {
 	////////////////////////////////////////////////////////////
 	
 	var settingsWin = Titanium.UI.createWindow({
-		title: model.getAppName(),
+		title: Msgs.APP_NAME,
 		font: { fontSize: 20, fontFamily: myFont },
 		barColor: css.getColor0(),
 		url: 'view/settingsMain.js'
@@ -730,7 +730,7 @@ function init() {
 	else {
 		if (!hasUserDeclined()) {
 			promptWin = Titanium.UI.createWindow({
-				title: model.getAppName(),
+				title: Msgs.APP_NAME,
 				color: css.getColor2(),
 				font: { fontSize: 20, fontFamily: myFont },
 				backgroundColor: css.getColor0(),

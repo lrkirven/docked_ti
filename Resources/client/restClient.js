@@ -144,7 +144,7 @@ function RestClient() {
                 //
                 xhr.onerror = function(e) {
                 	Titanium.API.info("some error");
-					Ti.App.fireEvent('NEW_MSG_EVENT_ADDED', { status:69,
+					Ti.App.fireEvent('NEW_HOTSPOT_ADDED', { status:69,
 						errorMsg: 'Unable to connect to remote services -- Please check your network connection'	
 					});
                 }; 
@@ -154,7 +154,7 @@ function RestClient() {
                 //
                 xhr.onload = function() {
 					if (Tools.test4NotFound(this.responseText)) {
-						Ti.App.fireEvent('NEW_MSG_EVENT_ADDED', { status:89,
+						Ti.App.fireEvent('NEW_HOTSPOT_ADDED', { status:89,
 							errorMsg: 'Unable complete request at this time -- Apologize for the service failure.'	
 						});
 						return;
@@ -164,15 +164,15 @@ function RestClient() {
 						var jsonNodeData = JSON.parse(this.responseText);
 						if (jsonNodeData != null) {
 							Titanium.API.info('addHotSpot: onload: SUCCESS');
-							Ti.App.fireEvent('NEW_MSG_EVENT_ADDED', { newMsgEvent: jsonNodeData, origMsgEvent: msg, status:0 });
+							Ti.App.fireEvent('NEW_HOTSPOT_ADDED', { newMsgEvent: jsonNodeData, origMsgEvent: msg, status:0 });
 						}
 						else {
-							Ti.App.fireEvent('NEW_MSG_EVENT_ADDED', 
+							Ti.App.fireEvent('NEW_HOTSPOT_ADDED', 
 								{ status:99, errorMsg:'Remote services unable to complete request -- Support has been contacted.' });
 						}
 					}
 					else {
-						Ti.App.fireEvent('NEW_MSG_EVENT_ADDED', 
+						Ti.App.fireEvent('NEW_HOTSPOT_ADDED', 
 							{ status:99, errorMsg:'Remote services unable to complete request -- Support has been contacted.' });
 					}
                 };

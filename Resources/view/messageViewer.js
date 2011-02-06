@@ -523,7 +523,7 @@ function updateSearchTableViewDisplay(searchResults) {
 		searchView.show();
 	}
 	else {
-		Tools.reportMsg(model.getAppName(), 'No matching results for search criteria.');
+		Tools.reportMsg(Msgs.APP_NAME, 'No matching results for search criteria.');
 		Ti.API.info('updateSearchTableViewDisplay: results are empty');
 		searchView.hide();
 	}
@@ -548,7 +548,7 @@ function updateTableViewDisplay(list) {
 	else {
 		if (!alertedUserOfNoMsgs) {
 			alertedUserOfNoMsgs = true;
-			Tools.reportMsg(model.getAppName(), Msgs.NO_BUZZ);
+			Tools.reportMsg(Msgs.APP_NAME, Msgs.NO_BUZZ);
 		}
 		if (tableView != null) {
 			tableView.hide();
@@ -641,7 +641,7 @@ Ti.App.addEventListener('SEARCH_RESULTS_RECD', function(e) {
 		updateSearchTableViewDisplay(e.result);
 	}
 	else {
-		Tools.reportMsg(model.getAppName(), e.errorMsg);
+		Tools.reportMsg(Msgs.APP_NAME, e.errorMsg);
 	}
 });
 
@@ -662,7 +662,7 @@ Titanium.App.addEventListener('LOCAL_MSG_EVENTS_RECD', function(e) {
 		updateTableViewDisplay(e.result);
 	}
 	else {
-		Tools.reportMsg(model.getAppName(), e.errorMsg);			
+		Tools.reportMsg(Msgs.APP_NAME, e.errorMsg);			
 	}
 });
 
@@ -683,7 +683,7 @@ Titanium.App.addEventListener('REMOTE_MSG_EVENTS_RECD', function(e) {
 		updateTableViewDisplay(e.result);
 	}
 	else {
-		Tools.reportMsg(model.getAppName(), e.errorMsg);			
+		Tools.reportMsg(Msgs.APP_NAME, e.errorMsg);			
 	}
 });
 
@@ -695,9 +695,7 @@ function init() {
 	//
 	// initial app preloader
 	//	
-	initPreloader = Base.createPreloader(null);
-	win.add(initPreloader);
-	initPreloader.show();
+	initPreloader = Base.showPreloader(win, null);
 
 	if (localFlag) {
 		//	

@@ -1,3 +1,4 @@
+Ti.include('../util/msgs.js');
 Ti.include('../util/tools.js');
 Ti.include('../model/modelLocator.js');
 Ti.include('../client/restClient.js');
@@ -219,7 +220,7 @@ function buildForm() {
 				tempFlag = e.value;
 			}
 			else {
-				Tools.reportMsg(model.getAppName(), 'Please login into Facebook to synchronize your profile');	
+				Tools.reportMsg(Msgs.APP_NAME, 'Please login into Facebook to synchronize your profile');	
 			}
 		}
 	});

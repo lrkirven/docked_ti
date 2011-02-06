@@ -1,7 +1,12 @@
 
 	var Base = {}; // Base namespace
 	
-	Base.createPreloader = function(msg) {
+	/**
+	 * This method displays a command activity indicator for this application.
+	 * 
+	 * @param {Object} msg
+	 */
+	Base.showPreloader = function(currentWin, msg) {
 		var pre = null;
 		if (msg == null) {
 			pre = Titanium.UI.createActivityIndicator({
@@ -34,6 +39,8 @@
 				style: Titanium.UI.iPhone.ActivityIndicatorStyle.PLAIN
 			});
 		}
+		currentWin.add(pre);
+		pre.show();
 		return pre;
 	};
 	
@@ -128,6 +135,19 @@
 			}
 		}
 		return myDataRowList;
+	};
+	
+	/**
+	 * This method attaches a common BACK button for the app.
+	 * 
+	 * @param {Object} w
+	 */
+	Base.attachMyBACKButton = function(w) {
+		var b = Titanium.UI.createButton({title:'BACK'});
+		b.addEventListener('click', function() {
+			w.close();
+		});
+		w.leftNavButton = b;	
 	};
 
 	/**
@@ -274,6 +294,5 @@
 		currentWin.add(h);
 		
 		return h;
-		
 	};
 	

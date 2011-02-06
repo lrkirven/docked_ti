@@ -215,9 +215,7 @@ function init() {
 		getMyFacebookInfo();
 	}
 	
-	mainInd = Base.createPreloader('Initializing ...');
-	win.add(mainInd);
-	mainInd.show();
+	mainInd = Base.showPreloader(win, 'Initializing ...');
 	
 	setTimeout(function () { 
 		Ti.App.fireEvent('LOCATION_CHANGED', {});	

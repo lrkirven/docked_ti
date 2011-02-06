@@ -1,3 +1,4 @@
+Ti.include('../util/msgs.js');
 Ti.include('../util/tools.js');
 Ti.include('../model/modelLocator.js');
 Ti.include('../client/restClient.js');
@@ -64,7 +65,7 @@ Titanium.App.addEventListener('SHORT_REPORT_DATA_RECD', function(e) {
 		 * load incoming data into table
 		 */
 		if (e.result == null || e.result.length == 0) {
-			Tools.reportMsg(model.getAppName(), 'No fishing report data for requested state ... Coming soon.');
+			Tools.reportMsg(Msgs.APP_NAME, 'No fishing report data for requested state ... Coming soon.');
 		}
 		else {
 			var reports = convertRawData2TableItems(e.result);
@@ -82,7 +83,7 @@ Titanium.App.addEventListener('SHORT_REPORT_DATA_RECD', function(e) {
 		}
 	}
 	else {
-		Tools.reportMsg(model.getAppName(), e.errorMsg);
+		Tools.reportMsg(Msgs.APP_NAME, e.errorMsg);
 	}
 });
 

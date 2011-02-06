@@ -1,3 +1,4 @@
+Ti.include('../util/msgs.js');
 Ti.include('../util/tools.js');
 Ti.include('../model/modelLocator.js');
 Ti.include('../client/restClient.js');
@@ -115,7 +116,7 @@ function init() {
 			Titanium.App.fireEvent('PROMPT_USER_TO_REGISTER_COMPLETE', { registerFlag:true });
 			/*
 			var registerWin = Titanium.UI.createWindow({
-				title: model.getAppName(),
+				title: Msgs.APP_NAME,
 				color: css.getColor2(),
 				font: { fontSize: 20, fontFamily: myFont },
 				backgroundColor: css.getColor0(),

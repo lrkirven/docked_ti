@@ -1,7 +1,8 @@
+Ti.include('../util/msgs.js');
+Ti.include('../util/tea.js');
 Ti.include('../model/modelLocator.js');
 Ti.include('../client/picasaClient.js');
 Ti.include('../client/restClient.js');
-Ti.include('../util/tea.js');
 
 var win = Ti.UI.currentWindow;
 var model = win.model;
@@ -40,7 +41,7 @@ function buildForm() {
 	
 	var appName = Titanium.UI.createLabel({
 		color: css.getColor0(),
-		text: model.getAppName(),
+		text: Msgs.APP_NAME,
 		font: { fontFamily: model.myFont, fontSize:25, fontWeight: 'bold' },
 		top: 10,
 		right: 20,

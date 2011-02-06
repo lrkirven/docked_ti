@@ -1,3 +1,4 @@
+Ti.include('../util/msgs.js');
 Ti.include('../util/tools.js');
 Ti.include('../model/modelLocator.js');
 Ti.include('../client/picasaClient.js');
@@ -13,10 +14,10 @@ var displayNameText = null;
 
 Titanium.App.addEventListener('UPDATED_DISPLAY_NAME', function(e) { 
 	if (e.status == 0) {
-		Tools.reportMsg(model.getAppName(), 'User preferences updated!');	
+		Tools.reportMsg(Msgs.APP_NAME, Msgs.PREFS_UPDATED);	
 	}
 	else {
-		Tools.reportMsg(model.getAppName(), e.errorMsg);
+		Tools.reportMsg(Msgs.APP_NAME, e.errorMsg);
 	}
 });
 
@@ -50,7 +51,7 @@ function buildForm() {
 	
 	var appName = Titanium.UI.createLabel({
 		color: css.getColor0(),
-		text: model.getAppName(),
+		text: Msgs.APP_NAME,
 		font: { fontFamily: model.myFont, fontSize:25, fontWeight: 'bold' },
 		top: 10,
 		right: 20,

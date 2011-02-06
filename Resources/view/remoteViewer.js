@@ -1,6 +1,7 @@
+Ti.include('../util/msgs.js');
+Ti.include('../util/tools.js');
 Ti.include('../model/modelLocator.js');
 Ti.include('../client/restClient.js');
-Ti.include('../util/tools.js');
 
 Ti.include('baseViewer.js');
 
@@ -596,7 +597,7 @@ function init() {
 			msgPage.visible = true;
 		}
 		else {
-			Tools.reportMsg(model.getAppName(), e.errorMsg);
+			Tools.reportMsg(Msgs.APP_NAME, e.errorMsg);
 		}
 	});
 	
@@ -606,7 +607,7 @@ function init() {
 			updateSearchTableViewDisplay(e.result);
 		}
 		else {
-			Tools.reportMsg(model.getAppName(), e.errorMsg);
+			Tools.reportMsg(Msgs.APP_NAME, e.errorMsg);
 		}
 	});
 	
