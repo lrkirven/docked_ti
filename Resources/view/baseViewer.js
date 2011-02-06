@@ -230,7 +230,7 @@
 			}
 			else {
 				selectedLake = Ti.UI.createLabel({
-					text: Msgs.OUT_OF_ZONE,
+					text: (model.getLastLocTime() == 0 ? '...' : Msgs.OUT_OF_ZONE),
 					top: 15,
 					left: 10,
 					height: 25,

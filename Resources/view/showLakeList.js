@@ -122,6 +122,7 @@ function init() {
 	 * go get report data for this state
 	 */
 	if (reportData == null) {
+		Ti.API.info('showLakeList: Going to get the report data ...');
 		preloader = Titanium.UI.createActivityIndicator({
 			top: 120,
 			left: 135,
@@ -141,21 +142,15 @@ function init() {
 	 * if we have it, just show what we have 
 	 */
 	else {
+		Ti.API.info('showLakeList: Using cached report data ... reportData=' + reportData);
 		lakeTbl.data = reportData;
 		/*
 	 	 * create table view event listener
 	 	 */
 		lakeTbl.addEventListener('click', function(e) {
-			var w = Titanium.UI.createWindow({
-				url:'reportDetails.js',
-				backgroundColor:css.getColor0(),
-  	 			barColor:css.getColor0(),
-				title:e.rowData.title
-			});
-			w.model = model;
-			w.css = css;
-			Titanium.UI.currentTab.open(w, {animated:true});
-			// windowList.push(w);
+			var client = new RestClient();
+			var shortReport = e.rowData;
+			client.getReportByReportId(shortReport.reportId);
 		});
 	}
 };

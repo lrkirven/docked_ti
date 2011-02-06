@@ -38,7 +38,8 @@ function init() {
 	webview.url = 'reportDetails.html';
 	webview.scalesPageToFit = true;
 	win.add(webview);
-	Ti.API.info('reportDetails: report : ' + report.title);
+	Ti.API.info('reportDetails: report : ' + report);
+	Ti.API.info('reportDetails: title : ' + report.title);
 	setTimeout(function(e) {
 		Ti.App.fireEvent("LOAD_REPORT", { title:report.title, timeDisplay:report.timeDisplay, reportBody:report.reportBody });
 	}, 3000);
