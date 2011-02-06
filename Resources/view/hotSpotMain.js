@@ -209,13 +209,16 @@ function init() {
 		writeFlag:false,
 		leftImage:'../phone_playmovie.png',
 		ptr: 'hsViewer.js'
-	}, {
+	}
+	/*,
+	 {
 		title:'Mark HotSpot',
 		hasChild:true,
 		writeFlag:true,
 		leftImage:'../phone_playmovie.png',
 		ptr:'markHotSpot.js'
-	}];
+	}*/
+	];
 	
 	inPolygonAnonymousMM = [{
 		title:'Local HotSpots',
