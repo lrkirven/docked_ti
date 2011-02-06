@@ -236,10 +236,7 @@ function init() {
 		/*
 		 * header
 		 */	
-		var t1 = Titanium.UI.createAnimation({top:0, duration:750});
-		headerView = Base.buildLocationHeader(true, '');
-		headerView.animate(t1);
-		win.add(headerView);
+		headerView = Base.buildLocationHeader(win, true, '');
 		
 		/*
 		 * menu
@@ -258,13 +255,6 @@ function init() {
 		}
 		win.add(hsMenu);
 		
-		/*
-		currentLocationLabel.text = currentLake.name;
-		currentLocationLabel.color = css.getColor4();
-		var countDisplay = currentLake.localCount + ' USER(S)';
-		userCountLbl.text = countDisplay;
-		*/
-		
 		win.touchEnabled = true;
 	
 		/*
@@ -279,10 +269,7 @@ function init() {
 		/*
 		 * header
 		 */	
-		var t2 = Titanium.UI.createAnimation({top:0, duration:750});
-		headerView = Base.buildLocationHeader(true, '');
-		headerView.animate(t2);
-		win.add(headerView);
+		headerView = Base.buildLocationHeader(win, true, '');
 		
 		/*
 		 * menu

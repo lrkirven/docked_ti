@@ -588,10 +588,7 @@ function init() {
 	/*
 	 * location header 
 	 */
-	var t2 = Titanium.UI.createAnimation({top:0, duration:750});
-	headerView = Base.buildLocationHeader(true, '');
-	headerView.animate(t2);
-	win.add(headerView);
+	headerView = Base.buildLocationHeader(win, true, '');
 	
 	//
 	// display search form

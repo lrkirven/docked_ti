@@ -652,10 +652,7 @@ Titanium.App.addEventListener('LOCAL_MSG_EVENTS_RECD', function(e) {
 		// update to data
 		//
 		if (headerView == null) {
-			var t2 = Titanium.UI.createAnimation({top:0, duration:750});
-			headerView = Base.buildLocationHeader(true, '');
-			headerView.animate(t2);
-			win.add(headerView);
+			headerView = Base.buildLocationHeader(win, true, '');
 		}
 		if (tableView != null) {
 			win.remove(tableView);
@@ -676,10 +673,7 @@ Titanium.App.addEventListener('REMOTE_MSG_EVENTS_RECD', function(e) {
 		// update to data
 		//
 		if (headerView == null) {
-			var t2 = Titanium.UI.createAnimation({top:0, duration:750});
-			headerView = Base.buildLocationHeader(false, remoteLake.name);
-			headerView.animate(t2);
-			win.add(headerView);
+			headerView = Base.buildLocationHeader(win, false, remoteLake.name);
 		}
 		if (tableView != null) {
 			win.remove(tableView);

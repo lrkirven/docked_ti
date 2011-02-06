@@ -129,7 +129,12 @@
 		}
 		return myDataRowList;
 	};
-	
+
+	/**
+	 * This methods adds an iAd to current window.
+	 * 
+	 * @param {Object} w
+	 */	
 	Base.attachiAd = function(w) {
 		var iads = Ti.UI.iOS.createAdView({
     		width: 'auto',
@@ -144,7 +149,15 @@
     	w.add(iads);	
 	};
 	
-	Base.buildLocationHeader = function(localFlag, remoteName) {
+	/**
+	 * This method add a location header to the top of my window based upon a few important 
+	 * attributes.
+	 * 
+	 * @param {Object} currentWin
+	 * @param {Object} localFlag
+	 * @param {Object} remoteName
+	 */
+	Base.buildLocationHeader = function(currentWin, localFlag, remoteName) {
 		var h = Ti.UI.createView({
 			height: 50,
 			width: 320,
@@ -255,6 +268,10 @@
 		h.add(selectedLake);
 		h.add(userLabel);
 		h.add(userCountLbl);
+		
+		var t2 = Titanium.UI.createAnimation({top:0, duration:750});
+		h.animate(t2);
+		currentWin.add(h);
 		
 		return h;
 		
