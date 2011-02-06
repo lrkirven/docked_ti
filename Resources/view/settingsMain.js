@@ -3,6 +3,8 @@ Ti.include('../model/modelLocator.js');
 Ti.include('../client/restClient.js');
 Ti.include('../props/cssMgr.js');
 
+Ti.include('baseViewer.js');
+
 /**
  * local variables
  */
@@ -129,6 +131,11 @@ function init() {
 		win.add(button0);
 	}
 	settingsMenu.backgroundImage = '../dockedbg.png';
+	
+	/*
+	 * iAd 
+	 */
+	Base.attachiAd(win);
 	
 };
 

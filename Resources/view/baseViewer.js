@@ -130,6 +130,20 @@
 		return myDataRowList;
 	};
 	
+	Base.attachiAd = function(w) {
+		var iads = Ti.UI.iOS.createAdView({
+    		width: 'auto',
+    		height: 'auto',
+    		bottom: -100,
+    		borderColor: '#000000',
+    		backgroundColor: '#000000'});
+    	var t1 = Titanium.UI.createAnimation({bottom:0, duration:750});
+    	iads.addEventListener('load', function(){
+    	    iads.animate(t1);
+    	});
+    	w.add(iads);	
+	};
+	
 	Base.buildLocationHeader = function(localFlag, remoteName) {
 		var h = Ti.UI.createView({
 			height: 50,

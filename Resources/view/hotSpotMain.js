@@ -185,24 +185,6 @@ function buildMenu() {
 	hsMenu.backgroundImage = '../dockedbg.png';	
 };
 
-function iAdDisplay() {
-	var iads = Ti.UI.iOS.createAdView({
-		width: 'auto',
-		height: 'auto',
-		bottom: -100,
-		borderColor: '#000000',
-		backgroundColor: '#000000'
-	});
-	var t1 = Titanium.UI.createAnimation({
-		bottom: 0,
-		duration: 750
-	});
-	iads.addEventListener('load', function(){
-		iads.animate(t1);
-	});
-	return iads;
-};
-
 /**
  * This method initializes the buzz main menu for user selections.
  */
@@ -254,15 +236,14 @@ function init() {
 		/*
 		 * header
 		 */	
-		var t2 = Titanium.UI.createAnimation({top:0, duration:750});
+		var t1 = Titanium.UI.createAnimation({top:0, duration:750});
 		headerView = Base.buildLocationHeader(true, '');
-		headerView.animate(t2);
+		headerView.animate(t1);
 		win.add(headerView);
 		
 		/*
 		 * menu
 		 */
-		var baseColor = css.getColor0();
 		buildMenu();	
 		if (model.getLastLocTime() != 0) {
 			hsMenu.data = (model.getCurrentUser() == null ? inPolygonAnonymousMM : inPolygonMM);
@@ -306,7 +287,6 @@ function init() {
 		/*
 		 * menu
 		 */
-		var baseColor = css.getColor0();
 		buildMenu();	
 		if (model.getLastLocTime() != 0) {
 			hsMenu.data = (model.getCurrentUser() == null ? [] : outPolygonMM);
@@ -325,8 +305,7 @@ function init() {
 	/*
 	 * iAd 
 	 */
-	var iads = iAdDisplay();	
-	win.add(iads);
+	Base.attachiAd(win);
 	
 };
 

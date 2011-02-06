@@ -1,5 +1,7 @@
 Ti.include('../model/modelLocator.js');
 
+Ti.include('baseViewer.js');
+
 var win = Ti.UI.currentWindow;
 var model = win.model;
 var css = win.css;
@@ -89,18 +91,10 @@ function init() {
 	});
 	win.add(reportTbl);
 	
-	// iAd integration	
-	var iads = Ti.UI.iOS.createAdView({
-    	width: 'auto',
-    	height: 'auto',
-    	bottom: -100,
-    	borderColor: '#000000',
-    	backgroundColor: '#000000'});
-    t1 = Titanium.UI.createAnimation({bottom:0, duration:750});
-    iads.addEventListener('load', function(){
-        iads.animate(t1);
-    });
-    win.add(iads);
+	/*
+	 * iAd 
+	 */
+	Base.attachiAd(win);
 	
 	mainInd = Titanium.UI.createActivityIndicator({
 		top: 135,

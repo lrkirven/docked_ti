@@ -1,5 +1,5 @@
-Ti.include('../util/tools.js');
 Ti.include('../util/msgs.js');
+Ti.include('../util/tools.js');
 Ti.include('../model/modelLocator.js');
 Ti.include('../client/restClient.js');
 
@@ -9,7 +9,7 @@ var win = Ti.UI.currentWindow;
 var model = win.model;
 var css = win.css;
 var windowList = [];
-var currentLocationLabel = null;
+var selectedLake = null;
 var buzzMenu = null;
 var inPolygonMM = null;
 var outPolygonMM = null;
@@ -70,22 +70,68 @@ Titanium.App.addEventListener('UPDATED_DISPLAY_NAME', function(e) {
 Titanium.App.addEventListener('LOCATION_CHANGED', function(e){
 	Ti.API.info('Handle LOCATION_CHANGED event ...');
 	if (model.getCurrentLake() != null) {
-		currentLocationLabel.text = model.getCurrentLake().name;
-		currentLocationLabel.color = css.getColor4();
+		selectedLake.text = model.getCurrentLake().name;
+		selectedLake.color = css.getColor4();
 		buzzMenu.data = (model.getCurrentUser() == null ? inPolygonAnonymousMM : inPolygonMM);
 		var countDisplay = model.getCurrentLake().localCount + Msgs.USERS;
 		userCountLbl.text = countDisplay;
 		win.touchEnabled = true;
 	}
 	else {
-		currentLocationLabel.text = Msgs.OUT_OF_ZONE;
+		selectedLake.text = Msgs.OUT_OF_ZONE;
 		userCountLbl.text = '';
-		currentLocationLabel.color = css.getColor3();
+		selectedLake.color = css.getColor3();
 		buzzMenu.data = outPolygonMM;
 		win.touchEnabled = true;
 	}
 	mainInd.hide();
 });
+
+/**
+ * This method build the table that contains all of the buzz messages.
+ */
+function buildBuzzMsgTable() {
+	// table header
+	var tblHeader = Ti.UI.createView({ height:30, width:320 });
+	var label = Ti.UI.createLabel({ 
+		top:5,
+		left:10,
+   		text:Msgs.BUZZ_TITLE, 
+		font: { fontFamily:model.myFont, fontSize:20, fontWeight:'bold' },
+		color:css.getColor2()
+	});
+	tblHeader.add(label);
+	// create table view
+	buzzMenu = Titanium.UI.createTableView({
+		top:45,
+		headerView:tblHeader,
+		scrollable:false,
+		moving:false,
+		style:Titanium.UI.iPhone.TableViewStyle.GROUPED,
+		selectionStyle:Ti.UI.iPhone.TableViewCellSelectionStyle.GRAY,
+		rowBackgroundColor:css.getColor2()
+	});
+
+	// create table view event listener
+	buzzMenu.addEventListener('click', function(e) {
+		Ti.API.info('User selcted to go here: ' + e.rowData.ptr);
+		if (e.rowData.ptr) {
+			var w = Titanium.UI.createWindow({
+				url:e.rowData.ptr,
+				backgroundColor:css.getColor0(),
+    			barColor:css.getColor0(),
+				title:Msgs.APP_NAME,
+				localFlag:e.rowData.localFlag
+			});
+			w.model = model;
+			w.css = css;
+			Titanium.UI.currentTab.open(w, {animated:true});
+			windowList.push(w);
+		}
+	});
+	win.add(buzzMenu);	
+	buzzMenu.backgroundImage = '../dockedbg.png';
+};
 
 /**
  * This method initializes the buzz main menu for user selections.
@@ -150,144 +196,23 @@ function init() {
 	
 	Ti.API.info('buzzMain.init(): Entered ');
 	
-	var h = Ti.UI.createView({
-		height:50,
-		left:0,
-		top:-100,
-		borderColor: css.getColor0(),
-		backgroundColor: css.getColor0()
-	});
+	/*
+	 * header
+	 */	
 	var t2 = Titanium.UI.createAnimation({top:0, duration:750});
-	
-	var headerLbl0 = 'My Location: ';
-	var label0 = Ti.UI.createLabel({
-		text: headerLbl0,
-		top: 0,
-		left: 10,
-		height: 20,
-		font: { fontFamily: model.myFont, fontSize: 11, fontWeight: 'normal' },
-		color: '#fff'
-	});
-	
-	var target = model.getCurrentLake();
-	var label1 = undefined;
-	if (target != undefined) {
-		currentLocationLabel = Ti.UI.createLabel({
-			text: target.name,
-			top: 15,
-			left: 10,
-			height: 25,
-			font: { fontFamily: model.myFont, fontSize: 16, fontWeight: 'bold' },
-			color: css.getColor2()
-		});
-	}
-	else {
-		currentLocationLabel = Ti.UI.createLabel({
-			text: "...",
-			top: 15,
-			left: 10,
-			height: 25,
-			font: { fontFamily: model.myFont, fontSize: 16, fontWeight: 'bold' },
-			color: css.getColor3()
-		});
-	}
-	
-	var displayName = null;
-	if (model.getCurrentUser() != null) {
-		displayName = model.getCurrentUser().displayName;
-	}
-	else {
-		displayName = "Anonymous";
-	}
-	userLabel = Ti.UI.createLabel({
-		text: displayName,
-		top: 0,
-		width: 150,
-		right: 10,
-		height: 20,
-		textAlign: 'right',
-		font: { fontFamily: model.myFont, fontSize: 13, fontWeight: 'bold' },
-		color: '#fff'
-	});
-	var countDisplay = '';
-	if (model.getCurrentLake() != null) {
-		countDisplay = model.getCurrentLake().localCount + Msgs.USERS;
-	}
-	userCountLbl = Ti.UI.createLabel({
-		text: countDisplay,
-		top: 25,
-		width: 100,
-		right: 10,
-		textAlign: 'right',
-		height: 20,
-		font: { fontFamily: model.myFont, fontSize: 11, fontWeight: 'normal' },
-		color: '#fff'
-	});
-	
-	h.add(label0);
-	h.add(currentLocationLabel);
-	h.add(userLabel);
-	h.add(userCountLbl);
-    h.animate(t2);
-	win.add(h);
+	headerView = Base.buildLocationHeader(true, '');
+	headerView.animate(t2);
+	win.add(headerView);
 
-	var baseColor = css.getColor0();
+	/*
+	 * Buzz message table
+	 */
+	buildBuzzMsgTable();
 	
-	var tblHeader = Ti.UI.createView({ height:30, width:320 });
-	var label = Ti.UI.createLabel({ 
-		top:5,
-		left:10,
-   		text:'Buzz', 
-		font: { fontFamily:model.myFont, fontSize:20, fontWeight:'bold' },
-   		// color:'#ffffff'
-		color:css.getColor2()
-	});
-	tblHeader.add(label);
-
-	// create table view
-	buzzMenu = Titanium.UI.createTableView({
-		top:45,
-		headerView:tblHeader,
-		scrollable:false,
-		moving:false,
-		style:Titanium.UI.iPhone.TableViewStyle.GROUPED,
-		selectionStyle:Ti.UI.iPhone.TableViewCellSelectionStyle.GRAY,
-		rowBackgroundColor:css.getColor2()
-	});
-
-	// create table view event listener
-	buzzMenu.addEventListener('click', function(e) {
-		Ti.API.info('User selcted to go here: ' + e.rowData.ptr);
-		if (e.rowData.ptr) {
-			var w = Titanium.UI.createWindow({
-				url:e.rowData.ptr,
-				backgroundColor:baseColor,
-    			barColor:baseColor,
-				title:'Docked',
-				localFlag:e.rowData.localFlag
-			});
-			w.model = model;
-			w.css = css;
-			Titanium.UI.currentTab.open(w, {animated:true});
-			windowList.push(w);
-		}
-	});
-	win.add(buzzMenu);
-	buzzMenu.backgroundImage = '../dockedbg.png';
-	// win.backgroundImage = '../dockedbg.png';
-	
-	// iAd integration	
-	var iads = Ti.UI.iOS.createAdView({
-    	width: 'auto',
-    	height: 'auto',
-    	bottom: -100,
-    	borderColor: '#000000',
-    	backgroundColor: '#000000'});
-    var t1 = Titanium.UI.createAnimation({bottom:0, duration:750});
-    iads.addEventListener('load', function(){
-        iads.animate(t1);
-    });
-    win.add(iads);
+	/*
+	 * iAd integration
+	 */
+	Base.attachiAd(win);
 	
 	if (Titanium.Facebook.isLoggedIn()) {
 		getMyFacebookInfo();
