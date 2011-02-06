@@ -1,5 +1,5 @@
 
-	var Msgs = {}; // Msg namespace
+	var Msgs = {}; // Msgs namespace
 
 	Msgs.APP_NAME = 'Docked';	
 	Msgs.BUZZ_TITLE = 'Buzz'

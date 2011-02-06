@@ -1,4 +1,4 @@
-function RestClient() {
+function RestClient(){
 	var secureBaseUrl = 'https://www.zarcode4fishin.appspot.com';
 	var baseUrl = 'http://mobile.lazylaker.net';
 	var myMsgRestURL = baseUrl + '/resources/buzz/';
@@ -6,6 +6,30 @@ function RestClient() {
 	var myUserRestURL = baseUrl + '/resources/users/';
 	var myReportRestURL = baseUrl + '/resources/reports/';
 	var myHotSpotRestURL = baseUrl + '/resources/hotspots/';
+	
+	var httpCodes = { // Http namespace
+		OK:200,
+		CREATED:201,
+		ACCEPTED:202,
+		NO_CONTENT:204,
+		RESET_CONTENT:205,
+		BAD_REQUEST:400,
+		UNAUTHORIZED:401
+	};
+	
+	function handleErrorResp(statusCode, eventName) {
+       	Titanium.API.warn('handleErrorResp(): Found statusCode -- ' + statusCode);
+		if (statusCode == httpCodes.BAD_REQUEST) {
+			Ti.App.fireEvent(eventName, { status:69,
+				errorMsg: 'Unable complete request at this time -- Apologize for the service failure.'
+			});
+		}
+		else if (statusCode == httpCodes.UNAUTHORIZED) {
+			Ti.App.fireEvent(eventName, { status:69,
+				errorMsg: 'Your user account was not authorized to perform action -- Please contact support for assistance.'
+			});
+		}
+	};
     
     // 
 	// create singleton instance to communicate with remote REST web service
@@ -33,6 +57,10 @@ function RestClient() {
                 // success    
                 //
                 xhr.onload = function() {
+					if (this.status >= httpCodes.BAD_REQUEST) {
+						handleErrorResp(this.status, 'NEW_MSG_EVENT_ADDED');	
+						return;
+					}
 					if (Tools.test4NotFound(this.responseText)) {
 						Ti.App.fireEvent('NEW_MSG_EVENT_ADDED', { status:89,
 							errorMsg: 'Unable complete request at this time -- Apologize for the service failure.'	
@@ -98,6 +126,10 @@ function RestClient() {
                 // success    
                 //
                 xhr.onload = function() {
+					if (this.status >= httpCodes.BAD_REQUEST) {
+						handleErrorResp(this.status, 'NEW_COMMENT_ADDED');	
+						return;
+					}
 					if (Tools.test4NotFound(this.responseText)) {
 						Ti.App.fireEvent('NEW_COMMENT_ADDED', { status:89,
 							errorMsg: 'Unable complete request at this time -- Apologize for the service failure.'	
@@ -153,6 +185,10 @@ function RestClient() {
                 // success    
                 //
                 xhr.onload = function() {
+					if (this.status >= httpCodes.BAD_REQUEST) {
+						handleErrorResp(this.status, 'NEW_HOTSPOT_ADDED');	
+						return;
+					}
 					if (Tools.test4NotFound(this.responseText)) {
 						Ti.App.fireEvent('NEW_HOTSPOT_ADDED', { status:89,
 							errorMsg: 'Unable complete request at this time -- Apologize for the service failure.'	
@@ -214,6 +250,10 @@ function RestClient() {
                 // success    
                 //
                 xhr.onload = function() {
+					if (this.status >= httpCodes.BAD_REQUEST) {
+						handleErrorResp(this.status, 'USER_REGISTERED');	
+						return;
+					}
 					if (this.responseText == null) {
 						Ti.App.fireEvent('USER_REGISTERED', { status:77,
 							errorMsg: 'Unable complete registration at this time -- Apologize for the service failure.'	
@@ -281,6 +321,10 @@ function RestClient() {
                 // success    
                 //
                 xhr.onload = function() {
+					if (this.status >= httpCodes.BAD_REQUEST) {
+						handleErrorResp(this.status, 'UPDATED_DISPLAY_NAME');	
+						return;
+					}
 					if (Tools.test4NotFound(this.responseText)) {
 						Ti.App.fireEvent('UPDATED_DISPLAY_NAME', { status:89,
 							errorMsg: 'Unable complete request at this time -- Apologize for the service failure.'	
@@ -340,6 +384,10 @@ function RestClient() {
                 // success    
                 //
                 xhr.onload = function() {
+					if (this.status >= httpCodes.BAD_REQUEST) {
+						handleErrorResp(this.status, 'UPDATED_PROFILE_URL');	
+						return;
+					}
 					if (Tools.test4NotFound(this.responseText)) {
 						Ti.App.fireEvent('UPDATED_PROFILE_URL', { status:89,
 							errorMsg: 'Unable complete request at this time -- Apologize for the service failure.'	
@@ -398,18 +446,22 @@ function RestClient() {
                 // success    
                 //
                 xhr.onload = function() {
+					if (this.status >= httpCodes.BAD_REQUEST) {
+						handleErrorResp(this.status, 'LOCAL_MSG_EVENTS_RECD');	
+						return;
+					}
 					if (Tools.test4NotFound(this.responseText)) {
 						Ti.App.fireEvent('LOCAL_MSG_EVENTS_RECD', { status:89,
 							errorMsg: 'Unable complete request at this time -- Apologize for the service failure.'	
 						});
 						return;
 					}
-					Titanium.API.info('getLocalMsgEvents: onload: Entered - [' + this.responseText + ']');
-					if (this.responseText == 'null' || this.responseText == undefined) {
+					if (this.status == httpCodes.NO_CONTENT) {
 						Titanium.API.info('getLocalMsgEvents: onload: Returning empty set');
 						Ti.App.fireEvent('LOCAL_MSG_EVENTS_RECD', { result:[], status:0 });
 						return;
 					}
+					Titanium.API.info('getLocalMsgEvents: onload: Entered - [' + this.responseText + ']');
 					if (this.responseText != null) {
 						var jsonNodeData = JSON.parse(this.responseText);
 						if (jsonNodeData != null) {
@@ -460,18 +512,22 @@ function RestClient() {
                 // success    
                 //
                 xhr.onload = function() {
+					if (this.status >= httpCodes.BAD_REQUEST) {
+						handleErrorResp(this.status, 'REMOTE_MSG_EVENTS_RECD');	
+						return;
+					}
 					if (Tools.test4NotFound(this.responseText)) {
 						Ti.App.fireEvent('REMOTE_MSG_EVENTS_RECD', { status:89,
 							errorMsg: 'Unable complete request at this time -- Apologize for the service failure.'	
 						});
 						return;
 					}
-					Titanium.API.info('getRemoteMsgEvents: onload: Entered - [' + this.responseText + ']');
-					if (this.responseText == 'null' || this.responseText == undefined) {
+					if (this.status == httpCodes.NO_CONTENT) {
 						Titanium.API.info('getRemoteMsgEvents: onload: Returning empty set');
 						Ti.App.fireEvent('REMOTE_MSG_EVENTS_RECD', { result:[], status:0 });
 						return;
 					}
+					Titanium.API.info('getRemoteMsgEvents: onload: Entered - [' + this.responseText + ']');
 					if (this.responseText != null) {
 						var jsonNodeData = JSON.parse(this.responseText);
 						if (jsonNodeData != null) {
@@ -525,6 +581,10 @@ function RestClient() {
                 // success    
                 //
                 xhr.onload = function() {
+					if (this.status >= httpCodes.BAD_REQUEST) {
+						handleErrorResp(this.status, 'SEARCH_RESULTS_RECD');	
+						return;
+					}
 					if (Tools.test4NotFound(this.responseText)) {
 						Ti.App.fireEvent('SEARCH_RESULTS_RECD', { status:89,
 							errorMsg: 'Unable complete request at this time -- Apologize for the service failure.'	
@@ -590,18 +650,22 @@ function RestClient() {
                 // success    
                 //
                 xhr.onload = function() {
+					if (this.status >= httpCodes.BAD_REQUEST) {
+						handleErrorResp(this.status, 'REPORT_DATA_RECD');	
+						return;
+					}
 					if (Tools.test4NotFound(this.responseText)) {
 						Ti.App.fireEvent('REPORT_DATA_RECD', { status:89,
 							errorMsg: 'Unable complete request at this time -- Apologize for the service failure.'	
 						});
 						return;
 					}
-					Titanium.API.info('getReportsByState: onload: Entered - [' + this.responseText + ']');
-					if (this.responseText == 'null' || this.responseText == undefined) {
+					if (this.status == httpCodes.NO_CONTENT) {
 						Titanium.API.info('getReportsByState: onload: Returning empty set');
 						Ti.App.fireEvent('REPORT_DATA_RECD', { result:[], status:0 });
 						return;
 					}
+					Titanium.API.info('getReportsByState: onload: Entered - [' + this.responseText + ']');
 					if (this.responseText != null) {
 						var jsonNodeData = JSON.parse(this.responseText);
 						if (jsonNodeData != null) {
@@ -652,18 +716,22 @@ function RestClient() {
                 // success    
                 //
                 xhr.onload = function() {
+					if (this.status >= httpCodes.BAD_REQUEST) {
+						handleErrorResp(this.status, 'SHORT_REPORT_DATA_RECD');	
+						return;
+					}
 					if (Tools.test4NotFound(this.responseText)) {
 						Ti.App.fireEvent('SHORT_REPORT_DATA_RECD', { status:89,
 							errorMsg: 'Unable complete request at this time -- Apologize for the service failure.'	
 						});
 						return;
 					}
-					Titanium.API.info('getShortReportsByState: onload: Entered - [' + this.responseText + ']');
-					if (this.responseText == 'null' || this.responseText == undefined) {
+					if (this.status == httpCodes.NO_CONTENT) {
 						Titanium.API.info('getShortReportsByState: onload: Returning empty set');
 						Ti.App.fireEvent('SHORT_REPORT_DATA_RECD', { result:[], status:0 });
 						return;
 					}
+					Titanium.API.info('getShortReportsByState: onload: Entered - [' + this.responseText + ']');
 					if (this.responseText != null) {
 						var jsonNodeData = JSON.parse(this.responseText);
 						if (jsonNodeData != null) {
@@ -714,6 +782,10 @@ function RestClient() {
                 // success    
                 //
                 xhr.onload = function() {
+					if (this.status >= httpCodes.BAD_REQUEST) {
+						handleErrorResp(this.status, 'ONE_REPORT_RECD');	
+						return;
+					}
 					if (Tools.test4NotFound(this.responseText)) {
 						Ti.App.fireEvent('ONE_REPORT_RECD', { status:89,
 							errorMsg: 'Unable complete request at this time -- Apologize for the service failure.'	
@@ -776,18 +848,22 @@ function RestClient() {
                 // success    
                 //
                 xhr.onload = function() {
+					if (this.status >= httpCodes.BAD_REQUEST) {
+						handleErrorResp(this.status, 'HOTSPOT_DATA_RECD');	
+						return;
+					}
 					if (Tools.test4NotFound(this.responseText)) {
 						Ti.App.fireEvent('HOTSPOT_DATA_RECD', { status:89,
 							errorMsg: 'Unable complete request at this time -- Apologize for the service failure.'	
 						});
 						return;
 					}
-					Titanium.API.info('getHotSpotsByLake: onload: Entered - [' + this.responseText + ']');
-					if (this.responseText == 'null' || this.responseText == undefined) {
+					if (this.status == httpCodes.NO_CONTENT) {
 						Titanium.API.info('getHotSpotsByLake: onload: Returning empty set');
 						Ti.App.fireEvent('HOTSPOT_DATA_RECD', { result:[], status:0 });
 						return;
 					}
+					Titanium.API.info('getHotSpotsByLake: onload: Entered - [' + this.responseText + ']');
 					if (this.responseText != null) {
 						var jsonNodeData = JSON.parse(this.responseText);
 						if (jsonNodeData != null) {
@@ -838,18 +914,22 @@ function RestClient() {
                 // success    
                 //
                 xhr.onload = function() {
+					if (this.status >= httpCodes.BAD_REQUEST) {
+						handleErrorResp(this.status, 'HOTSPOT_DATA_RECD');	
+						return;
+					}
 					if (Tools.test4NotFound(this.responseText)) {
 						Ti.App.fireEvent('HOTSPOT_DATA_RECD', { status:89,
 							errorMsg: 'Unable complete request at this time -- Apologize for the service failure.'	
 						});
 						return;
 					}
-					Titanium.API.info('getHotSpotsByUserToken: onload: Entered - [' + this.responseText + ']');
-					if (this.responseText == 'null' || this.responseText == undefined) {
+					if (this.status == httpCodes.NO_CONTENT) {
 						Titanium.API.info('getHotSpotsByUserToken: onload: Returning empty set');
 						Ti.App.fireEvent('HOTSPOT_DATA_RECD', { result:[], status:0 });
 						return;
 					}
+					Titanium.API.info('getHotSpotsByUserToken: onload: Entered - [' + this.responseText + ']');
 					if (this.responseText != null) {
 						var jsonNodeData = JSON.parse(this.responseText);
 						if (jsonNodeData != null) {
@@ -894,16 +974,21 @@ function RestClient() {
                 // error
                 //
                 xhr.onerror = function(e) {
-                	Titanium.API.info("some error");
-					Ti.App.fireEvent('PING_RESPONSE_DATA', { status:69,
-						errorMsg: 'Unable to connect to remote services -- Please check your network connection'	
-					});
+                	Titanium.API.info('EXCEPTION :: ' + e.source.responseText);
+					if (status > httpCodes.OK) {
+						handleErrorResp(e.source.status, 'PING_RESPONSE_DATA');	
+						return;
+					}
                 }; 
             
                 // 
                 // success    
                 //
                 xhr.onload = function() {
+					if (this.status >= httpCodes.BAD_REQUEST) {
+						handleErrorResp(this.status, 'PING_RESPONSE_DATA');	
+						return;
+					}
 					if (Tools.test4NotFound(this.responseText)) {
 						return;
 					}
@@ -949,6 +1034,7 @@ function RestClient() {
                 //
 				var userUrl = '/resources/users/ping';
 				var targetURL = secureBaseUrl + userUrl;
+				// var targetURL = baseUrl + userUrl;
 				Titanium.API.info('ping: REST URL: ' + targetURL);
                 xhr.open('POST', targetURL);
 				xhr.setRequestHeader('Content-Type', 'application/json');

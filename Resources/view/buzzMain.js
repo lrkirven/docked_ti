@@ -61,6 +61,12 @@ function getMyFacebookInfo() {
 	});	
 };
 
+Titanium.App.addEventListener('PING_RESPONSE_DATA', function(e) { 
+	if (e.status > 0) {
+		mainInd.hide();
+	}
+});
+
 Titanium.App.addEventListener('UPDATED_DISPLAY_NAME', function(e) { 
 	if (e.status == 0) {
 		userLabel.text = e.displayName;

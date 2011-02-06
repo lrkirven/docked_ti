@@ -1,3 +1,4 @@
+Ti.include('../util/msgs.js');
 Ti.include('../model/modelLocator.js');
 
 Ti.include('baseViewer.js');
@@ -6,12 +7,6 @@ var win = Ti.UI.currentWindow;
 var model = win.model;
 var css = win.css;
 
-/* 
-var webview = Ti.UI.createWebView();
-webview.url = 'http://www.anglerguide.com/texas/index.cfm?TR_ID=2389';
-webview.scalesPageToFit = true;
-win.add(webview);
-*/
 var stateDP =  [
 	{ title:'Alaska Fishing', hasChild:true, leftImage:'../phone_playmovie.png', state:'AK' },
 	{ title:'Arizona Fishing', hasChild:true, leftImage:'../phone_playmovie.png', state:'AZ' },
