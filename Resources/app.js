@@ -566,7 +566,7 @@ function buildAppTabs() {
 		url: 'view/buzzMain.js'
 	});
 	buzzWin.addEventListener('focus', function(e){
-		Ti.API.info('win1 is active -- ' + (e.source).url);
+		Ti.API.info('Buzz Window has focus -- ' + (e.source).url);
 	});
 	buzzWin.model = model;
 	buzzWin.db = db;
@@ -589,7 +589,7 @@ function buildAppTabs() {
 		url: 'view/hotSpotMain.js'
 	});
 	hsWin.addEventListener('focus', function(e){
-		Ti.API.info('win2 is active -- ' + (e.source).url);
+		Ti.API.info('HotSpot Window has focus -- ' + (e.source).url);
 	});
 	hsWin.model = model;
 	hsWin.db = db;

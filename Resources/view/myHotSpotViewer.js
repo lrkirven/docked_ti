@@ -591,14 +591,13 @@ function init() {
  	 */
 	Base.attachMyBACKButton(win);
 	
-	/*
-	 * location header 
-	 */
 	
-	/*
-	 * headerView = Base.buildLocationHeader(win, true, '');
-	 */
-
+	var startMarkingBtn = Titanium.UI.createButton({title:'Mark HotSpot!'});
+	startMarkingBtn.addEventListener('click', function() {
+		Ti.App.fireEvent('OPEN_MARK_HOTSPOT', {});
+	});
+	win.rightNavButton = startMarkingBtn;
+	
 	/*
 	 * build table to display to user
 	 */

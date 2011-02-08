@@ -224,7 +224,7 @@ function init() {
 	
 	setTimeout(function () { 
 		Ti.App.fireEvent('LOCATION_CHANGED', {});	
-    }, 20000);
+    }, 25000);
 };
 
 init();

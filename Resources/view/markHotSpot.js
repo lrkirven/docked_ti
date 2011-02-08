@@ -254,16 +254,14 @@ function performExit() {
 
 function handleNewHotSpotAdded(e) {
 	if (e.status == 0) {
-		postingInd.visible = false;
+		postingInd.hide();
 		Tools.reportMsg(Msgs.APP_NAME, "HotSpot saved!");
 		performExit();
-		win.close();
+		Ti.App.fireEvent('OPEN_MY_HOTSPOTS', {});
 	}
 	else {
-		postingInd.visible = false;
+		postingInd.hide();
 		Tools.reportMsg(Msgs.APP_NAME, e.errorMsg);
-		performExit();
-		win.close();
 	}
 };
 
@@ -272,9 +270,6 @@ function handleNewHotSpotAdded(e) {
  * Initialize the form
  */
 function init() {
-	/*
- 	 * Modify the 'Back' to my preference
- 	 */
 	Base.attachMyBACKButton(win);
 	Ti.App.addEventListener('NEW_HOTSPOT_ADDED', handleNewHotSpotAdded);
 	buildForm();

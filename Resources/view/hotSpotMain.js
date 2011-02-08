@@ -9,6 +9,8 @@ Ti.include('baseViewer.js');
 var win = Ti.UI.currentWindow;
 var model = win.model;
 var windowList = [];
+var openMyHotSpotViewerFlag = false;
+var openMarkHotSpotFlag = false;
 var buzzMenu = null;
 var inPolygonMM = null;
 var outPolygonMM = null;
@@ -16,6 +18,7 @@ var userCountLbl = null;
 var mainInd = null;
 var userLabel = null;
 var hsMenu = null;
+var currentHSWin = null;
 var selectedLake = null;
 
 /**
@@ -42,6 +45,21 @@ Titanium.App.addEventListener('LOCATION_CHANGED', function(e){
 	if (mainInd != null) {
 		mainInd.hide();
 	}
+});
+
+
+
+Titanium.App.addEventListener('OPEN_MY_HOTSPOTS', function(e) { 
+	Ti.API.info('Got OPEN_MY_HOTSPOTS event ...');
+	openMyHotSpotViewerFlag = true;
+	currentHSWin.close();
+	
+});
+
+Titanium.App.addEventListener('OPEN_MARK_HOTSPOT', function(e) { 
+	Ti.API.info('Got OPEN_MARK_HOTSPOT event ...');
+	openMarkHotSpotFlag = true;
+	currentHSWin.close();
 });
 
 Titanium.App.addEventListener('UPDATED_DISPLAY_NAME', function(e) { 
@@ -77,15 +95,14 @@ function buildMenu() {
 	hsMenu.addEventListener('click', function(e){
 		Ti.API.info('User selcted to go here: ' + e.rowData.ptr);
 		if (e.rowData.ptr) {
-			var w = Titanium.UI.createWindow({
+			currentHSWin = Titanium.UI.createWindow({
 				url: e.rowData.ptr,
 				backgroundColor: CSSMgr.color0,
 				barColor: CSSMgr.color0,
-				userHostSpotFlag:e.rowData.userHostSpotFlag,
 				title: Msgs.APP_NAME 
 			});
-			w.model = model;
-			Titanium.UI.currentTab.open(w, { animated: true }); 
+			currentHSWin.model = model;
+			Titanium.UI.currentTab.open(currentHSWin, { animated: true }); 
 		}
 	});
 	hsMenu.backgroundImage = '../dockedbg.png';	
@@ -138,6 +155,13 @@ function init() {
 		userHostSpotFlag:true,
 		leftImage:'../phone_playmovie.png',
 		ptr: 'myHotSpotViewer.js'
+	},
+	{
+		title:'Mark HotSpot',
+		hasChild:true,
+		writeFlag:true,
+		leftImage:'../phone_playmovie.png',
+		ptr:'markHotSpot.js'
 	}];
 	
 	
@@ -200,6 +224,38 @@ function init() {
 	 */
 	Base.attachiAd(win);
 	
+	win.addEventListener('focus', function(e) {
+		if (openMyHotSpotViewerFlag) {
+			Ti.API.info('Trying to open MY hotspots window ...');
+			var w = Titanium.UI.createWindow({
+				url: 'myHotSpotViewer.js',
+				backgroundColor: CSSMgr.color0,
+				barColor: CSSMgr.color0,
+				title: Msgs.APP_NAME
+			});
+			w.model = model;
+			currentHSWin = w;
+			Titanium.UI.currentTab.open(w, {
+				animated: true
+			});
+			openMyHotSpotViewerFlag = false;
+		}
+		if (openMarkHotSpotFlag) {
+			Ti.API.info('Trying to open MARK hotspot window ...');
+			var w = Titanium.UI.createWindow({
+				url: 'myHotSpotViewer.js',
+				backgroundColor: CSSMgr.color0,
+				barColor: CSSMgr.color0,
+				title: Msgs.APP_NAME
+			});
+			w.model = model;
+			currentHSWin = w;
+			Titanium.UI.currentTab.open(w, {
+				animated: true
+			});
+			openMarkHotSpotFlag = false;
+		}
+	});
 };
 
 init();

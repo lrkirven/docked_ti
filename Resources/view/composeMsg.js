@@ -383,12 +383,12 @@ function performExit() {
 function handleNewMsgPosted(e) {
 	if (e.status == 0) {
 		if (post2FB) {
-			postingInd.visible = false;
+			postingInd.hide();
 			Ti.API.info('handleNewMsgPosted(): Going to facebook ---> ' + e.origMsgEvent);
 			postMessage2FB(e.origMsgEvent);
 		}
 		else {
-			postingInd.visible = false;
+			postingInd.hide();
 			var alertDialog = Titanium.UI.createAlertDialog({
 				message: 'Message posted!',
 				buttonNames: ['OK']
@@ -399,7 +399,7 @@ function handleNewMsgPosted(e) {
 		}
 	}
 	else {
-		postingInd.visible = false;
+		postingInd.hide();
 		Tools.reportMsg(Msgs.APP_NAME, e.errorMsg);
 		performExit();
 		win.close();
