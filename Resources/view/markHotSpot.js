@@ -1,6 +1,8 @@
 Ti.include('../util/tools.js');
 Ti.include('../util/msgs.js');
 Ti.include('../util/geo.js');
+Ti.include('../util/hotspot.js');
+Ti.include('../props/cssMgr.js');
 Ti.include('../model/modelLocator.js');
 Ti.include('../props/cssMgr.js');
 Ti.include('../client/picasaClient.js');
@@ -10,7 +12,6 @@ Ti.include('baseViewer.js');
 
 var win = Ti.UI.currentWindow;
 var model = win.model;
-var css = win.css;
 var submitBtn = null;
 var notesText = null;
 var descText = null;
@@ -39,7 +40,7 @@ function checkFormData() {
 function buildForm() {
 	
 	var panel = Ti.UI.createView({ 
-		backgroundColor:css.getColor2(),
+		backgroundColor:CSSMgr.color2,
 		top:20,
 		left:20,
 		right:20,
@@ -50,7 +51,7 @@ function buildForm() {
 	});
 	
 	var lakeText = Titanium.UI.createLabel({
-		color: css.getColor0(),
+		color: CSSMgr.color0,
 		text: model.getCurrentLake().name, 
 		font: { fontSize:15, fontFamily: model.myFont, fontWeight: 'bold' },
 		top: 10,
@@ -62,7 +63,7 @@ function buildForm() {
 	panel.add(lakeText);
 	
 	var latText = Titanium.UI.createLabel({
-		color: css.getColor0(),
+		color: CSSMgr.color0,
 		text: Geo.toLat(model.getUserLat(), 'dms', 2),
 		font: { fontSize:13, fontFamily: model.myFont, fontWeight: 'bold' },
 		top: 40,
@@ -74,7 +75,7 @@ function buildForm() {
 	panel.add(latText);
 	
 	var lngText = Titanium.UI.createLabel({
-		color: css.getColor0(),
+		color: CSSMgr.color0,
 		text: Geo.toLon(model.getUserLng(), 'dms', 2),
 		font: { fontSize:13, fontFamily: model.myFont, fontWeight: 'bold' },
 		top: 40,
@@ -91,7 +92,7 @@ function buildForm() {
 	var currentLake = model.getCurrentLake().name;
 	var prompt1 = currentLake;
 	var descLbl = Titanium.UI.createLabel({
-		color: css.getColor0(),
+		color: CSSMgr.color0,
 		text: Msgs.DESC_LBL,
 		font: { fontFamily: model.myFont, fontWeight: 'bold' },
 		top: 70,
@@ -127,7 +128,7 @@ function buildForm() {
 	panel.add(descText);
 	
 	var notesLbl = Titanium.UI.createLabel({
-		color: css.getColor0(),
+		color: CSSMgr.color0,
 		text: Msgs.NOTES_LBL,
 		font: { fontFamily: model.myFont, fontWeight: 'bold' },
 		top: 140,
@@ -147,7 +148,7 @@ function buildForm() {
 		appearance:Titanium.UI.KEYBOARD_APPEARANCE_ALERT,	
 		keyboardType:Titanium.UI.KEYBOARD_NUMBERS_PUNCTUATION,
 		borderWidth:2,
-		borderColor:css.getColor0(),
+		borderColor:CSSMgr.color0,
 		borderRadius:5
 	});
 	notesText.addEventListener('change', function(e){
@@ -163,7 +164,7 @@ function buildForm() {
 	panel.add(notesText);
 	
 	var categoryLbl = Titanium.UI.createLabel({
-		color: css.getColor0(),
+		color: CSSMgr.color0,
 		text: Msgs.CATEGORY_LBL,
 		font: { fontFamily: model.myFont, fontWeight: 'bold' },
 		top: 190,
@@ -174,8 +175,8 @@ function buildForm() {
 	});
 	
 	var categoryBtn = Titanium.UI.createTabbedBar({
-    	labels:['Catch', 'Launch', 'Bait', 'Other'],
-    	backgroundColor:css.getColor0(),
+    	labels:HotSpot.categoryLabels,
+    	backgroundColor:CSSMgr.color0,
     	top:270,
 		left:10,
     	style:Titanium.UI.iPhone.SystemButtonStyle.BAR,
@@ -196,7 +197,7 @@ function buildForm() {
 		title: Msgs.MARK,
 		style: Titanium.UI.iPhone.SystemButtonStyle.BORDERED,
 		enabled: false,
-		color: css.getColor0(),
+		color: CSSMgr.color0,
 		bottom: 20,
 		right: 10,
 		height: 30,
@@ -243,7 +244,7 @@ function buildForm() {
 		fontSize: 15,
 		fontWeight: 'bold'
 	};
-	postingInd.color = css.getColor3();
+	postingInd.color = CSSMgr.color3;
 	win.add(postingInd);
 };
 

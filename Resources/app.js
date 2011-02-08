@@ -1,10 +1,10 @@
 Ti.include('util/msgs.js');
 Ti.include('util/tools.js');
 Ti.include('util/tea.js');
+Ti.include('props/cssMgr.js');
 Ti.include('model/modelLocator.js');
 Ti.include('client/picasaClient.js');
 Ti.include('client/restClient.js');
-Ti.include('props/cssMgr.js');
 
 
 // Titanium.UI.setBackgroundColor('#000');
@@ -15,7 +15,6 @@ Ti.include('props/cssMgr.js');
 
 var myFont = 'Verdana';
 var model = new ModelLocator();
-var css = CSSMgr();
 Ti.Geolocation.purpose = "Recieve User Location";
 
 var myFont = 'Verdana';
@@ -517,15 +516,14 @@ Titanium.App.addEventListener('PROMPT_USER_TO_REGISTER_COMPLETE', function(e) {
 		tabGroup.close();
 		registerWin = Titanium.UI.createWindow({
 			title: Msgs.APP_NAME,
-			color: css.getColor2(),
+			color: CSSMgr.color2,
 			font: { fontSize: 20, fontFamily: myFont },
-			backgroundColor: css.getColor0(),
-			barColor: css.getColor0(),
+			backgroundColor: CSSMgr.color0,
+			barColor: CSSMgr.color0,
 			url: 'view/basicRegisterUser.js'
 		});
 		registerWin.model = model;
 		registerWin.db = db;
-		registerWin.css = css;
 		registerWin.open();
 	}
 	else {
@@ -562,16 +560,15 @@ function buildAppTabs() {
 	
 	var buzzWin = Titanium.UI.createWindow({
 		title: Msgs.APP_NAME,
-		color: css.getColor2(),
+		color: CSSMgr.color2,
 		font: { fontSize: 20, fontFamily: myFont },
-		barColor: css.getColor0(),
+		barColor: CSSMgr.color0,
 		url: 'view/buzzMain.js'
 	});
 	buzzWin.addEventListener('focus', function(e){
 		Ti.API.info('win1 is active -- ' + (e.source).url);
 	});
 	buzzWin.model = model;
-	buzzWin.css = css;
 	buzzWin.db = db;
 	buzzTab = Titanium.UI.createTab({
 		icon: 'KS_nav_ui.png',
@@ -586,16 +583,15 @@ function buildAppTabs() {
 	
 	var hsWin = Titanium.UI.createWindow({
 		title: Msgs.APP_NAME,
-		color: css.getColor2(),
+		color: CSSMgr.color2,
 		font: { fontSize: 20, fontFamily: myFont },
-		barColor: css.getColor0(),
+		barColor: CSSMgr.color0,
 		url: 'view/hotSpotMain.js'
 	});
 	hsWin.addEventListener('focus', function(e){
 		Ti.API.info('win2 is active -- ' + (e.source).url);
 	});
 	hsWin.model = model;
-	hsWin.css = css;
 	hsWin.db = db;
 	hotspotTab = Titanium.UI.createTab({
 		icon: 'KS_nav_ui.png',
@@ -612,14 +608,13 @@ function buildAppTabs() {
 	var reportsWin = Titanium.UI.createWindow({
 		title: Msgs.APP_NAME,
 		font: { fontSize: 20, fontFamily: myFont },
-		barColor: css.getColor0(),
+		barColor: CSSMgr.color0,
 		url: 'view/reportViewer.js'
 	});
 	reportsWin.addEventListener('focus', function(e){
 		Ti.API.info('win3 is active -- ' + (e.source).url);
 	});
 	reportsWin.model = model;
-	reportsWin.css = css;
 	reportsTab = Titanium.UI.createTab({
 		icon: 'KS_nav_ui.png',
 		window: reportsWin
@@ -643,14 +638,13 @@ function buildAppTabs() {
 	var settingsWin = Titanium.UI.createWindow({
 		title: Msgs.APP_NAME,
 		font: { fontSize: 20, fontFamily: myFont },
-		barColor: css.getColor0(),
+		barColor: CSSMgr.color0,
 		url: 'view/settingsMain.js'
 	});
 	settingsWin.addEventListener('focus', function(e){
 		Ti.API.info('win4 is active -- ' + (e.source).url);
 	});
 	settingsWin.model = model;
-	settingsWin.css = css;
 	settingsWin.db = db;
 	settingsTab = Titanium.UI.createTab({
 		icon: 'KS_nav_platform.png',
@@ -731,15 +725,14 @@ function init() {
 		if (!hasUserDeclined()) {
 			promptWin = Titanium.UI.createWindow({
 				title: Msgs.APP_NAME,
-				color: css.getColor2(),
+				color: CSSMgr.color2,
 				font: { fontSize: 20, fontFamily: myFont },
-				backgroundColor: css.getColor0(),
-				barColor: css.getColor0(),
+				backgroundColor: CSSMgr.color0,
+				barColor: CSSMgr.color0,
 				url: 'view/promptUserToRegister.js'
 			});
 			promptWin.model = model;
 			promptWin.db = db;
-			promptWin.css = css;
 			promptWin.open();
 		}
 		//

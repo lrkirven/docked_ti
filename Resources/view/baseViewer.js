@@ -19,7 +19,7 @@
 					fontSize: 13,
 					fontWeight: 'bold'
 				},
-				color: css.getColor2(),
+				color: CSSMgr.color2,
 				style: Titanium.UI.iPhone.ActivityIndicatorStyle.PLAIN
 			});
 		}
@@ -35,7 +35,7 @@
 					fontSize: 13,
 					fontWeight: 'bold'
 				},
-				color: css.getColor2(),
+				color: CSSMgr.color2,
 				style: Titanium.UI.iPhone.ActivityIndicatorStyle.PLAIN
 			});
 		}
@@ -84,10 +84,10 @@
 				//
 				var row = Ti.UI.createTableViewRow({
 					selectedBackgroundColor:'#fff',
-					backgroundColor:css.getColor0(),
+					backgroundColor:CSSMgr.color0,
 					height:0,
 					width:'auto',
-					borderColor:css.getColor2(),
+					borderColor:CSSMgr.color2,
 					className:'MsgEventRow' + i,
 					clickName:'row',
 					msgEvent:msgEvent,
@@ -115,7 +115,7 @@
 				}
 				
 				var replyCounter = Ti.UI.createLabel({
-					color: css.getColor3(),
+					color: CSSMgr.color3,
 					font: { fontSize: '10', fontWeight: 'bold', fontFamily: model.myFont },
 					right: 0,
 					top: 0,
@@ -182,8 +182,8 @@
 			height: 50,
 			width: 320,
 			top: -100,
-			borderColor: css.getColor0(),
-			backgroundColor: css.getColor0()
+			borderColor: CSSMgr.color0,
+			backgroundColor: CSSMgr.color0
 		});
 		
 		var headerLbl0 = (localFlag ? Msgs.MY_LOCATION : Msgs.REMOTE_LOCATION);
@@ -245,7 +245,7 @@
 						fontSize: 16,
 						fontWeight: 'bold'
 					},
-					color: css.getColor4()
+					color: CSSMgr.color4
 				});
 			}
 			else {
@@ -259,7 +259,7 @@
 						fontSize: 16,
 						fontWeight: 'bold'
 					},
-					color: css.getColor3()
+					color: CSSMgr.color3
 				});
 			}
 		}
@@ -277,7 +277,7 @@
 					fontSize: 16,
 					fontWeight: 'bold'
 				},
-				color: css.getColor4()
+				color: CSSMgr.color4
 			});
 		}
 		

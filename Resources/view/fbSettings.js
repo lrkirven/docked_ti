@@ -1,11 +1,11 @@
 Ti.include('../util/msgs.js');
 Ti.include('../util/tools.js');
+Ti.include('../props/cssMgr.js');
 Ti.include('../model/modelLocator.js');
 Ti.include('../client/restClient.js');
 
 var win = Ti.UI.currentWindow;
 var model = win.model;
-var css = win.css;
 var db = win.db;
 var switchBtn0 = null;
 var switchBtn1 = null;
@@ -121,15 +121,15 @@ function buildForm() {
 		bottom: 15,
 		left: 10,
 		width: 300,
-		borderColor:css.getColor0(),
+		borderColor:CSSMgr.color0,
 		borderRadius: 20,
 		clickName: 'bg'
 	});
 	
 	var defaultIDImage = Ti.UI.createImageView({
 		image: '../user.png',
-		backgroundColor:css.getColor0(),
-		borderColor:css.getColor2(),
+		backgroundColor:CSSMgr.color0,
+		borderColor:CSSMgr.color2,
 		top:10,
 		left:10,
 		width:50,
@@ -139,7 +139,7 @@ function buildForm() {
 	panel.add(defaultIDImage);
 	
 	var fbLbl = Titanium.UI.createLabel({
-		color: css.getColor0(),
+		color: CSSMgr.color0,
 		text: 'Click button below to connect to your Facebook account: ',
 		font: { fontFamily: model.myFont, fontSize: 15, fontWeight:'bold' },
 		top: 70,
@@ -184,7 +184,7 @@ function buildForm() {
 	});
 	
 	var lbl0 = Titanium.UI.createLabel({
-		color: css.getColor0(),
+		color: CSSMgr.color0,
 		text: 'Use Facebook Profile Picture: ',
 		font: { fontFamily: model.myFont, fontSize: 15, fontWeight:'bold' },
 		top: 170,
@@ -227,7 +227,7 @@ function buildForm() {
 	panel.add(switchBtn0);
 	
 	var lbl1 = Titanium.UI.createLabel({
-		color: css.getColor0(),
+		color: CSSMgr.color0,
 		text: 'Sync Docked Buzz to Facebook: ',
 		font: { fontFamily: model.myFont, fontSize: 15, fontWeight:'bold' },
 		top: 240,

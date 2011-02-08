@@ -1,8 +1,9 @@
 Ti.include('../model/modelLocator.js');
 
+Ti.include('baseViewer.js');
+
 var win = Ti.UI.currentWindow;
 var model = win.model;
-var css = win.css;
 var report = win.report;
 var webview = null;
 var mainInd = null;
@@ -22,6 +23,8 @@ Titanium.App.addEventListener('LOAD_REPORT_COMPLETE', function(e) {
  * Initial entry
  */
 function init() {
+	Base.attachMyBACKButton(win);
+	
 	mainInd = Titanium.UI.createActivityIndicator({
 		top: 120,
 		left: 135,

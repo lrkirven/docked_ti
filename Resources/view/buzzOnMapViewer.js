@@ -1,15 +1,15 @@
 Ti.include('../model/modelLocator.js');
 
+Ti.include('baseViewer.js');
+
 var win = Ti.UI.currentWindow;
 var model = win.model;
 
-var b = Titanium.UI.createButton({title:'BACK'});
-b.addEventListener('click', function() {
-	win.close();
-});
-win.leftNavButton = b;
-
-function init(){
+/**
+ * Initial entry
+ */
+function init() {
+	Base.attachMyBACKButton(win);
 	var webview = Ti.UI.createWebView();
 	var lat = model.getUserLat();
 	var lng = model.getUserLng();

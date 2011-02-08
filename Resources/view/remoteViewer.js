@@ -1,5 +1,6 @@
 Ti.include('../util/msgs.js');
 Ti.include('../util/tools.js');
+Ti.include('../props/cssMgr.js');
 Ti.include('../model/modelLocator.js');
 Ti.include('../client/restClient.js');
 
@@ -7,7 +8,6 @@ Ti.include('baseViewer.js');
 
 var win = Ti.UI.currentWindow;
 var model = win.model;
-var css = win.css;
 var picasa = win.picasa;
 var searchText = null;
 var searchView = null;
@@ -23,8 +23,8 @@ function appendProfilePhoto(row) {
 		var defaultIDImage = null;
 		defaultIDImage = Ti.UI.createImageView({
 			image: '../user.png',
-			backgroundColor:css.getColor0(),
-			borderColor:css.getColor1(),
+			backgroundColor:CSSMgr.color0,
+			borderColor:CSSMgr.color1,
 			top:0,
 			left:0,
 			width:50,
@@ -37,8 +37,8 @@ function appendProfilePhoto(row) {
 	else {
 		var userProfilePhoto = Ti.UI.createImageView({
 			image: msgEvent.profileUrl,
-			backgroundColor: css.getColor0(),
-			borderColor: css.getColor1(),
+			backgroundColor: CSSMgr.color0,
+			borderColor: CSSMgr.color1,
 			top:0,
 			left:0,
 			width:50,
@@ -70,7 +70,7 @@ function appendMsgBody(row, fontSize) {
 		row.height = 90;
 		
 		msgBody = Ti.UI.createView({
-			backgroundColor:css.getColor0(),
+			backgroundColor:CSSMgr.color0,
 			left:60,
 			top:0,
 			height:90,
@@ -92,7 +92,7 @@ function appendMsgBody(row, fontSize) {
 		msgBody.add(userMsg);
 		
 		userLocale = Ti.UI.createLabel({
-			color:css.getColor2(),
+			color:CSSMgr.color2,
 			font:{fontSize:11, fontWeight:'normal', fontFamily:model.myFont},
 			left:5,
 			top:35,
@@ -110,7 +110,7 @@ function appendMsgBody(row, fontSize) {
 		row.height = 65;
 		
 		msgBody = Ti.UI.createView({
-			backgroundColor:css.getColor0(),
+			backgroundColor:CSSMgr.color0,
 			left:60,
 			top:0,
 			height:65,
@@ -132,7 +132,7 @@ function appendMsgBody(row, fontSize) {
 		msgBody.add(userMsg);
 		
 		userLocale = Ti.UI.createLabel({
-			color:css.getColor2(),
+			color:CSSMgr.color2,
 			font:{fontSize:11, fontWeight:'normal', fontFamily:model.myFont},
 			left:5,
 			top:15,
@@ -168,7 +168,7 @@ function appendMsgBodyWithPhoto(row, fontSize) {
 		row.height = 90;
 		
 		msgBody = Ti.UI.createView({
-			backgroundColor: css.getColor0(),
+			backgroundColor: CSSMgr.color0,
 			left: 60,
 			top: 0,
 			height: 90,
@@ -177,8 +177,8 @@ function appendMsgBodyWithPhoto(row, fontSize) {
 		});
 		msgPhoto = Ti.UI.createImageView({
 			image: msgEvent.photoUrl,
-			backgroundColor: css.getColor0(),
-			borderColor: css.getColor1(),
+			backgroundColor: CSSMgr.color0,
+			borderColor: CSSMgr.color1,
 			top: 12,
 			left: 0,
 			width: 50,
@@ -200,7 +200,7 @@ function appendMsgBodyWithPhoto(row, fontSize) {
 		msgBody.add(userMsg);
 		
 		userLocale = Ti.UI.createLabel({
-			color: css.getColor2(),
+			color: CSSMgr.color2,
 			font: { fontSize: 11, fontWeight: 'normal', fontFamily: model.myFont },
 			left: 60,
 			top: 35,
@@ -216,7 +216,7 @@ function appendMsgBodyWithPhoto(row, fontSize) {
 		row.height = 75;
 		
 		msgBody = Ti.UI.createView({
-			backgroundColor: css.getColor0(),
+			backgroundColor: CSSMgr.color0,
 			left: 60,
 			top: 0,
 			height: 65,
@@ -225,8 +225,8 @@ function appendMsgBodyWithPhoto(row, fontSize) {
 		});
 		msgPhoto = Ti.UI.createImageView({
 			image: msgEvent.photoUrl,
-			backgroundColor: css.getColor0(),
-			borderColor: css.getColor1(),
+			backgroundColor: CSSMgr.color0,
+			borderColor: CSSMgr.color1,
 			top: 12,
 			left: 0,
 			width: 50,
@@ -248,7 +248,7 @@ function appendMsgBodyWithPhoto(row, fontSize) {
 		msgBody.add(userMsg);
 		
 		userLocale = Ti.UI.createLabel({
-			color: css.getColor2(),
+			color: CSSMgr.color2,
 			font: { fontSize: 11, fontWeight: 'normal', fontFamily: model.myFont },
 			left: 60,
 			top: 15,
@@ -265,7 +265,7 @@ function appendMsgBodyWithPhoto(row, fontSize) {
 
 function buildSearchView(visible) {
 	searchPage = Ti.UI.createView({
-		backgroundColor: css.getColor0(),
+		backgroundColor: CSSMgr.color0,
 		left: 0,
 		top: 0,
 		visible:visible,
@@ -274,7 +274,7 @@ function buildSearchView(visible) {
 		clickName: 'searchPage'
 	});
 	var searchLbl = Ti.UI.createLabel({
-		color: css.getColor2(),
+		color: CSSMgr.color2,
 		font: { fontFamily: model.myFont, fontWeight: 'normal' },
 		left: 25,
 		top: 5,
@@ -315,14 +315,14 @@ function buildSearchView(visible) {
 	// table to display search results
 	//
 	searchView = Titanium.UI.createTableView({
-		separatorColor: css.getColor0(),
+		separatorColor: CSSMgr.color0,
 		style: Titanium.UI.iPhone.TableViewStyle.PLAIN,
 		top: 75,
 		height:300,
 		visible:false,
 		filterAttribute: 'filter',
-		color: css.getColor2(),
-		backgroundColor: css.getColor0()
+		color: CSSMgr.color2,
+		backgroundColor: CSSMgr.color0
 	});
 	searchView.addEventListener('click', function(e) { 
 		Ti.API.info('User selected resource Id -- ' + e.rowData.lake.resourceId);
@@ -369,11 +369,11 @@ function buildSearchResultsRowCollection(lakeList) {
 			
 			var row = Ti.UI.createTableViewRow({
 				selectedBackgroundColor: '#fff',
-				backgroundColor: css.getColor0(),
+				backgroundColor: CSSMgr.color0,
 				height:0,
 				width:'auto',
 				lake:lake,
-				borderColor: css.getColor2(),
+				borderColor: CSSMgr.color2,
 				className: 'LakeRow' + i,
 				clickName: 'row'
 			});
@@ -383,7 +383,7 @@ function buildSearchResultsRowCollection(lakeList) {
 			// name of the lake
 			//	
 			var lakeNameLbl = Ti.UI.createLabel({
-				color: css.getColor2(),
+				color: CSSMgr.color2,
 				font: {
 					fontSize: '12',
 					fontWeight: 'bold',
@@ -402,7 +402,7 @@ function buildSearchResultsRowCollection(lakeList) {
 			// number of active users
 			//	
 			var userCountLbl = Ti.UI.createLabel({
-				color: css.getColor3(),
+				color: CSSMgr.color3,
 				font: {
 					fontSize: '10',
 					fontWeight: 'bold',
@@ -421,7 +421,7 @@ function buildSearchResultsRowCollection(lakeList) {
 			// lasyUpdate timestamp
 			//	
 			var lastUpdateLbl = Ti.UI.createLabel({
-				color: css.getColor3(),
+				color: CSSMgr.color3,
 				font: {
 					fontSize: '10',
 					fontWeight: 'bold',
@@ -450,14 +450,14 @@ function buildSearchResultsRowCollection(lakeList) {
  */
 function buildMsgTableView(){
 	var t = Titanium.UI.createTableView({
-		separatorColor:css.getColor2(),
+		separatorColor:CSSMgr.color2,
 		style:Titanium.UI.iPhone.TableViewStyle.PLAIN,
 		visible:false,
 		top:50,
 		left:0,
 		width:325,
 		height:350,
-		backgroundColor:css.getColor0()
+		backgroundColor:CSSMgr.color0
 	});
 	//
 	// listener
@@ -467,11 +467,10 @@ function buildMsgTableView(){
 			var rendererWin = Titanium.UI.createWindow({
 				url: e.rowData.renderer,
 				title: e.rowData.title,
-				backgroundColor: css.getColor0(),
-				barColor: css.getColor0()
+				backgroundColor: CSSMgr.color0,
+				barColor: CSSMgr.color0
 			});
 			rendererWin.model = model;
-			rendererWin.css = css;
 			Ti.API.info('---------------> ' + e.rowData);
 			Ti.API.info('---------------> ' + e.rowData.msgEvent);
 			rendererWin.msgEvent = e.rowData.msgEvent;
@@ -494,7 +493,7 @@ function buildMsgView(visible) {
 	// empty msg view
 	//
 	msgPage = Ti.UI.createView({
-		backgroundColor: css.getColor0(),
+		backgroundColor: CSSMgr.color0,
 		visible:visible,
 		top:0,
 		left:0,
@@ -506,8 +505,8 @@ function buildMsgView(visible) {
 	var h = Ti.UI.createView({
 		height: 50,
 		top: -100,
-		borderColor: css.getColor0(),
-		backgroundColor: css.getColor0()
+		borderColor: CSSMgr.color0,
+		backgroundColor: CSSMgr.color0
 	});
 	var headerLbl0 = 'Remote Location: ';
 	var label0 = Ti.UI.createLabel({
@@ -520,7 +519,7 @@ function buildMsgView(visible) {
 	});
 	h.add(label0);
 	selectedLake = Ti.UI.createLabel({
-		color: css.getColor2(),
+		color: CSSMgr.color2,
 		font: { fontFamily: model.myFont, fontSize: 16, fontWeight: 'bold' },
 		left: 10,
 		top: 10,

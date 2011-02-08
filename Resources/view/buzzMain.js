@@ -1,4 +1,5 @@
 Ti.include('../util/msgs.js');
+Ti.include('../props/cssMgr.js');
 Ti.include('../util/tools.js');
 Ti.include('../model/modelLocator.js');
 Ti.include('../client/restClient.js');
@@ -7,7 +8,6 @@ Ti.include('baseViewer.js');
 
 var win = Ti.UI.currentWindow;
 var model = win.model;
-var css = win.css;
 var windowList = [];
 var selectedLake = null;
 var buzzMenu = null;
@@ -77,7 +77,7 @@ Titanium.App.addEventListener('LOCATION_CHANGED', function(e){
 	Ti.API.info('Handle LOCATION_CHANGED event ...');
 	if (model.getCurrentLake() != null) {
 		selectedLake.text = model.getCurrentLake().name;
-		selectedLake.color = css.getColor4();
+		selectedLake.color = CSSMgr.color4;
 		buzzMenu.data = (model.getCurrentUser() == null ? inPolygonAnonymousMM : inPolygonMM);
 		var countDisplay = model.getCurrentLake().localCount + Msgs.USERS;
 		userCountLbl.text = countDisplay;
@@ -86,7 +86,7 @@ Titanium.App.addEventListener('LOCATION_CHANGED', function(e){
 	else {
 		selectedLake.text = Msgs.OUT_OF_ZONE;
 		userCountLbl.text = '';
-		selectedLake.color = css.getColor3();
+		selectedLake.color = CSSMgr.color3;
 		buzzMenu.data = outPolygonMM;
 		win.touchEnabled = true;
 	}
@@ -98,13 +98,13 @@ Titanium.App.addEventListener('LOCATION_CHANGED', function(e){
  */
 function buildBuzzMsgTable() {
 	// table header
-	var tblHeader = Ti.UI.createView({ height:30, width:320 });
+	var tblHeader = Ti.UI.createView({ height:30, width:'auto' });
 	var label = Ti.UI.createLabel({ 
 		top:5,
 		left:10,
    		text:Msgs.BUZZ_TITLE, 
 		font: { fontFamily:model.myFont, fontSize:20, fontWeight:'bold' },
-		color:css.getColor2()
+		color:CSSMgr.color2
 	});
 	tblHeader.add(label);
 	// create table view
@@ -115,7 +115,7 @@ function buildBuzzMsgTable() {
 		moving:false,
 		style:Titanium.UI.iPhone.TableViewStyle.GROUPED,
 		selectionStyle:Ti.UI.iPhone.TableViewCellSelectionStyle.GRAY,
-		rowBackgroundColor:css.getColor2()
+		rowBackgroundColor:CSSMgr.color2
 	});
 
 	// create table view event listener
@@ -124,13 +124,12 @@ function buildBuzzMsgTable() {
 		if (e.rowData.ptr) {
 			var w = Titanium.UI.createWindow({
 				url:e.rowData.ptr,
-				backgroundColor:css.getColor0(),
-    			barColor:css.getColor0(),
+				backgroundColor:CSSMgr.color0,
+    			barColor:CSSMgr.color0,
 				title:Msgs.APP_NAME,
 				localFlag:e.rowData.localFlag
 			});
 			w.model = model;
-			w.css = css;
 			Titanium.UI.currentTab.open(w, {animated:true});
 			windowList.push(w);
 		}

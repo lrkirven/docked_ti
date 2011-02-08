@@ -1,3 +1,4 @@
+Ti.include('../props/cssMgr.js');
 Ti.include('../model/modelLocator.js');
 Ti.include('../client/restClient.js');
 
@@ -7,12 +8,11 @@ Ti.include('../client/restClient.js');
 var win = Ti.UI.currentWindow;
 var model = win.model;
 var msgEvent = win.msgEvent;
-var css = win.css;
 var newCommentBody = null;
 var initStart = 0;
 var commentVBox = null;
 
-Ti.API.info('Entering messageRenderer --> ' + this.msgEvent);
+Ti.API.info('Entering messageRendererReadOnly --> ' + this.msgEvent);
 
 /**
  * This method create a view containing the poster's profile image (or photo).
@@ -24,8 +24,8 @@ function appendProfilePhoto(m) {
 	if (m.profileUrl == undefined) {
 		p = Ti.UI.createImageView({
 			image: '../user.png',
-			backgroundColor: css.getColor0(),
-			borderColor: css.getColor1(),
+			backgroundColor: CSSMgr.color0,
+			borderColor: CSSMgr.color1,
 			top: 0,
 			left: 0,
 			width: 50,
@@ -36,8 +36,8 @@ function appendProfilePhoto(m) {
 	else {
 		p = Ti.UI.createImageView({
 			image: m.profileUrl,
-			backgroundColor: css.getColor0(),
-			borderColor: css.getColor1(),
+			backgroundColor: CSSMgr.color0,
+			borderColor: CSSMgr.color1,
 			top: 0,
 			left: 0,
 			width: 50,
@@ -68,7 +68,7 @@ function createExistingCommentRow(commentInst, index) {
 	}
 	var size = 75;
 	var c0 = Ti.UI.createTableViewRow({
-		backgroundColor:css.getColor0(),
+		backgroundColor:CSSMgr.color0,
 		left:0,
 		height:'auto',
 		width:340,
@@ -78,8 +78,8 @@ function createExistingCommentRow(commentInst, index) {
 	
 	var p = Ti.UI.createImageView({
 		image: profileUrl,
-		backgroundColor:css.getColor0(),
-		borderColor:css.getColor1(),
+		backgroundColor:CSSMgr.color0,
+		borderColor:CSSMgr.color1,
 		top:0,
 		left:0,
 		width:50,
@@ -89,8 +89,8 @@ function createExistingCommentRow(commentInst, index) {
 	c0.add(p);
 	
 	var c1 = Ti.UI.createView({
-		backgroundColor:css.getColor0(),
-		borderColor:css.getColor4(),
+		backgroundColor:CSSMgr.color0,
+		borderColor:CSSMgr.color4,
 		left:60,
 		top:0,
 		height:'auto',
@@ -112,7 +112,7 @@ function createExistingCommentRow(commentInst, index) {
 	c1.add(comment);
 	
 	var userLocale = Ti.UI.createLabel({
-		color:css.getColor2(),
+		color:CSSMgr.color2,
 		font:{fontSize:10, fontWeight:'normal', fontFamily:model.myFont},
 		left:10,
 		top:0,
@@ -132,7 +132,7 @@ function createMsgTopic(m) {
 	var fontSize = 13;
 	var size = 90;
 	var msgBody = Ti.UI.createView({
-		backgroundColor:css.getColor4(),
+		backgroundColor:CSSMgr.color4,
 		left:50,
 		top:0,
 		layout:'vertical',
@@ -153,7 +153,7 @@ function createMsgTopic(m) {
 	msgBody.add(comment);
 	
 	var userLocale = Ti.UI.createLabel({
-		color:css.getColor2(),
+		color:CSSMgr.color2,
 		font:{fontSize:11, fontWeight:'normal', fontFamily:model.myFont},
 		left:10,
 		bottom:5,
@@ -175,7 +175,7 @@ function createMsgTopicWithPhoto(m) {
 	var myWidth = 260;
 	
 	var msgBody = Ti.UI.createView({
-		backgroundColor:css.getColor4(),
+		backgroundColor:CSSMgr.color4,
 		left:50,
 		top:0,
 		layout:'vertical',
@@ -185,8 +185,8 @@ function createMsgTopicWithPhoto(m) {
 	});
 	var msgPhoto = Ti.UI.createImageView({
 		image:m.photoUrl,
-		backgroundColor:css.getColor4(),
-		borderColor:css.getColor1(),
+		backgroundColor:CSSMgr.color4,
+		borderColor:CSSMgr.color1,
 		top:10,
 		left:10,
 		width:'auto',
@@ -208,7 +208,7 @@ function createMsgTopicWithPhoto(m) {
 	msgBody.add(comment);
 	
 	var userLocale = Ti.UI.createLabel({
-		color:css.getColor2(),
+		color:CSSMgr.color2,
 		font:{fontSize:11, fontWeight:'normal', fontFamily:model.myFont},
 		left:10,
 		top:5,
@@ -253,11 +253,11 @@ function updateDisplayList() {
 	
 	commentVBox = Titanium.UI.createTableView({
 		data:commentList,
-		separatorColor:css.getColor0(),
+		separatorColor:CSSMgr.color0,
 		style:Titanium.UI.iPhone.TableViewStyle.PLAIN,
 		top:topStart,
 		filterAttribute:'filter',
-		backgroundColor:css.getColor0()
+		backgroundColor:CSSMgr.color0
 	});
 	win.add(commentVBox);
 };

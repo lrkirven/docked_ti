@@ -1,12 +1,15 @@
 Ti.include('../util/msgs.js');
+Ti.include('../props/cssMgr.js');
 Ti.include('../util/tools.js');
+Ti.include('../props/cssMgr.js');
 Ti.include('../model/modelLocator.js');
 Ti.include('../client/picasaClient.js');
 Ti.include('../client/restClient.js');
 
+Ti.include('baseViewer.js');
+
 var win = Ti.UI.currentWindow;
 var model = win.model;
-var css = win.css;
 var composeMsgWinPhotoIndBtn = null;
 var post2FB = false;
 
@@ -41,11 +44,7 @@ function postMessage2FB(m) {
 	
 		Titanium.Facebook.publishStream(m.messageData, fbRec, null, function(r) {
 			if (r.success) {
-				var alertDialog = Titanium.UI.createAlertDialog({
-					message: Msgs.MSG_POSTED,
-					buttonNames: ['OK']
-				});
-				alertDialog.show();
+				Tools.reportMsg(Msgs.APP_NAME, Msgs.MSG_POSTED);	
 				performExit();
 				win.close();
 			}
@@ -56,11 +55,7 @@ function postMessage2FB(m) {
 	}
 	else {
 		Ti.API.warn('**** User is not logged into Facebook -- Cannot post message to FB');
-		var alertDialog = Titanium.UI.createAlertDialog({
-			message: Msgs.MSG_POSTED,
-			buttonNames: ['OK']
-		});
-		alertDialog.show();
+		Tools.reportMsg(Msgs.APP_NAME, Msgs.MSG_POSTED);	
 		performExit();
 		win.close();
 	}
@@ -91,7 +86,7 @@ function buildForm() {
 	var hint = "Buzz on '" + currentLake + "'?";
 	var prompt1 = currentLake;
 	var msgLbl = Titanium.UI.createLabel({
-		color: css.getColor0(),
+		color: CSSMgr.color0,
 		text: prompt1,
 		font: { fontFamily: model.myFont, fontWeight: 'bold' },
 		top: 10,
@@ -105,8 +100,8 @@ function buildForm() {
 	if (model.getUseFBProfilePic() && model.getFBProfileUrl() != null) {
 		var userProfilePhoto = Ti.UI.createImageView({
 			image: model.getFBProfileUrl(),
-			backgroundColor: css.getColor0(),
-			borderColor: css.getColor2(),
+			backgroundColor: CSSMgr.color0,
+			borderColor: CSSMgr.color2,
 			top: 10,
 			left: 10,
 			width: 50,
@@ -118,8 +113,8 @@ function buildForm() {
 	else {
 		var defaultIDImage = Ti.UI.createImageView({
 			image: '../user.png',
-			backgroundColor:css.getColor0(),
-			borderColor:css.getColor2(),
+			backgroundColor:CSSMgr.color0,
+			borderColor:CSSMgr.color2,
 			top: 10,
 			left: 10,
 			width:50,
@@ -153,7 +148,7 @@ function buildForm() {
 		appearance:Titanium.UI.KEYBOARD_APPEARANCE_ALERT,	
 		keyboardType:Titanium.UI.KEYBOARD_NUMBERS_PUNCTUATION,
 		borderWidth:2,
-		borderColor:css.getColor0(),
+		borderColor:CSSMgr.color0,
 		borderRadius:5
 	});
 	msgText.addEventListener('change', function(e){
@@ -179,8 +174,8 @@ function buildForm() {
 	//
 	var photoIndBtn = Ti.UI.createImageView({
 		image: '../commentButton.png',
-		backgroundColor: css.getColor2(),
-		borderColor: css.getColor2(),
+		backgroundColor: CSSMgr.color2,
+		borderColor: CSSMgr.color2,
 		top: 175,
 		left: 10,
 		width: 75,
@@ -194,32 +189,31 @@ function buildForm() {
 	// photo menu
 	//
 	var photoMenuList = [
-		{ title: Msgs.TAKE_PIC, color: css.getColor0(), url: 'takePhoto.js' }, 
-		{ title: Msgs.SELECT_FROM_GALLERY, color: css.getColor0(), url: 'browseGallery.js' }
+		{ title: Msgs.TAKE_PIC, color: CSSMgr.color0, url: 'takePhoto.js' }, 
+		{ title: Msgs.SELECT_FROM_GALLERY, color: CSSMgr.color0, url: 'browseGallery.js' }
 	];
 	var photoMenu = Titanium.UI.createTableView({
 		data: photoMenuList,
 		scrollable: false,
-		separatorColor: css.getColor0(),
+		separatorColor: CSSMgr.color0,
 		style: Titanium.UI.iPhone.TableViewStyle.PLAIN,
 		top: 165,
 		right: 10,
 		height: 100,
 		width: 200,
-		color: css.getColor0(),
+		color: CSSMgr.color0,
 		font: { fontFamily: model.myFont, fontWeight: 'normal' },
-		backgroundColor: css.getColor2()
+		backgroundColor: CSSMgr.color2
 	});
 	photoMenu.addEventListener('click', function(e){
 		if (e.rowData.url) {
 			var helperWin = Titanium.UI.createWindow({
 				url: e.rowData.url,
 				title: e.rowData.title,
-				backgroundColor: css.getColor0(),
-				barColor: css.getColor0()
+				backgroundColor: CSSMgr.color0,
+				barColor: CSSMgr.color0
 			});
 			helperWin.model = model;
-			helperWin.css = css;
 			helperWin.addEventListener('close', function(e){
 				if (model.getPendingRawImage() != null) {
 					photoIndBtn.image = model.getPendingRawImage();
@@ -266,7 +260,7 @@ function buildForm() {
 		title: 'Post!',
 		style: Titanium.UI.iPhone.SystemButtonStyle.BORDERED,
 		enabled: false,
-		color: css.getColor0(),
+		color: CSSMgr.color0,
 		bottom: 20,
 		right: 10,
 		height: 30,
@@ -378,7 +372,7 @@ function buildForm() {
 		fontSize: 15,
 		fontWeight: 'bold'
 	};
-	postingInd.color = css.getColor3();
+	postingInd.color = CSSMgr.color3;
 	win.add(postingInd);
 };
 

@@ -1,14 +1,14 @@
 Ti.include('../util/msgs.js');
 Ti.include('../util/tools.js');
+Ti.include('../util/tea.js');
+Ti.include('../props/cssMgr.js');
 Ti.include('../model/modelLocator.js');
 Ti.include('../client/picasaClient.js');
 Ti.include('../client/restClient.js');
-Ti.include('../util/tea.js');
 
 var win = Ti.UI.currentWindow;
 var model = win.model;
 var db = win.db;
-var css = win.css;
 var saveBtn = null;
 var displayNameText = null;
 
@@ -28,7 +28,7 @@ Titanium.App.addEventListener('UPDATED_DISPLAY_NAME', function(e) {
 function buildForm() {
 
 	var panel = Ti.UI.createView({ 
-		backgroundColor:'#cccccc',
+		backgroundColor:CSSMgr.color2,
 		top:10,
 		bottom:10,
 		left:10,
@@ -39,8 +39,8 @@ function buildForm() {
 
 	var defaultIDImage = Ti.UI.createImageView({
 		image: '../user.png',
-		backgroundColor:css.getColor0(),
-		borderColor:css.getColor2(),
+		backgroundColor:CSSMgr.color0,
+		borderColor:CSSMgr.color2,
 		top:10,
 		left:20,
 		width:50,
@@ -50,7 +50,7 @@ function buildForm() {
 	panel.add(defaultIDImage);
 	
 	var appName = Titanium.UI.createLabel({
-		color: css.getColor0(),
+		color: CSSMgr.color0,
 		text: Msgs.APP_NAME,
 		font: { fontFamily: model.myFont, fontSize:25, fontWeight: 'bold' },
 		top: 10,
@@ -64,7 +64,7 @@ function buildForm() {
 	panel.add(appName);
 
 	var lbl = Titanium.UI.createLabel({
-		color: css.getColor0(),
+		color: CSSMgr.color0,
 		text: 'Display name to \'Docked\' Community: ',
 		font: { fontFamily: model.myFont, fontSize:15 },
 		top: 80,
@@ -108,9 +108,9 @@ function buildForm() {
 	saveBtn = Titanium.UI.createButton({
 		title: 'Save',
 		enabled: true,
-		color: css.getColor0(),
+		color: CSSMgr.color0,
 		systemButton: Titanium.UI.iPhone.SystemButton.FLEXIBLE_SPACE,
-		selectedColor:css.getColor2(),
+		selectedColor:CSSMgr.color2,
 		bottom: 10,
 		borderRadius:0,
 		right: 20,

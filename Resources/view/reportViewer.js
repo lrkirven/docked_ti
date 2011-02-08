@@ -1,11 +1,11 @@
 Ti.include('../util/msgs.js');
+Ti.include('../props/cssMgr.js');
 Ti.include('../model/modelLocator.js');
 
 Ti.include('baseViewer.js');
 
 var win = Ti.UI.currentWindow;
 var model = win.model;
-var css = win.css;
 
 var stateDP =  [
 	{ title:'Alaska Fishing', hasChild:true, leftImage:'../phone_playmovie.png', state:'AK' },
@@ -54,7 +54,7 @@ function init() {
    		text:'Fishing Reports', 
 		font: { fontFamily:model.myFont, fontSize:20, fontWeight:'bold' },
    		// color:'#ffffff'
-		color:css.getColor2()
+		color:CSSMgr.color2
 	});
 	tblHeader.add(label);
 	
@@ -65,7 +65,7 @@ function init() {
 		top:0,
 		style:Titanium.UI.iPhone.TableViewStyle.GROUPED,
 		selectionStyle:Ti.UI.iPhone.TableViewCellSelectionStyle.GRAY,
-		rowBackgroundColor:css.getColor2()
+		rowBackgroundColor:CSSMgr.color2
 	});
 	
 	// create table view event listener
@@ -73,14 +73,13 @@ function init() {
 		Ti.API.info('User selected to go here: ' + e.rowData.ptr);
 		var w = Titanium.UI.createWindow({
 			url:'showLakeList.js',
-			backgroundColor:css.getColor0(),
-   			barColor:css.getColor0(),
+			backgroundColor:CSSMgr.color0,
+   			barColor:CSSMgr.color0,
 			state:e.rowData.state,
 			stateTitle:e.rowData.title,
 			title:Msgs.APP_NAME
 		});
 		w.model = model;
-		w.css = css;
 		Titanium.UI.currentTab.open(w, {animated:true});
 		// windowList.push(w);
 	});

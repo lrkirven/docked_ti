@@ -1,11 +1,11 @@
 Ti.include('../util/msgs.js');
 Ti.include('../util/tools.js');
+Ti.include('../props/cssMgr.js');
 Ti.include('../model/modelLocator.js');
 Ti.include('../client/restClient.js');
 
 var win = Ti.UI.currentWindow;
 var model = win.model;
-var css = win.css;
 var state = win.state;
 var title = win.title;
 var stateTitle = win.stateTitle;
@@ -42,13 +42,12 @@ function convertRawData2TableItems(list) {
 Titanium.App.addEventListener('ONE_REPORT_RECD', function(e) { 
 	var w = Titanium.UI.createWindow({
 		url: 'reportDetails.js',
-		backgroundColor:css.getColor0(),
-		barColor:css.getColor0(),
+		backgroundColor:CSSMgr.color0,
+		barColor:CSSMgr.color0,
 		title:e.result.keyword,
 		report:{ title:e.result.keyword, timeDisplay:e.result.timeDisplay, reportBody:e.result.reportBody }
 	});
 	w.model = model;
-	w.css = css;
 	Titanium.UI.currentTab.open(w, { animated:true });
 });
 
@@ -103,7 +102,7 @@ function init() {
 		left: 10,
 		text: stateTitle,
 		font: { fontFamily: model.myFont, fontSize: 20, fontWeight: 'bold' },
-		color: css.getColor2()
+		color: CSSMgr.color2
 	});
 	tblHeader.add(label);
 	
@@ -112,7 +111,7 @@ function init() {
 		headerView: tblHeader,
 		style: Titanium.UI.iPhone.TableViewStyle.GROUPED,
 		selectionStyle:Ti.UI.iPhone.TableViewCellSelectionStyle.GRAY,
-		rowBackgroundColor: css.getColor2()
+		rowBackgroundColor: CSSMgr.color2
 	});
 	win.add(lakeTbl);
 	lakeTbl.backgroundImage = '../dockedbg.png';

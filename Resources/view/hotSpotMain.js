@@ -1,5 +1,6 @@
 Ti.include('../util/tools.js');
 Ti.include('../util/msgs.js');
+Ti.include('../props/cssMgr.js');
 Ti.include('../model/modelLocator.js');
 Ti.include('../client/restClient.js');
 
@@ -7,7 +8,6 @@ Ti.include('baseViewer.js');
 
 var win = Ti.UI.currentWindow;
 var model = win.model;
-var css = win.css;
 var windowList = [];
 var buzzMenu = null;
 var inPolygonMM = null;
@@ -26,7 +26,7 @@ Titanium.App.addEventListener('LOCATION_CHANGED', function(e){
 	Ti.API.info('Handle LOCATION_CHANGED event ...');
 	if (model.getCurrentLake() != null) {
 		selectedLake.text = model.getCurrentLake().name;
-		selectedLake.color = css.getColor4();
+		selectedLake.color = CSSMgr.color4;
 		hsMenu.data = (model.getCurrentUser() == null ? inPolygonAnonymousMM : inPolygonMM);
 		var countDisplay = model.getCurrentLake().localCount + Msgs.USERS;
 		userCountLbl.text = countDisplay;
@@ -35,7 +35,7 @@ Titanium.App.addEventListener('LOCATION_CHANGED', function(e){
 	else {
 		selectedLake.text = Msgs.OUT_OF_ZONE;
 		userCountLbl.text = '';
-		selectedLake.color = css.getColor3();
+		selectedLake.color = CSSMgr.color3;
 		hsMenu.data = outPolygonMM;
 		win.touchEnabled = true;
 	}
@@ -50,99 +50,6 @@ Titanium.App.addEventListener('UPDATED_DISPLAY_NAME', function(e) {
 	}
 });
 
-/**
- * This method builds the top header to display location and user information to
- * the user.
- * 
- * @param {Object} currentLake
- */
-/*
-function buildHeader(currentLake) {
-	var h = Ti.UI.createView({
-		height: 50,
-		top: -100,
-		borderColor: css.getColor0(),
-		backgroundColor: css.getColor0()
-	});
-	var t2 = Titanium.UI.createAnimation({
-		top: 0,
-		duration: 750
-	});
-		
-	var headerLbl0 = 'My Location: ';
-	var label0 = Ti.UI.createLabel({
-		text: headerLbl0,
-		top: 0,
-		left: 10,
-		height: 20,
-		font: { fontFamily: model.myFont, fontSize: 11, fontWeight: 'normal' },
-		color: '#fff'
-	});
-		
-		
-	var label1 = undefined;
-	if (currentLake != null) {
-		currentLocationLabel = Ti.UI.createLabel({
-			text: currentLake.name,
-			top: 15,
-			left: 10,
-			height: 25,
-			font: { fontFamily: model.myFont, fontSize: 16, fontWeight: 'bold' },
-			color: css.getColor2()
-		});
-	}
-	else {
-		currentLocationLabel = Ti.UI.createLabel({
-			text: (model.getLastLocTime() == 0 ? "..." : Msgs.OUT_OF_ZONE),
-			top: 15,
-			left: 10,
-			height: 25,
-			font: { fontFamily: model.myFont, fontSize: 16, fontWeight: 'bold' },
-			color: css.getColor3()
-		});
-	}
-		
-	var displayName = null;
-	if (model.getCurrentUser() != null) {
-		displayName = model.getCurrentUser().displayName;
-	}
-	else {
-		displayName = "Anonymous";
-	}
-	userLabel = Ti.UI.createLabel({
-		text: displayName,
-		top: 0,
-		width: 100,
-		right: 10,
-		height: 20,
-		textAlign: 'right',
-		font: { fontFamily: model.myFont, fontSize: 13, fontWeight: 'bold' },
-		color: '#fff'
-	});
-	var countDisplay = '';
-	if (model.getCurrentLake() != null) {
-		countDisplay = model.getCurrentLake().localCount + ' USER(S)';
-	}
-	userCountLbl = Ti.UI.createLabel({
-		text: countDisplay,
-		top: 25,
-		width: 100,
-		right: 10,
-		textAlign: 'right',
-		height: 20,
-		font: { fontFamily: model.myFont, fontSize: 11, fontWeight: 'normal' },
-		color: '#fff'
-	});
-	
-	h.add(label0);
-	h.add(currentLocationLabel);
-	h.add(userLabel);
-	h.add(userCountLbl);
-	h.animate(t2);	
-		
-	return h;
-};
-*/
 
 function buildMenu() {
 	var tblHeader = Ti.UI.createView({
@@ -154,7 +61,7 @@ function buildMenu() {
 		left: 10,
 		text: 'HotSpots',
 		font: { fontFamily: model.myFont, fontSize: 20, fontWeight: 'bold' },
-		color: css.getColor2()
+		color: CSSMgr.color2
 	});
 	tblHeader.add(label);
 		
@@ -164,7 +71,7 @@ function buildMenu() {
 		headerView: tblHeader,
 		style: Titanium.UI.iPhone.TableViewStyle.GROUPED,
 		selectionStyle: Ti.UI.iPhone.TableViewCellSelectionStyle.GRAY,
-		rowBackgroundColor: css.getColor2()
+		rowBackgroundColor: CSSMgr.color2
 	});
 	// create table view event listener
 	hsMenu.addEventListener('click', function(e){
@@ -172,13 +79,12 @@ function buildMenu() {
 		if (e.rowData.ptr) {
 			var w = Titanium.UI.createWindow({
 				url: e.rowData.ptr,
-				backgroundColor: css.getColor0(),
-				barColor: css.getColor0(),
+				backgroundColor: CSSMgr.color0,
+				barColor: CSSMgr.color0,
 				userHostSpotFlag:e.rowData.userHostSpotFlag,
 				title: Msgs.APP_NAME 
 			});
 			w.model = model;
-			w.css = css;
 			Titanium.UI.currentTab.open(w, { animated: true }); 
 		}
 	});
@@ -199,34 +105,30 @@ function init() {
 		title:'My HotSpots',
 		hasChild:true,
 		writeFlag:false,
-		userHostSpotFlag:true,
 		leftImage:'../phone_playmovie.png',
-		ptr: 'hsViewer.js'
+		ptr: 'myHotSpotViewer.js'
 	}, {
 		title:'Local HotSpots',
 		hasChild:true,
-		userHostSpotFlag:false,
 		writeFlag:false,
 		leftImage:'../phone_playmovie.png',
-		ptr: 'hsViewer.js'
-	}
-	/*,
+		ptr: 'localHotSpotViewer.js'
+	},
 	 {
 		title:'Mark HotSpot',
 		hasChild:true,
 		writeFlag:true,
 		leftImage:'../phone_playmovie.png',
 		ptr:'markHotSpot.js'
-	}*/
+	}
 	];
 	
 	inPolygonAnonymousMM = [{
 		title:'Local HotSpots',
 		hasChild:true,
 		writeFlag:false,
-		userHostSpotFlag:false,
 		leftImage:'../phone_playmovie.png',
-		ptr:'hsViewer.js'
+		ptr:'localHotSpotViewer.js'
 	}];
 	
 	outPolygonMM = [{
@@ -235,7 +137,7 @@ function init() {
 		writeFlag:false,
 		userHostSpotFlag:true,
 		leftImage:'../phone_playmovie.png',
-		ptr: 'hsViewer.js'
+		ptr: 'myHotSpotViewer.js'
 	}];
 	
 	

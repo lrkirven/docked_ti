@@ -1,9 +1,9 @@
 Ti.include('../util/msgs.js');
+Ti.include('../props/cssMgr.js');
 Ti.include('../model/modelLocator.js');
 
 var win = Ti.UI.currentWindow;
 var model = win.model;
-var css = win.css;
 var parentWin = win.parentWin;
 
 

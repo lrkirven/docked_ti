@@ -1,8 +1,8 @@
 Ti.include('../util/msgs.js');
 Ti.include('../util/tools.js');
+Ti.include('../props/cssMgr.js');
 Ti.include('../model/modelLocator.js');
 Ti.include('../client/restClient.js');
-Ti.include('../props/cssMgr.js');
 
 Ti.include('baseViewer.js');
 
@@ -12,7 +12,6 @@ Ti.include('baseViewer.js');
 var win = Ti.UI.currentWindow;
 var model = win.model;
 var picasa = win.picasa;
-var css = win.css;
 var db = win.db;
 var windowList = [];
 
@@ -56,7 +55,7 @@ function init() {
    		text:'Settings', 
 		font: { fontFamily:model.myFont, fontSize:20, fontWeight:'bold' },
    		// color:'#ffffff'
-		color:css.getColor2()
+		color:CSSMgr.color2
 	});
 	tblHeader.add(label);
 	
@@ -68,7 +67,7 @@ function init() {
 		moving:false,
 		style:Titanium.UI.iPhone.TableViewStyle.GROUPED,
 		selectionStyle:Ti.UI.iPhone.TableViewCellSelectionStyle.GRAY,
-		rowBackgroundColor:css.getColor2()
+		rowBackgroundColor:CSSMgr.color2
 		// rowBackgroundColor:'#ffffff'
 	});
 	settingsMenu.addEventListener('click', function(e){
@@ -76,11 +75,10 @@ function init() {
 			var w = Titanium.UI.createWindow({
 				url:e.rowData.ptr,
 				backgroundColor:'#CCCCCC',
-    			barColor:css.getColor0(),
+    			barColor:CSSMgr.color0,
 				title:e.rowData.title
 			});
 			w.model = model;
-			w.css = css;
 			w.db = db;
 			Titanium.UI.currentTab.open(w, {animated:true});
 			windowList.push(w);
@@ -90,7 +88,7 @@ function init() {
 
 	if (model.getCurrentUser() == null) {
 		var lbl0 = Titanium.UI.createLabel({
-			color: css.getColor0(),
+			color: CSSMgr.color0,
 			text: 'Register to become an active member of the Docked community: ',
 			font: { fontFamily: model.myFont, fontSize: 15, fontWeight: 'bold' },
 			top: 150,
@@ -104,8 +102,8 @@ function init() {
 		button0 = Titanium.UI.createButton({
 			title: 'Sign Up',
 			style: Titanium.UI.iPhone.SystemButtonStyle.BORDERED,
-			color:css.getColor0(),
-			selectedColor:css.getColor2(),
+			color:CSSMgr.color0,
+			selectedColor:CSSMgr.color2,
 			top: 195,
 			left: 10,
 			height: 30,
@@ -114,20 +112,6 @@ function init() {
 		button0.addEventListener('click', function(e) {
 			Ti.API.info('Start register process ....');
 			Titanium.App.fireEvent('PROMPT_USER_TO_REGISTER_COMPLETE', { registerFlag:true });
-			/*
-			var registerWin = Titanium.UI.createWindow({
-				title: Msgs.APP_NAME,
-				color: css.getColor2(),
-				font: { fontSize: 20, fontFamily: myFont },
-				backgroundColor: css.getColor0(),
-				barColor: css.getColor0(),
-				url: 'basicRegisterUser.js'
-			});
-			registerWin.model = model;
-			registerWin.db = db;
-			registerWin.css = css;
-			registerWin.open();
-			*/
 		});
 		win.add(button0);
 	}

@@ -1,4 +1,5 @@
 Ti.include('../util/msgs.js');
+Ti.include('../props/cssMgr.js');
 Ti.include('../util/tools.js');
 Ti.include('../model/modelLocator.js');
 Ti.include('../client/picasaClient.js');
@@ -8,7 +9,6 @@ Ti.include('../util/tea.js');
 var win = Ti.UI.currentWindow;
 var model = win.model;
 var db = win.db;
-var css = win.css;
 var registerBtn = null;
 var displayNameText = null;
 var enteredDisplayName = null;
@@ -41,8 +41,8 @@ function buildForm() {
 
 	var defaultIDImage = Ti.UI.createImageView({
 		image: '../user.png',
-		backgroundColor:css.getColor0(),
-		borderColor:css.getColor2(),
+		backgroundColor:CSSMgr.color0,
+		borderColor:CSSMgr.color2,
 		top:10,
 		left:20,
 		width:50,
@@ -53,7 +53,7 @@ function buildForm() {
 	
 	
 	var appName = Titanium.UI.createLabel({
-		color: css.getColor0(),
+		color: CSSMgr.color0,
 		text: Msgs.APP_NAME,
 		font: { fontFamily: model.myFont, fontSize:25, fontWeight: 'bold' },
 		top: 10,
@@ -69,7 +69,7 @@ function buildForm() {
 	Ti.API.info('buildForm(): ----> form item #1');
 	
 	var lbl0 = Titanium.UI.createLabel({
-		color: css.getColor0(),
+		color: CSSMgr.color0,
 		text: 'Email Address: ',
 		font: { fontFamily: model.myFont, fontSize:15 },
 		top: 80,
@@ -115,7 +115,7 @@ function buildForm() {
 	Ti.API.info('buildForm(): ----> form item #2');
 	
 	var lbl1 = Titanium.UI.createLabel({
-		color: css.getColor0(),
+		color: CSSMgr.color0,
 		text: 'Display Name: ',
 		font: { fontFamily: model.myFont, fontSize:15 },
 		top: 170,
@@ -164,9 +164,9 @@ function buildForm() {
 	registerBtn = Titanium.UI.createButton({
 		title: 'Register',
 		enabled: false,
-		color: css.getColor0(),
+		color: CSSMgr.color0,
 		systemButton: Titanium.UI.iPhone.SystemButton.FLEXIBLE_SPACE,
-		selectedColor:css.getColor2(),
+		selectedColor:CSSMgr.color2,
 		bottom: 10,
 		borderRadius:0,
 		right: 20,
@@ -185,7 +185,7 @@ function buildForm() {
 	var laterBtn = Titanium.UI.createButton({
 		title: 'Later',
 		enabled: true,
-		color: css.getColor0(),
+		color: CSSMgr.color0,
 		systemButton: Titanium.UI.iPhone.SystemButton.FLEXIBLE_SPACE,
 		selectionStyle:Ti.UI.iPhone.TableViewCellSelectionStyle.GRAY,
 		bottom: 10,
@@ -239,7 +239,7 @@ function init() {
 		font: { fontFamily: model.myFont, fontSize: 15, fontWeight: 'bold' },
 		style: Titanium.UI.iPhone.ActivityIndicatorStyle.DARK
 	});
-	preloader.color = css.getColor3();
+	preloader.color = CSSMgr.color3;
 	win.add(preloader);
 	win.backgroundImage = '../dockedbg.png';	
 };
