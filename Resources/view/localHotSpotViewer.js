@@ -1,4 +1,5 @@
 Ti.include('../util/msgs.js');
+Ti.include('../util/geo.js');
 Ti.include('../util/tools.js');
 Ti.include('../props/cssMgr.js');
 Ti.include('../model/modelLocator.js');

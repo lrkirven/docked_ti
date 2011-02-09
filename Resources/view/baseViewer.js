@@ -44,7 +44,363 @@
 		return pre;
 	};
 	
-	Base.buildRowCollection = function(msgEventList) {
+	/**
+	 * This method builds a message view without an attached photo to be added to an individual 
+	 * row inside of the table.
+	 * 
+	 * @param {Object} row
+	 * @param {Object} fontSize
+	 */
+	Base.appendMsgBody = function(row, fontSize) {
+		var msgEvent = row.msgEvent;
+		var msgBody = null;
+		var userLocale = null;
+		var userMsg = null;
+		
+		if (msgEvent.messageData != null && msgEvent.messageData.length > 35) {
+			
+			row.height = 90;
+			
+			msgBody = Ti.UI.createView({
+				backgroundColor:CSSMgr.color0,
+				left:60,
+				top:0,
+				height:90,
+				width:230,
+				clickName:'msgBody'
+			});
+			
+			userMsg = Ti.UI.createLabel({
+				color: '#fff',
+				font: { fontSize: fontSize, fontWeight: 'normal', fontFamily: model.myFont },
+				left: 5,
+				top: 0,
+				height: 50,
+				width: 220,
+				clickName: 'userMsg',
+				text: msgEvent.messageData
+			});
+			
+			msgBody.add(userMsg);
+			
+			userLocale = Ti.UI.createLabel({
+				color:CSSMgr.color2,
+				font:{fontSize:11, fontWeight:'normal', fontFamily:model.myFont},
+				left:5,
+				top:35,
+				height:50,
+				textAlign:'left',
+				width:220,
+				clickName:'userLocale',
+				text:(msgEvent.username + ' on ' + msgEvent.location + ', ' + msgEvent.timeDisplay)
+			});
+			
+			msgBody.add(userLocale);
+		}
+		else {
+			row.height = 65;
+			
+			msgBody = Ti.UI.createView({
+				backgroundColor:CSSMgr.color0,
+				left:60,
+				top:0,
+				height:65,
+				width:230,
+				clickName:'msgBody'
+			});
+			
+			userMsg = Ti.UI.createLabel({
+				color: '#fff',
+				font: { fontSize: fontSize, fontWeight: 'normal', fontFamily: model.myFont },
+				left: 5,
+				top: 0,
+				height: 25,
+				width: 220,
+				clickName: 'userMsg',
+				text: msgEvent.messageData
+			});
+			
+			msgBody.add(userMsg);
+			
+			userLocale = Ti.UI.createLabel({
+				color:CSSMgr.color2,
+				font:{fontSize:11, fontWeight:'normal', fontFamily:model.myFont},
+				left:5,
+				top:15,
+				height:50,
+				textAlign:'left',
+				width:220,
+				clickName:'userLocale',
+				text:(msgEvent.username + ' on ' + msgEvent.location + ', ' + msgEvent.timeDisplay)
+			});
+			
+			msgBody.add(userLocale);
+		}
+		
+		row.add(msgBody);	
+		
+	}; 
+	
+	/**
+	 * This method builds a message view with photo to be added to a row inside of a table.
+	 * 
+	 * @param {Object} row
+	 * @param {Object} fontSize
+	 */
+	Base.appendMsgBodyWithPhoto = function(row, fontSize) {
+		var msgBody = null;
+		var msgPhoto = null;
+		var userLocale = null;
+		var msgEvent = row.msgEvent;
+		
+		if (msgEvent.messageData != null && msgEvent.messageData.length > 20) {
+			
+			row.height = 90;
+			
+			msgBody = Ti.UI.createView({
+				backgroundColor: CSSMgr.color0,
+				left: 60,
+				top: 0,
+				height: 90,
+				width: 230,
+				clickName: 'msgBody'
+			});
+			msgPhoto = Ti.UI.createImageView({
+				image: msgEvent.photoUrl,
+				backgroundColor: CSSMgr.color0,
+				borderColor: CSSMgr.color1,
+				top: 12,
+				left: 0,
+				width: 50,
+				height: 50,
+				clickName: 'msgPhoto'
+			});
+			msgBody.add(msgPhoto);
+			
+			userMsg = Ti.UI.createLabel({
+				color: '#fff',
+				font: { fontSize: fontSize, fontWeight: 'normal', fontFamily: model.myFont },
+				left: 60,
+				top: 0,
+				height: 50,
+				width: 160,
+				clickName: 'comment',
+				text: msgEvent.messageData
+			});
+			msgBody.add(userMsg);
+			
+			var desc1 = msgEvent.username + ' on ' + msgEvent.location + ', ' + msgEvent.timeDisplay;
+			if (desc1.length > 45) {
+				desc1 = desc1.substr(0, 40);
+				desc1 += "...";
+			}
+			userLocale = Ti.UI.createLabel({
+				color: CSSMgr.color2,
+				font: { fontSize: 11, fontWeight: 'normal', fontFamily: model.myFont },
+				left: 60,
+				top: 35,
+				height: 50,
+				textAlign: 'left',
+				width: 160,
+				clickName: 'userLocale',
+				text:desc1
+			});
+			msgBody.add(userLocale);
+		}
+		else {
+			
+			row.height = 75;
+			
+			msgBody = Ti.UI.createView({
+				backgroundColor: CSSMgr.color0,
+				left: 60,
+				top: 0,
+				height: 65,
+				width: 230,
+				clickName: 'msgBody'
+			});
+			msgPhoto = Ti.UI.createImageView({
+				image: msgEvent.photoUrl,
+				backgroundColor: CSSMgr.color0,
+				borderColor: CSSMgr.color1,
+				top: 12,
+				left: 0,
+				width: 50,
+				height: 50,
+				clickName: 'msgPhoto'
+			});
+			msgBody.add(msgPhoto);
+			
+			userMsg = Ti.UI.createLabel({
+				color: '#fff',
+				font: { fontSize: fontSize, fontWeight: 'normal', fontFamily: model.myFont },
+				left: 60,
+				top: 0,
+				height: 25,
+				width: 160,
+				clickName: 'userMsg',
+				text: msgEvent.messageData
+			});
+			msgBody.add(userMsg);
+			
+			var desc2 = msgEvent.username + ' on ' + msgEvent.location + ', ' + msgEvent.timeDisplay;
+			if (desc2.length > 45) {
+				desc2 = desc2.substr(0, 40);
+				desc2 += "...";
+			}
+			userLocale = Ti.UI.createLabel({
+				color: CSSMgr.color2,
+				font: { fontSize: 11, fontWeight: 'normal', fontFamily: model.myFont },
+				left: 60,
+				top: 15,
+				height: 50,
+				textAlign: 'left',
+				width: 160,
+				clickName: 'userLocale',
+				text: desc2
+			});
+			msgBody.add(userLocale);
+		}
+		row.add(msgBody);	
+	}; 
+	
+	/**
+	 * This method adds the author's profile photo if they have one to their message view (or entry).
+	 * 
+	 * @param {Object} row
+	 */
+	Base.appendProfilePhoto = function(row) {
+		var msgEvent = row.msgEvent;
+		if (msgEvent.profileUrl == undefined) {
+			var defaultIDImage = null;
+			defaultIDImage = Ti.UI.createImageView({
+				image: '../user.png',
+				backgroundColor:CSSMgr.color0,
+				borderColor:CSSMgr.color1,
+				top:0,
+				left:0,
+				width:50,
+				height:50,
+				clickName:'defaultIDImage'
+			});
+			row.add(defaultIDImage);
+		}
+		else {
+			var userProfilePhoto = Ti.UI.createImageView({
+				image: msgEvent.profileUrl,
+				backgroundColor: CSSMgr.color0,
+				borderColor: CSSMgr.color1,
+				top:0,
+				left:0,
+				width:50,
+				height:50,
+				clickName:'photo'
+			});
+			row.add(userProfilePhoto);
+		}
+	};
+	
+	Base.buildHotSpotRows = function(dataList, rendererFile) {
+		var i = 0;
+		var hs = null;
+		var bigFontSize = 13;
+		var smallFontSize = 10;
+		var myDataRowList = [];
+		var currentRow = null;
+		var currentRowIndex = null;
+		var username = null;
+		var location = null;
+		var msgTitle = null;
+		
+		if (dataList != null) {
+			Ti.API.info('buildHotSpotRows: size: ' + dataList.length);
+			for (i=0; i<dataList.length; i++) {
+				
+				hs = dataList[i];
+		
+				/*
+				 * table row
+				 */	
+				var row = Ti.UI.createTableViewRow({
+					selectedBackgroundColor:CSSMgr.color2,
+					backgroundColor:CSSMgr.color0,
+					height:70,
+					width:300,
+					borderColor:CSSMgr.color2,
+					className:'HotSpotRow' + i,
+					clickName:'row',
+					hotSpot:hs,
+					hasChild:true,
+					renderer:rendererFile
+				});
+				Ti.API.info('buildHotSpotRows: row=' + row);
+				
+				var dataPanel = Ti.UI.createView({
+					backgroundColor:CSSMgr.color0,
+					left:0,
+					top:0,
+					height:'auto',
+					width:300,
+					clickName:'hsBody'
+				});
+			
+				var descLbl = Ti.UI.createLabel({
+					color: CSSMgr.color2,
+					font: { fontSize: bigFontSize, fontWeight: 'normal', fontFamily: model.myFont },
+					left: 10,
+					top: 0,
+					height: 25,
+					width: 220,
+					clickName: 'hsDesc',
+					text: hs.desc
+				});
+				dataPanel.add(descLbl)
+			
+				var locationLbl = Ti.UI.createLabel({
+					color: CSSMgr.color3,
+					font: { fontSize: smallFontSize, fontWeight: 'bold', fontFamily: model.myFont },
+					left: 10,
+					top: 20, 
+					height: 25,
+					width: 150,
+					clickName: 'hsLocation',
+					text: hs.location
+				});
+				dataPanel.add(locationLbl);
+				
+				var latlngPanel = Ti.UI.createView({
+					backgroundColor:CSSMgr.color0,
+					left: 10,
+					top: 40,
+					height: 20,
+					width: 300,
+					clickName:'latlngBody'
+				});
+			
+				var latlngStr = Geo.toLat(hs.lat, 'dms', 2) + ' - ' + Geo.toLon(model.getUserLng(), 'dms', 2);	
+				var latlngText = Titanium.UI.createLabel({
+					color: CSSMgr.color3,
+					text: latlngStr,
+					font: { fontSize:smallFontSize, fontFamily: model.myFont, fontWeight: 'bold' },
+					top: 0,
+					left: 0,
+					width: 300,
+					textAlign: 'left',
+					height:20 
+				});
+				latlngPanel.add(latlngText);
+	
+				dataPanel.add(latlngPanel);
+				
+				row.add(dataPanel);
+				
+				myDataRowList.push(row);
+			}
+		}
+		return myDataRowList;
+	};
+	
+	Base.buildRowCollection = function(msgEventList, rendererFile) {
 		var i = 0;
 		var msgEvent = null;
 		var myDataRowList = [];
@@ -53,7 +409,6 @@
 		var username = null;
 		var location = null;
 		var msgTitle = null;
-		var ppUrl = 'http://philestore1.phreadz.com/_users/2d/04/e4/16/bennycrime/2010/02/19/bennycrime_1266618797_60.jpg';
 		
 		if (msgEventList != null) {
 			Ti.API.info('buildRowCollection: size: ' + msgEventList.length);
@@ -71,13 +426,9 @@
 				}
 				
 				
-				Ti.API.info('buildRowCollection: msgEvent= ' + msgEvent);
 				username = msgEvent.username;
-				Ti.API.info('buildRowCollection: username: ' + username);
 				location = msgEvent.location;
-				Ti.API.info('buildRowCollection: location: ' + location);
 				msgTitle = 'Posted by ' + username + ' on ' + location;
-				Ti.API.info('buildRowCollection: title: ' + msgTitle);
 				
 				//
 				// create table row
@@ -92,26 +443,25 @@
 					clickName:'row',
 					msgEvent:msgEvent,
 					hasChild:true,
-					renderer:'messageRenderer.js'
+					renderer:rendererFile
 				});
 				Ti.API.info('buildRowCollection: row=' + row);
 				
 				//
 				// build message body
 				//	
-				appendProfilePhoto(row);
+				Base.appendProfilePhoto(row);
 				var fontSize = 14;
 				if (Titanium.Platform.name == 'android') {
 					fontSize = 13;
 				}
-				Ti.API.info('buildRowCollection: Starting msg body');
 				if (msgEvent.photoUrl == undefined) {
 					Ti.API.info('buildRowCollection: BASIC msg body ...');
-					appendMsgBody(row, fontSize);
+					Base.appendMsgBody(row, fontSize);
 				}
 				else {
 					Ti.API.info('buildRowCollection: PHOTO msg body ...');
-					appendMsgBodyWithPhoto(row, fontSize);
+					Base.appendMsgBodyWithPhoto(row, fontSize);
 				}
 				
 				var replyCounter = Ti.UI.createLabel({

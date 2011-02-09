@@ -5,14 +5,17 @@ Ti.include('../model/modelLocator.js');
 Ti.include('../client/restClient.js');
 Ti.include('baseViewer.js');
 
-/**
- * local variables
+/*
+ * Incoming argument to the window object
  */
 var win = Ti.UI.currentWindow;
 var model = win.model;
 var picasa = win.picasa;
 var localFlag = win.localFlag;
 
+/*
+ * members of this window instance
+ */
 var currentLake = null;
 var tableView = null;
 var headerView = null;
@@ -25,7 +28,6 @@ var alertedUserOfNoMsgs = false;
 var initPreloader = null;
 var userCountLbl = null;
 var newPostBtn = null;
-
 var searchText = null;
 var searchView = null;
 var searchPage = null;
@@ -244,261 +246,7 @@ function formatComments(str, len) {
 	return s;
 }
 
-/**
- * This method builds a message view without an attached photo to be added to an individual 
- * row inside of the table.
- * 
- * @param {Object} row
- * @param {Object} fontSize
- */
-function appendMsgBody(row, fontSize) {
-	var msgEvent = row.msgEvent;
-	var msgBody = null;
-	var userLocale = null;
-	var userMsg = null;
-	
-	if (msgEvent.messageData != null && msgEvent.messageData.length > 35) {
-		
-		row.height = 90;
-		
-		msgBody = Ti.UI.createView({
-			backgroundColor:CSSMgr.color0,
-			left:60,
-			top:0,
-			height:90,
-			width:230,
-			clickName:'msgBody'
-		});
-		
-		userMsg = Ti.UI.createLabel({
-			color: '#fff',
-			font: { fontSize: fontSize, fontWeight: 'normal', fontFamily: model.myFont },
-			left: 5,
-			top: 0,
-			height: 50,
-			width: 220,
-			clickName: 'userMsg',
-			text: msgEvent.messageData
-		});
-		
-		msgBody.add(userMsg);
-		
-		userLocale = Ti.UI.createLabel({
-			color:CSSMgr.color2,
-			font:{fontSize:11, fontWeight:'normal', fontFamily:model.myFont},
-			left:5,
-			top:35,
-			height:50,
-			textAlign:'left',
-			width:220,
-			clickName:'userLocale',
-			text:(msgEvent.username + ' on ' + msgEvent.location + ', ' + msgEvent.timeDisplay)
-		});
-		
-		msgBody.add(userLocale);
-	}
-	else {
-		row.height = 65;
-		
-		msgBody = Ti.UI.createView({
-			backgroundColor:CSSMgr.color0,
-			left:60,
-			top:0,
-			height:65,
-			width:230,
-			clickName:'msgBody'
-		});
-		
-		userMsg = Ti.UI.createLabel({
-			color: '#fff',
-			font: { fontSize: fontSize, fontWeight: 'normal', fontFamily: model.myFont },
-			left: 5,
-			top: 0,
-			height: 25,
-			width: 220,
-			clickName: 'userMsg',
-			text: msgEvent.messageData
-		});
-		
-		msgBody.add(userMsg);
-		
-		userLocale = Ti.UI.createLabel({
-			color:CSSMgr.color2,
-			font:{fontSize:11, fontWeight:'normal', fontFamily:model.myFont},
-			left:5,
-			top:15,
-			height:50,
-			textAlign:'left',
-			width:220,
-			clickName:'userLocale',
-			text:(msgEvent.username + ' on ' + msgEvent.location + ', ' + msgEvent.timeDisplay)
-		});
-		
-		msgBody.add(userLocale);
-	}
-	
-	row.add(msgBody);	
-	
-}; 
 
-/**
- * This method builds a message view with photo to be added to a row inside of a table.
- * 
- * @param {Object} row
- * @param {Object} fontSize
- */
-function appendMsgBodyWithPhoto(row, fontSize) {
-	var msgBody = null;
-	var msgPhoto = null;
-	var userLocale = null;
-	var msgEvent = row.msgEvent;
-	
-	if (msgEvent.messageData != null && msgEvent.messageData.length > 20) {
-		
-		row.height = 90;
-		
-		msgBody = Ti.UI.createView({
-			backgroundColor: CSSMgr.color0,
-			left: 60,
-			top: 0,
-			height: 90,
-			width: 230,
-			clickName: 'msgBody'
-		});
-		msgPhoto = Ti.UI.createImageView({
-			image: msgEvent.photoUrl,
-			backgroundColor: CSSMgr.color0,
-			borderColor: CSSMgr.color1,
-			top: 12,
-			left: 0,
-			width: 50,
-			height: 50,
-			clickName: 'msgPhoto'
-		});
-		msgBody.add(msgPhoto);
-		
-		userMsg = Ti.UI.createLabel({
-			color: '#fff',
-			font: { fontSize: fontSize, fontWeight: 'normal', fontFamily: model.myFont },
-			left: 60,
-			top: 0,
-			height: 50,
-			width: 160,
-			clickName: 'comment',
-			text: msgEvent.messageData
-		});
-		msgBody.add(userMsg);
-		
-		var desc1 = msgEvent.username + ' on ' + msgEvent.location + ', ' + msgEvent.timeDisplay;
-		if (desc1.length > 45) {
-			desc1 = desc1.substr(0, 40);
-			desc1 += "...";
-		}
-		userLocale = Ti.UI.createLabel({
-			color: CSSMgr.color2,
-			font: { fontSize: 11, fontWeight: 'normal', fontFamily: model.myFont },
-			left: 60,
-			top: 35,
-			height: 50,
-			textAlign: 'left',
-			width: 160,
-			clickName: 'userLocale',
-			text:desc1
-		});
-		msgBody.add(userLocale);
-	}
-	else {
-		
-		row.height = 75;
-		
-		msgBody = Ti.UI.createView({
-			backgroundColor: CSSMgr.color0,
-			left: 60,
-			top: 0,
-			height: 65,
-			width: 230,
-			clickName: 'msgBody'
-		});
-		msgPhoto = Ti.UI.createImageView({
-			image: msgEvent.photoUrl,
-			backgroundColor: CSSMgr.color0,
-			borderColor: CSSMgr.color1,
-			top: 12,
-			left: 0,
-			width: 50,
-			height: 50,
-			clickName: 'msgPhoto'
-		});
-		msgBody.add(msgPhoto);
-		
-		userMsg = Ti.UI.createLabel({
-			color: '#fff',
-			font: { fontSize: fontSize, fontWeight: 'normal', fontFamily: model.myFont },
-			left: 60,
-			top: 0,
-			height: 25,
-			width: 160,
-			clickName: 'userMsg',
-			text: msgEvent.messageData
-		});
-		msgBody.add(userMsg);
-		
-		var desc2 = msgEvent.username + ' on ' + msgEvent.location + ', ' + msgEvent.timeDisplay;
-		if (desc2.length > 45) {
-			desc2 = desc2.substr(0, 40);
-			desc2 += "...";
-		}
-		userLocale = Ti.UI.createLabel({
-			color: CSSMgr.color2,
-			font: { fontSize: 11, fontWeight: 'normal', fontFamily: model.myFont },
-			left: 60,
-			top: 15,
-			height: 50,
-			textAlign: 'left',
-			width: 160,
-			clickName: 'userLocale',
-			text: desc2
-		});
-		msgBody.add(userLocale);
-	}
-	row.add(msgBody);	
-}; 
-
-/**
- * This method adds the author's profile photo if they have one to their message view (or entry).
- * 
- * @param {Object} row
- */
-function appendProfilePhoto(row) {
-	var msgEvent = row.msgEvent;
-	if (msgEvent.profileUrl == undefined) {
-		var defaultIDImage = null;
-		defaultIDImage = Ti.UI.createImageView({
-			image: '../user.png',
-			backgroundColor:CSSMgr.color0,
-			borderColor:CSSMgr.color1,
-			top:0,
-			left:0,
-			width:50,
-			height:50,
-			clickName:'defaultIDImage'
-		});
-		row.add(defaultIDImage);
-	}
-	else {
-		var userProfilePhoto = Ti.UI.createImageView({
-			image: msgEvent.profileUrl,
-			backgroundColor: CSSMgr.color0,
-			borderColor: CSSMgr.color1,
-			top:0,
-			left:0,
-			width:50,
-			height:50,
-			clickName:'photo'
-		});
-		row.add(userProfilePhoto);
-	}
-};
 
 /**
  * This method builds and adds all of the listeners to handle all of the user interaction
@@ -537,7 +285,7 @@ function updateTableViewDisplay(list) {
 	if (list.length > 0) {
 		tableView.hide();
 		initPreloader.show();
-		var dataRowList = Base.buildRowCollection(list);
+		var dataRowList = Base.buildRowCollection(list, 'messageRenderer.js');
 		tableView.setData(dataRowList);
 		initPreloader.hide();
 		tableView.show();
@@ -558,7 +306,7 @@ function updateTableViewDisplay(list) {
  * This method builds the message event table and adds the listeners for
  * managing the user clicking a message.
  */
-function buildTableView(){
+function buildTableView() {
 	var t = Titanium.UI.createTableView({
 		separatorColor: CSSMgr.color2,
 		style: Titanium.UI.iPhone.TableViewStyle.PLAIN,

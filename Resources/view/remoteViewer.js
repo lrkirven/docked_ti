@@ -544,7 +544,7 @@ function updateMsgTableViewDisplay(list) {
 	Ti.API.info('updateMsgTableViewDisplay: # of msg(s): ' + (list != null ? list.length : 0));
 	if (list.length > 0) {
 		Ti.API.info('updateMsgTableViewDisplay: msgView --> ' + msgView);
-		var dataRowList = Base.buildRowCollection(list);
+		var dataRowList = Base.buildRowCollection(list, 'messageRendererReadOnly.js');
 		Ti.API.info('updateMsgTableViewDisplay: rows -- ' + dataRowList.length);
 		msgView.setData(dataRowList);
 		msgView.visible = true;

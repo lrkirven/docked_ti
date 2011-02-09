@@ -1,4 +1,5 @@
 Ti.include('../util/msgs.js');
+Ti.include('../util/geo.js');
 Ti.include('../util/tools.js');
 Ti.include('../util/hotspot.js');
 Ti.include('../props/cssMgr.js');
@@ -517,7 +518,7 @@ function updateHotSpotTable(list) {
 	Ti.API.info('updateHotSpotTable: # of items(s): ' + (list != null ? list.length : 0));
 	if (list.length > 0) {
 		Ti.API.info('updateHotSpotTable: hotSpotTable --> ' + hotSpotTable);
-		var dataRowList = Base.buildRowCollection(list);
+		var dataRowList = Base.buildHotSpotRows(list, 'hotSpotEditor.js');
 		Ti.API.info('updateHotSpotTable: rows -- ' + dataRowList.length);
 		hotSpotTable.setData(dataRowList);
 		hotSpotTable.visible = true;
@@ -546,6 +547,7 @@ function formatDataForHeaders(list) {
 		if (hotSpot.category != currentCat) {
 			currentCat++;
 			hotSpot.header = HotSpot.categoryLabels[currentCat];
+			Ti.API.info('formatDataForHeaders: Added header = ' + hotSpot.header);
 		}
 		modList.push(hotSpot);
 	}
@@ -562,7 +564,6 @@ Ti.App.addEventListener('HOTSPOT_DATA_RECD', function(e) {
 		Ti.API.info('Handling event -- HOTSPOT_DATA_RECD --> ' + e.result);
 		var modList = formatDataForHeaders(e.result);
 		updateHotSpotTable(modList);
-		Ti.API.info('updateMsgTableViewDisplay: DONE');
 		Ti.API.info('Adding view=' + hotSpotTable + ' page=' + hsPage);
 		hsPage.visible = true;
 	}
@@ -591,12 +592,13 @@ function init() {
  	 */
 	Base.attachMyBACKButton(win);
 	
-	
+	/*
 	var startMarkingBtn = Titanium.UI.createButton({title:'Mark HotSpot!'});
 	startMarkingBtn.addEventListener('click', function() {
 		Ti.App.fireEvent('OPEN_MARK_HOTSPOT', {});
 	});
 	win.rightNavButton = startMarkingBtn;
+	*/
 	
 	/*
 	 * build table to display to user
