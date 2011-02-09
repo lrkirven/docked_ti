@@ -15,6 +15,7 @@ function RestClient(){
 		RESET_CONTENT:205,
 		BAD_REQUEST:400,
 		UNAUTHORIZED:401
+		INTERNAL_ERROR:500
 	};
 	
 	function handleErrorResp(statusCode, eventName) {
@@ -27,6 +28,16 @@ function RestClient(){
 		else if (statusCode == httpCodes.UNAUTHORIZED) {
 			Ti.App.fireEvent(eventName, { status:69,
 				errorMsg: 'Your user account was not authorized to perform action -- Please contact support for assistance.'
+			});
+		}
+		else if (statusCode == httpCodes.INTERNAL_ERROR) {
+			Ti.App.fireEvent(eventName, { status:69,
+				errorMsg: 'Unable complete request at this time -- Apologize for the service failure.'
+			});
+		}
+		else {
+			Ti.App.fireEvent(eventName, { status:69,
+				errorMsg: 'Unable complete request at this time -- Apologize for the service failure.'
 			});
 		}
 	};
