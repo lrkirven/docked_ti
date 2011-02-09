@@ -38,7 +38,7 @@ function RestClient(){
 			/*	
 			 * This method posts a message by the user to a specific lake resource (or region)
 			 */	
-			postMessage : function(llId, msg) {
+			postMessage : function(llId, msg, addToMyHotSpots) {
                	Titanium.API.info("postMessage: Entered");
 				var xhr = Ti.Network.createHTTPClient();
                 xhr.setTimeout(90000);
@@ -90,7 +90,7 @@ function RestClient(){
                 //
 				var appContent = 'newMsg';
 				var msgUrl = '/resources/buzz/';
-				var targetURL = secureBaseUrl + msgUrl + msg.resourceId + '/' + appContent ;
+				var targetURL = secureBaseUrl + msgUrl + msg.resourceId + '/' + appContent + "?addToMyHotSpots=" + addToMyHotSpots ;
 				Titanium.API.info('postMessage: REST URL: ' + targetURL);
                 xhr.open('POST', targetURL);
 				xhr.setRequestHeader('Content-Type', 'application/json');

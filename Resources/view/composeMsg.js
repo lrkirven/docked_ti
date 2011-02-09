@@ -12,6 +12,7 @@ var win = Ti.UI.currentWindow;
 var model = win.model;
 var composeMsgWinPhotoIndBtn = null;
 var post2FB = false;
+var addToMyHotSpots = false;
 
 var b = Titanium.UI.createButton({title:'BACK'});
 b.addEventListener('click', function() {
@@ -68,13 +69,13 @@ function postMessage2FB(m) {
 function buildForm() {
 	
 	var panel = Ti.UI.createView({ 
-		backgroundColor:'#cccccc',
+		backgroundColor:CSSMgr.color2,
 		top:20,
 		left:20,
 		right:20,
 		bottom:10,
-		width:300,
-		height:300,
+		width:'auto',
+		height:340,
 		borderRadius:20,
 		clickName:'bg'
 	});
@@ -141,7 +142,7 @@ function buildForm() {
 	*/
 	var msgText = Titanium.UI.createTextArea({
 		height:80,
-		width:280,
+		width:260,
 		left:10,
 		top:75,
 		font:{ fontSize:15, fontFamily: model.myFont, fontWeight: 'normal' },
@@ -223,6 +224,30 @@ function buildForm() {
 		}
 	});
 	panel.add(photoMenu);
+	
+	var msgLbl3 = Titanium.UI.createLabel({
+		color: CSSMgr.color0,
+		text: 'Add location to My HotSpots',
+		font: {
+			fontFamily: model.myFont,
+			fontWeight: 'bold'
+		},
+		textAlign: 'right',
+		top: 275,
+		right: 10,
+		width: 260,
+		height: 'auto'
+	});
+	panel.add(msgLbl3);
+	var switchBtn = Titanium.UI.createSwitch({
+		value: false,
+		top: 300,
+		right: 10
+	});
+	switchBtn.addEventListener('change', function(e){
+		addToMyHotSpots = e.value;
+	});
+	panel.add(switchBtn);
 
 	/*	
 	if (Titanium.Facebook.isLoggedIn()) {
@@ -350,7 +375,7 @@ function buildForm() {
 				Ti.API.info('Not adding fb profile pic ....');
 			}
 			restClient = new RestClient();
-			restClient.postMessage(currentUser.id, msgEvent);
+			restClient.postMessage(currentUser.id, msgEvent, addToMyHotSpots);
 		}
 	});
 	win.add(panel);
