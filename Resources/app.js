@@ -1,4 +1,5 @@
 Ti.include('util/msgs.js');
+Ti.include('util/date.format.js');
 Ti.include('util/tools.js');
 Ti.include('util/tea.js');
 Ti.include('props/cssMgr.js');
@@ -677,6 +678,11 @@ function resetTabs() {
 // application init
 //
 function init() {
+	
+	var now = new Date();	
+	var timeStr = now.format();
+	Ti.API.info('APP STARTING :: ' + timeStr);
+	
 	
 	// reset db
 	db.execute("DELETE FROM AppParams WHERE name = 'DECLINE_REGISTRATION'");

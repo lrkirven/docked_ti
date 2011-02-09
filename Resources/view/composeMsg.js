@@ -1,6 +1,7 @@
 Ti.include('../util/msgs.js');
-Ti.include('../props/cssMgr.js');
+Ti.include('../util/date.format.js');
 Ti.include('../util/tools.js');
+Ti.include('../props/cssMgr.js');
 Ti.include('../props/cssMgr.js');
 Ti.include('../model/modelLocator.js');
 Ti.include('../client/picasaClient.js');
@@ -308,6 +309,8 @@ function buildForm() {
 			postingInd.message = "";
 			postingInd.show();
 			myLocation = model.getCurrentLake();
+			var now = new Date();	
+			var timeStr = now.format();
 			msgEvent = {
 				title: '',
 				version: 0,
@@ -316,13 +319,14 @@ function buildForm() {
 				location: myLocation.name,
 				messageData: msgText.value,
 				lat: model.getUserLat(),
-				lng: model.getUserLng()
+				lng: model.getUserLng(),
+				userLocalTime:timeStr
 			};
 			//
 			// add user's profile url to message if they have one
 			//
 			profilePic = model.getFBProfileUrl();
-			if (profilePic != null) {
+			if (model.getUseFBProfilePic() && profilePic != null) {
 				msgEvent.profileUrl = profilePic;
 				Ti.API.info('Adding fb profile pic .... ' + profilePic);
 			}
@@ -361,13 +365,14 @@ function buildForm() {
 				location: myLocation.name,
 				messageData: msgText.value,
 				lat: model.getUserLat(),
-				lng: model.getUserLng()
+				lng: model.getUserLng(),
+				userLocalTime:timeStr
 			};
 			//
 			// add user's profile url to message if they have one
 			//
 			profilePic = model.getFBProfileUrl();
-			if (profilePic != null) {
+			if (model.getUseFBProfilePic() && profilePic != null) {
 				msgEvent.profileUrl = profilePic;
 				Ti.API.info('Adding fb profile pic .... ' + profilePic);
 			}
