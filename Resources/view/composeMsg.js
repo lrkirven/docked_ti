@@ -300,6 +300,8 @@ function buildForm() {
 		var myLocation = null;
 		var restClient = null;
 		var profilePic = null;
+		var now = new Date();	
+		var timeStr = now.format();
 		
 		//
 		// uploading image and posting message
@@ -309,8 +311,6 @@ function buildForm() {
 			postingInd.message = "";
 			postingInd.show();
 			myLocation = model.getCurrentLake();
-			var now = new Date();	
-			var timeStr = now.format();
 			msgEvent = {
 				title: '',
 				version: 0,
@@ -320,7 +320,7 @@ function buildForm() {
 				messageData: msgText.value,
 				lat: model.getUserLat(),
 				lng: model.getUserLng(),
-				userLocalTime:timeStr
+				userLocalTime: timeStr
 			};
 			//
 			// add user's profile url to message if they have one
@@ -366,7 +366,7 @@ function buildForm() {
 				messageData: msgText.value,
 				lat: model.getUserLat(),
 				lng: model.getUserLng(),
-				userLocalTime:timeStr
+				userLocalTime: timeStr
 			};
 			//
 			// add user's profile url to message if they have one
@@ -380,6 +380,7 @@ function buildForm() {
 				Ti.API.info('Not adding fb profile pic ....');
 			}
 			restClient = new RestClient();
+			Ti.API.info('BuzzMsg TIMESTAMP ----> ' + msgEvent.userLocalTime);
 			restClient.postMessage(currentUser.id, msgEvent, addToMyHotSpots);
 		}
 	});
