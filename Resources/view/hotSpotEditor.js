@@ -193,6 +193,7 @@ function buildForm() {
 	categoryBtn.addEventListener('click', function(e) {
 		categoryBtn.index = e.index;
 		Ti.API.info('User selected index -- ' + e.index);
+		checkFormData();
 	});
 	Ti.API.info('Setting category ---> ' + hotSpot.category);
 	categoryBtn.index = hotSpot.category;
