@@ -177,9 +177,10 @@ function RestClient(){
                 Titanium.API.info('postComment: Posting JSON msg (comment) to server ... ' + str);
                 xhr.send(str);	
 			},
-			addHotSpot : function(userToken, hotSpot) {
-               	Titanium.API.info("addHotSpot: Entered");
+			addOrUpdateHotSpot : function(userToken, hotSpot, newFlag) {
+               	Titanium.API.info("addOrUpdateHotSpot: Entered");
 				var xhr = Ti.Network.createHTTPClient();
+				var newInstFlag = newFlag;
                 xhr.setTimeout(90000);
 				
                 // 
@@ -206,12 +207,12 @@ function RestClient(){
 						});
 						return;
 					}
-					Titanium.API.info('addHotSpot: onload: Entered - ' + this.responseText);
+					Titanium.API.info('addOrUpdateHotSpot: onload: Entered - ' + this.responseText);
 					if (this.responseText != null) {
 						var jsonNodeData = JSON.parse(this.responseText);
 						if (jsonNodeData != null) {
-							Titanium.API.info('addHotSpot: onload: SUCCESS');
-							Ti.App.fireEvent('NEW_HOTSPOT_ADDED', { newMsgEvent: jsonNodeData, origMsgEvent: msg, status:0 });
+							Titanium.API.info('addOrUpdateHotSpot: onload: SUCCESS');
+							Ti.App.fireEvent('NEW_HOTSPOT_ADDED', { result: jsonNodeData, status:0 });
 						}
 						else {
 							Ti.App.fireEvent('NEW_HOTSPOT_ADDED', 
@@ -227,8 +228,8 @@ function RestClient(){
                 //
                 // create connection
                 //
-				var targetURL =  myHotSpotRestURL + msg.resourceId + '?userToken' + userToken ;
-				Titanium.API.info('addHotSpot: REST URL: ' + targetURL);
+				var targetURL =  myHotSpotRestURL + 'addOrUpdate' + '?userToken=' + userToken ;
+				Titanium.API.info('addOrUpdateHotSpot: REST URL: ' + targetURL);
                 xhr.open('POST', targetURL);
 				xhr.setRequestHeader('Content-Type', 'application/json');
 				xhr.setRequestHeader('Accept', 'application/json');
@@ -236,7 +237,7 @@ function RestClient(){
                 // send HTTP request
                 //
 				var str = JSON.stringify(hotSpot);
-                Titanium.API.info('postMessage: Posting JSON msg (hotSpot) to server ... ' + str);
+                Titanium.API.info('addOrUpdateHotSpot: Posting JSON msg (hotSpot) to server ... ' + str);
                 xhr.send(str);	
 			},
 			/*

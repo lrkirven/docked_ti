@@ -54,7 +54,7 @@ function buildForm() {
 	
 	var lakeText = Titanium.UI.createLabel({
 		color: CSSMgr.color0,
-		text: model.getCurrentLake().name, 
+		text: hotSpot.location, 
 		font: { fontSize:15, fontFamily: model.myFont, fontWeight: 'bold' },
 		top: 10,
 		left: 0,
@@ -66,7 +66,7 @@ function buildForm() {
 	
 	var latText = Titanium.UI.createLabel({
 		color: CSSMgr.color0,
-		text: Geo.toLat(model.getUserLat(), 'dms', 2),
+		text: Geo.toLat(hotSpot.lat, 'dms', 2),
 		font: { fontSize:13, fontFamily: model.myFont, fontWeight: 'bold' },
 		top: 40,
 		left: 0,
@@ -78,7 +78,7 @@ function buildForm() {
 	
 	var lngText = Titanium.UI.createLabel({
 		color: CSSMgr.color0,
-		text: Geo.toLon(model.getUserLng(), 'dms', 2),
+		text: Geo.toLon(hotSpot.lat, 'dms', 2),
 		font: { fontSize:13, fontFamily: model.myFont, fontWeight: 'bold' },
 		top: 40,
 		left: 150,
@@ -182,18 +182,19 @@ function buildForm() {
 	
 	var categoryBtn = Titanium.UI.createTabbedBar({
     	labels:HotSpot.categoryLabels,
-    	backgroundColor:CSSMgr.color0,
+    	backgroundColor:CSSMgr.color4,
     	top:270,
 		left:10,
     	style:Titanium.UI.iPhone.SystemButtonStyle.BAR,
     	height:25,
-		enabled:canEdit,
+		touchEnabled:canEdit,
     	width:280
 	});
 	categoryBtn.addEventListener('click', function(e) {
 		categoryBtn.index = e.index;
 		Ti.API.info('User selected index -- ' + e.index);
 	});
+	Ti.API.info('Setting category ---> ' + hotSpot.category);
 	categoryBtn.index = hotSpot.category;
 	panel.add(categoryBtn);
 	
@@ -202,7 +203,7 @@ function buildForm() {
 		 * submit button
 		 */
 		submitBtn = Titanium.UI.createButton({
-			title: Msgs.SAVE,
+			title: (hotSpot == null ? Msgs.MARK : Msgs.SAVE),
 			style: Titanium.UI.iPhone.SystemButtonStyle.BORDERED,
 			enabled: false,
 			color: CSSMgr.color0,
@@ -219,20 +220,39 @@ function buildForm() {
 			Ti.API.info('Saving hotspot to server ...');
 			myLocation = model.getCurrentLake();
 			var user = model.getCurrentUser();
-			hotSpot =  {
-				category: categoryBtn.index,
-				username: currentUser.displayName,
-				resourceId: myLocation.id,
-				llId: user.id,
-				desc: descText.value,
-				notes: notesText.value,
-				lat: model.getUserLat(),
-				lng: model.getUserLng(),
-				rating: 0
-			};
 			
+			/*
+			 * creating new hotSpot
+			 */
+			if (hotSpot == null) {
+				hotSpot = {
+					category: categoryBtn.index,
+					username: currentUser.displayName,
+					resourceId: myLocation.id,
+					llId: user.id,
+					desc: descText.value,
+					notes: notesText.value,
+					lat: model.getUserLat(),
+					lng: model.getUserLng(),
+					rating: 0
+				};
+			}
+			/*
+			 * updating existing hotSpot
+			 */
+			else {
+				hotSpot.desc = descText.value;
+				hotSpot.notes = notesText.value;
+				hotSpot.category = categoryBtn.index; 
+				hotSpot.createDate = null;
+			}
+		
+			/*
+			 * update service
+			 */	
 			var restClient = new RestClient();
-			restClient.addHotSpot(currentUser.userToken, hotSpot);
+			var currentUser = model.getCurrentUser();
+			restClient.addOrUpdateHotSpot(currentUser.userToken, hotSpot);
 		});
 		win.setRightNavButton(submitBtn);
 	}
@@ -241,32 +261,22 @@ function buildForm() {
 	//
 	// preloader
 	//
-	postingInd = Titanium.UI.createActivityIndicator({
-		top: 50,
-		left: 140,
-		height: 150,
-		width: 50,
-		style: Titanium.UI.iPhone.ActivityIndicatorStyle.PLAIN
-	});
-	postingInd.font = {
-		fontFamily: model.myFont,
-		fontSize: 15,
-		fontWeight: 'bold'
-	};
-	postingInd.color = CSSMgr.color3;
+	postingInd = Base.showPreloader(win, null, true);
+	postingInd.hide();
 	win.add(postingInd);
 };
 
 function performExit() {
-	Ti.App.removeEventListener('NEW_HOTSPOT_ADDED', handleNewMsgPosted);
+	Ti.App.removeEventListener('NEW_HOTSPOT_ADDED', handleHotSpotAddedOrUpdated);
 };
 
-function handleNewHotSpotAdded(e) {
+function handleHotSpotAddedOrUpdated(e) {
 	if (e.status == 0) {
 		postingInd.hide();
 		Tools.reportMsg(Msgs.APP_NAME, "HotSpot saved!");
 		performExit();
 		Ti.App.fireEvent('OPEN_MY_HOTSPOTS', {});
+		win.close();
 	}
 	else {
 		postingInd.hide();
@@ -280,7 +290,7 @@ function handleNewHotSpotAdded(e) {
  */
 function init() {
 	Base.attachMyBACKButton(win);
-	Ti.App.addEventListener('NEW_HOTSPOT_ADDED', handleNewHotSpotAdded);
+	Ti.App.addEventListener('NEW_HOTSPOT_ADDED', handleHotSpotAddedOrUpdated);
 	buildForm();
 	win.backgroundImage = '../dockedbg.png';
 	win.open();	

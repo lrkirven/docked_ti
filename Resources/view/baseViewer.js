@@ -6,7 +6,7 @@
 	 * 
 	 * @param {Object} msg
 	 */
-	Base.showPreloader = function(currentWin, msg) {
+	Base.showPreloader = function(currentWin, msg, styleFlag) {
 		var pre = null;
 		if (msg == null) {
 			pre = Titanium.UI.createActivityIndicator({
@@ -22,6 +22,7 @@
 				color: CSSMgr.color2,
 				style: Titanium.UI.iPhone.ActivityIndicatorStyle.PLAIN
 			});
+			
 		}
 		else {
 			pre = Titanium.UI.createActivityIndicator({
@@ -38,6 +39,9 @@
 				color: CSSMgr.color2,
 				style: Titanium.UI.iPhone.ActivityIndicatorStyle.PLAIN
 			});
+		}
+		if (styleFlag) {
+			pre.style = Titanium.UI.iPhone.ActivityIndicatorStyle.DARK;
 		}
 		currentWin.add(pre);
 		pre.show();

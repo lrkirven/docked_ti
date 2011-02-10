@@ -150,6 +150,11 @@ Ti.App.addEventListener('HOTSPOT_DATA_RECD', function(e) {
 	}
 });
 
+Titanium.App.addEventListener('OPEN_MY_HOTSPOTS', function(e) { 
+	Ti.API.info('Got OPEN_MY_HOTSPOTS event ...');
+	getHotSpots();
+});
+
 /**
  * Goes to server to get hotSpot data.
  */

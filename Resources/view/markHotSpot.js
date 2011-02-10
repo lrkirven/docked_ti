@@ -176,7 +176,7 @@ function buildForm() {
 	
 	var categoryBtn = Titanium.UI.createTabbedBar({
     	labels:HotSpot.categoryLabels,
-    	backgroundColor:CSSMgr.color0,
+		backgroundColor:CSSMgr.color4,
     	top:270,
 		left:10,
     	style:Titanium.UI.iPhone.SystemButtonStyle.BAR,

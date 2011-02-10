@@ -14,7 +14,7 @@
 	Msgs.ANONYMOUS = 'Anonymous';
 	Msgs.NO_BUZZ = 'No buzz found in this area.';
 	Msgs.MARK = 'Mark!';
-	Msgs.SAVE = 'Mark!';
+	Msgs.SAVE = 'Save';
 	Msgs.CATEGORY_LBL = 'Category: ';
 	Msgs.NOTES_LBL = 'Notes: ';
 	Msgs.DESC_LBL = 'Description: ';

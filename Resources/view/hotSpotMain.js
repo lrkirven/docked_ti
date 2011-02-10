@@ -49,12 +49,7 @@ Titanium.App.addEventListener('LOCATION_CHANGED', function(e){
 
 
 
-Titanium.App.addEventListener('OPEN_MY_HOTSPOTS', function(e) { 
-	Ti.API.info('Got OPEN_MY_HOTSPOTS event ...');
-	openMyHotSpotViewerFlag = true;
-	currentHSWin.close();
-	
-});
+
 
 Titanium.App.addEventListener('OPEN_MARK_HOTSPOT', function(e) { 
 	Ti.API.info('Got OPEN_MARK_HOTSPOT event ...');
@@ -121,29 +116,26 @@ function init() {
 	inPolygonMM = [{
 		title:'My HotSpots',
 		hasChild:true,
-		writeFlag:false,
 		leftImage:'../phone_playmovie.png',
 		ptr: 'myHotSpotViewer.js'
 	}, {
 		title:'Local HotSpots',
 		hasChild:true,
-		writeFlag:false,
 		leftImage:'../phone_playmovie.png',
 		ptr: 'localHotSpotViewer.js'
 	},
 	 {
 		title:'Mark HotSpot',
 		hasChild:true,
-		writeFlag:true,
+		hotSpot:null,
 		leftImage:'../phone_playmovie.png',
-		ptr:'markHotSpot.js'
+		ptr:'hotSpotEditor.js'
 	}
 	];
 	
 	inPolygonAnonymousMM = [{
 		title:'Local HotSpots',
 		hasChild:true,
-		writeFlag:false,
 		leftImage:'../phone_playmovie.png',
 		ptr:'localHotSpotViewer.js'
 	}];
@@ -151,8 +143,6 @@ function init() {
 	outPolygonMM = [{
 		title:'My HotSpots',
 		hasChild:true,
-		writeFlag:false,
-		userHostSpotFlag:true,
 		leftImage:'../phone_playmovie.png',
 		ptr: 'myHotSpotViewer.js'
 	},
