@@ -285,7 +285,7 @@ function updateTableViewDisplay(list) {
 	if (list.length > 0) {
 		tableView.hide();
 		initPreloader.show();
-		var dataRowList = Base.buildRowCollection(list, 'messageRenderer.js');
+		var dataRowList = Base.buildBuzzRows(list, 'messageRenderer.js');
 		tableView.setData(dataRowList);
 		initPreloader.hide();
 		tableView.show();
@@ -307,8 +307,23 @@ function updateTableViewDisplay(list) {
  * managing the user clicking a message.
  */
 function buildTableView() {
+	/*
+	var tblHeader = Ti.UI.createView({
+		height: 30,
+		width: 320
+	});
+	var label = Ti.UI.createLabel({
+		top: 5,
+		left: 10,
+		text: Msgs.BUZZ_TITLE,
+		font: { fontFamily: model.myFont, fontSize: 20, fontWeight: 'bold' },
+		color: CSSMgr.color2
+	});
+	tblHeader.add(label);
+	*/
 	var t = Titanium.UI.createTableView({
-		separatorColor: CSSMgr.color2,
+		// headerView: tblHeader,
+		// style:Titanium.UI.iPhone.TableViewStyle.GROUPED,
 		style: Titanium.UI.iPhone.TableViewStyle.PLAIN,
 		top: 55,
 		filterAttribute: 'filter',
@@ -332,6 +347,7 @@ function buildTableView() {
 			});
 		}
 	});
+	t.backgroundImage = '../dockedbg.png';
 	return t;
 };
 

@@ -21,15 +21,17 @@ var selectedLake = null;
 /**
  * This method builds a table to display messages at a remote locale.
  */
-function buildHotSpotTableView() {
+function buildHotSpotTableView(offset) {
 	var t = Titanium.UI.createTableView({
-		separatorColor:CSSMgr.color2,
-		style:Titanium.UI.iPhone.TableViewStyle.GROUPED,
-		top:0,
+		style: Titanium.UI.iPhone.TableViewStyle.PLAIN,
+		selectionStyle:Ti.UI.iPhone.TableViewCellSelectionStyle.GRAY,
+		rowBackgroundColor: CSSMgr.color0,
+		backgroundColor: CSSMgr.color0,
+		top:offset,
+		borderColor:CSSMgr.color0,
 		left:0,
-		width:325,
-		height:350,
-		backgroundColor:CSSMgr.color0
+		width:320,
+		height:450
 	});
 	//
 	// listener
@@ -38,9 +40,11 @@ function buildHotSpotTableView() {
 		if (e.rowData.renderer) {
 			var rendererWin = Titanium.UI.createWindow({
 				url: e.rowData.renderer,
-				title: e.rowData.title,
+				title: Msgs.APP_NAME,
 				backgroundColor: CSSMgr.color0,
-				barColor: CSSMgr.color0
+				barColor: CSSMgr.color0,
+				hotSpot: e.rowData.hotSpot,
+				canEdit: true,
 			});
 			rendererWin.model = model;
 			Ti.API.info('---------------> ' + e.rowData);
@@ -67,14 +71,14 @@ function buildHotSpotPage(offset, visible) {
 	hsPage = Ti.UI.createView({
 		backgroundColor: CSSMgr.color0,
 		visible:visible,
-		top:offset,
+		top:45,
 		left:0,
-		height:'auto',
+		height:450,
 		width:'auto',
 		clickName: 'hsPage'
 	});
 	
-	hotSpotTable = buildHotSpotTableView();
+	hotSpotTable = buildHotSpotTableView(0);
 	Ti.API.info('buildHotSpotTable: Adding hotSpotTable=' + hotSpotTable);
 	hsPage.add(hotSpotTable);
 	Ti.API.info('buildHotSpotTable: win=' + win);
@@ -90,7 +94,7 @@ function updateHotSpotTable(list) {
 	Ti.API.info('updateHotSpotTable: # of items(s): ' + (list != null ? list.length : 0));
 	if (list.length > 0) {
 		Ti.API.info('updateHotSpotTable: hotSpotTable --> ' + hotSpotTable);
-		var dataRowList = Base.buildHotSpotRows(list, 'updateHotSpot.js');
+		var dataRowList = Base.buildHotSpotRows(list, 'hotSpotEditor.js');
 		Ti.API.info('updateHotSpotTable: rows -- ' + dataRowList.length);
 		hotSpotTable.setData(dataRowList);
 		hotSpotTable.visible = true;
@@ -98,6 +102,7 @@ function updateHotSpotTable(list) {
 	}
 	else {
 		Tools.reportMsg(Msgs.APP_NAME, 'No HotSpots found');
+		win.close();
 	}
 };
 
@@ -138,6 +143,7 @@ Ti.App.addEventListener('HOTSPOT_DATA_RECD', function(e) {
 		updateHotSpotTable(modList);
 		Ti.API.info('Adding view=' + hotSpotTable + ' page=' + hsPage);
 		hsPage.visible = true;
+		hsPage.backgroundImage = '../dockedbg.png';
 	}
 	else {
 		Tools.reportMsg(Msgs.APP_NAME, e.errorMsg);
@@ -158,24 +164,20 @@ function getHotSpots() {
  */
 function init() {
 	Ti.API.info('myHotSpotViewer.init(): Entered ');
-	
 	/*
  	 * Modify the 'Back' button
  	 */
 	Base.attachMyBACKButton(win);
 	
 	/*
-	var startMarkingBtn = Titanium.UI.createButton({title:'Mark HotSpot!'});
-	startMarkingBtn.addEventListener('click', function() {
-		Ti.App.fireEvent('OPEN_MARK_HOTSPOT', {});
-	});
-	win.rightNavButton = startMarkingBtn;
-	*/
+	 * location header 
+	 */
+	headerView = Base.buildPlainHeader(win, Msgs.MY_HOTSPOTS);
 	
 	/*
 	 * build table to display to user
 	 */
-	buildHotSpotPage(0, true);
+	buildHotSpotPage(55, true);
 	
 	/*
 	 * get hotspot data from server

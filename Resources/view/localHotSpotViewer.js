@@ -41,7 +41,9 @@ function buildHotSpotTableView(){
 				url: e.rowData.renderer,
 				title: e.rowData.title,
 				backgroundColor: CSSMgr.color0,
-				barColor: CSSMgr.color0
+				barColor: CSSMgr.color0,
+				hotSpot: e.rowData.hotSpot,
+				canEdit:false
 			});
 			rendererWin.model = model;
 			Ti.API.info('---------------> ' + e.rowData);
@@ -86,7 +88,7 @@ function updateHotSpotTableViewDisplay(list) {
 	Ti.API.info('updateHotSpotTableViewDisplay: # of items(s): ' + (list != null ? list.length : 0));
 	if (list.length > 0) {
 		Ti.API.info('updateHotSpotTableViewDisplay: msgView --> ' + msgView);
-		var dataRowList = Base.buildRowCollection(list);
+		var dataRowList = Base.buildHotSpotRows(list, 'hotSpotEditor.js');
 		Ti.API.info('updateHotSpotTableViewDisplay: rows -- ' + dataRowList.length);
 		msgView.setData(dataRowList);
 		msgView.visible = true;
@@ -94,6 +96,7 @@ function updateHotSpotTableViewDisplay(list) {
 	}
 	else {
 		Tools.reportMsg(Msgs.APP_NAME, 'No HotSpots found');
+		win.close();
 	}
 };
 
@@ -169,10 +172,6 @@ function init() {
 	 */
 	headerView = Base.buildLocationHeader(win, true, '');
 
-	/*	
-	buildSearchView(true);
-	*/
-	
 	/*
 	 * build table to display to user
 	 */

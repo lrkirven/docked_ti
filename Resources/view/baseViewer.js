@@ -326,7 +326,8 @@
 					backgroundColor:CSSMgr.color0,
 					height:70,
 					width:300,
-					borderColor:CSSMgr.color2,
+					borderColor:CSSMgr.color0,
+					borderRadius: 20,
 					className:'HotSpotRow' + i,
 					clickName:'row',
 					hotSpot:hs,
@@ -400,7 +401,7 @@
 		return myDataRowList;
 	};
 	
-	Base.buildRowCollection = function(msgEventList, rendererFile) {
+	Base.buildBuzzRows = function(msgEventList, rendererFile) {
 		var i = 0;
 		var msgEvent = null;
 		var myDataRowList = [];
@@ -434,11 +435,13 @@
 				// create table row
 				//
 				var row = Ti.UI.createTableViewRow({
-					selectedBackgroundColor:'#fff',
+					selectedBackgroundColor:CSSMgr.color2,
 					backgroundColor:CSSMgr.color0,
 					height:0,
-					width:'auto',
+					// width:'auto',
+					width:300,
 					borderColor:CSSMgr.color2,
+					borderRadius: 20,
 					className:'MsgEventRow' + i,
 					clickName:'row',
 					msgEvent:msgEvent,
@@ -638,6 +641,41 @@
 		h.add(selectedLake);
 		h.add(userLabel);
 		h.add(userCountLbl);
+		
+		var t2 = Titanium.UI.createAnimation({top:0, duration:750});
+		h.animate(t2);
+		currentWin.add(h);
+		
+		return h;
+	};
+	
+	Base.buildPlainHeader = function(currentWin, myTitle) {
+		var h = Ti.UI.createView({
+			height: 50,
+			width: 320,
+			top: -100,
+			borderColor: CSSMgr.color0,
+			backgroundColor: CSSMgr.color0
+		});
+		
+		var headerLbl0 = myTitle;
+		var label0 = Ti.UI.createLabel({
+			text: headerLbl0,
+			top: 15,
+			left: 10,
+			height: 20,
+			font: {
+				fontFamily: model.myFont,
+				fontSize: 16,
+				fontWeight: 'bold'
+			},
+			color: '#fff'
+		});
+	
+		//
+		// add items to table header
+		//
+		h.add(label0);
 		
 		var t2 = Titanium.UI.createAnimation({top:0, duration:750});
 		h.animate(t2);

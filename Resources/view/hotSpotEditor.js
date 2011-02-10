@@ -11,6 +11,8 @@ Ti.include('../client/restClient.js');
 Ti.include('baseViewer.js');
 
 var win = Ti.UI.currentWindow;
+var canEdit = win.canEdit;
+var hotSpot = win.hotSpot;
 var model = win.model;
 var submitBtn = null;
 var notesText = null;
@@ -107,6 +109,8 @@ function buildForm() {
 		height: 40,
 		width: 280,
 		left: 10,
+		enabled: canEdit,
+		value: hotSpot.desc,
 		top: 90,
 		font: { fontFamily: model.myFont, fontWeight: 'normal' },
 		textAlign: 'left',
@@ -116,7 +120,7 @@ function buildForm() {
 		borderRadius: 5
 	});
 	descText.addEventListener('change', function(e){
-		var str = notesText.value;
+		var str = descText.value;
 		if (str != null && str.length > 100) {
 			var modStr = str.substr(0, 100);
 			notesText.value = modStr;
@@ -149,7 +153,9 @@ function buildForm() {
 		keyboardType:Titanium.UI.KEYBOARD_NUMBERS_PUNCTUATION,
 		borderWidth:2,
 		borderColor:CSSMgr.color0,
-		borderRadius:5
+		borderRadius:5,
+		enabled: canEdit,
+		value: hotSpot.notes
 	});
 	notesText.addEventListener('change', function(e){
 		var str = notesText.value;
@@ -181,53 +187,56 @@ function buildForm() {
 		left:10,
     	style:Titanium.UI.iPhone.SystemButtonStyle.BAR,
     	height:25,
+		enabled:canEdit,
     	width:280
 	});
 	categoryBtn.addEventListener('click', function(e) {
 		categoryBtn.index = e.index;
 		Ti.API.info('User selected index -- ' + e.index);
 	});
-	categoryBtn.index = 0;
+	categoryBtn.index = hotSpot.category;
 	panel.add(categoryBtn);
 	
-	/*
-	 * submit button
-	 */
-	submitBtn = Titanium.UI.createButton({
-		title: Msgs.MARK,
-		style: Titanium.UI.iPhone.SystemButtonStyle.BORDERED,
-		enabled: false,
-		color: CSSMgr.color0,
-		bottom: 20,
-		right: 10,
-		height: 30,
-		width: 100
-	});
-	submitBtn.addEventListener('click', function(){
-		submitBtn.enabled = false;
-		var myLocation = null;
-		
-		postingInd.show();
-		Ti.API.info('Saving hotspot to server ...');
-		myLocation = model.getCurrentLake();
-		var user = model.getCurrentUser();
-		hotSpot =  {
-			category: categoryBtn.index,
-			username: currentUser.displayName,
-			resourceId: myLocation.id,
-			llId: user.id,
-			desc: descText.value,
-			notes: notesText.value,
-			lat: model.getUserLat(),
-			lng: model.getUserLng(),
-			rating: 0
-		};
-		
-		var restClient = new RestClient();
-		restClient.addHotSpot(currentUser.userToken, hotSpot);
-	});
+	if (canEdit) {
+		/*
+		 * submit button
+		 */
+		submitBtn = Titanium.UI.createButton({
+			title: Msgs.SAVE,
+			style: Titanium.UI.iPhone.SystemButtonStyle.BORDERED,
+			enabled: false,
+			color: CSSMgr.color0,
+			bottom: 20,
+			right: 10,
+			height: 30,
+			width: 100
+		});
+		submitBtn.addEventListener('click', function(){
+			submitBtn.enabled = false;
+			var myLocation = null;
+			
+			postingInd.show();
+			Ti.API.info('Saving hotspot to server ...');
+			myLocation = model.getCurrentLake();
+			var user = model.getCurrentUser();
+			hotSpot =  {
+				category: categoryBtn.index,
+				username: currentUser.displayName,
+				resourceId: myLocation.id,
+				llId: user.id,
+				desc: descText.value,
+				notes: notesText.value,
+				lat: model.getUserLat(),
+				lng: model.getUserLng(),
+				rating: 0
+			};
+			
+			var restClient = new RestClient();
+			restClient.addHotSpot(currentUser.userToken, hotSpot);
+		});
+		win.setRightNavButton(submitBtn);
+	}
 	win.add(panel);
-	win.setRightNavButton(submitBtn);
 	
 	//
 	// preloader

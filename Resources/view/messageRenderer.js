@@ -69,9 +69,10 @@ function appendProfilePhoto(m) {
  */
 function createNewCommentsSection(m) {
 	var editCommentBody = Ti.UI.createTableViewRow({
-		backgroundColor:CSSMgr.color0,
 		top:20,
 		left:0,
+		// opacity:0.4,
+		backgroundColor:'transparent',
 		height:100,
 		width:300,
 		clickName:'commentBody'
@@ -82,7 +83,6 @@ function createNewCommentsSection(m) {
 	if (u == null || !model.getUseFBProfilePic()) {
 		p = Ti.UI.createImageView({
 			image: '../user.png',
-			backgroundColor: CSSMgr.color0,
 			borderColor: CSSMgr.color1,
 			top: 0,
 			left: 0,
@@ -94,7 +94,6 @@ function createNewCommentsSection(m) {
 	else {
 		p = Ti.UI.createImageView({
 			image: model.getFBProfileUrl(),
-			backgroundColor: CSSMgr.color0,
 			borderColor: CSSMgr.color1,
 			top: 0,
 			left: 0,
@@ -110,7 +109,7 @@ function createNewCommentsSection(m) {
 	var msgText = Titanium.UI.createTextField({
 		hintText:'Comments',
     	height:50,
-    	width:260,
+    	width:250,
 		left:50,
     	top:0,
     	font:{ fontFamily:model.myFont, fontWeight:'normal' },
@@ -123,14 +122,14 @@ function createNewCommentsSection(m) {
 	editCommentBody.add(msgText);
 	
 	var addCommentBtn = Titanium.UI.createButton({
-   		title:'Post Comment',
+   		title:'Add Comment',
 		color:CSSMgr.color2,
-		backgroundColor:CSSMgr.color4,
+		backgroundColor:CSSMgr.color0,
   		font:{fontSize:15, fontFamily:model.myFont, fontWeight:'bold'},
 		style:Titanium.UI.iPhone.SystemButtonStyle.PLAIN,
   		width:150,
   		height:30,
-		right:10,
+		right:0,
 		top:50
 	});
 	addCommentBtn.addEventListener('click', function(e) {
@@ -175,7 +174,7 @@ function createExistingCommentRow(commentInst, index) {
 	}
 	var size = 75;
 	var c0 = Ti.UI.createTableViewRow({
-		backgroundColor:CSSMgr.color0,
+		backgroundColor:'transparent',
 		left:0,
 		height:'auto',
 		width:340,
@@ -239,7 +238,7 @@ function createMsgTopic(m) {
 	var fontSize = 13;
 	var size = 80;
 	var msgBody = Ti.UI.createView({
-		backgroundColor:CSSMgr.color4,
+		backgroundColor:CSSMgr.color0,
 		left:50,
 		top:0,
 		layout:'vertical',
@@ -282,7 +281,7 @@ function createMsgTopicWithPhoto(m) {
 	var myWidth = 260;
 	
 	var msgBody = Ti.UI.createView({
-		backgroundColor:CSSMgr.color4,
+		backgroundColor:CSSMgr.color0,
 		left:50,
 		top:0,
 		layout:'vertical',
@@ -368,14 +367,29 @@ function updateDisplayList() {
 		commentList.push(last);
 	}
 	
+	var tblHeader = Ti.UI.createView({
+		height: 30,
+		width: 320
+	});
+	var label = Ti.UI.createLabel({
+		top: 5,
+		left: 10,
+		text: 'Comments',
+		font: { fontFamily: model.myFont, fontSize: 20, fontWeight: 'bold' },
+		color: CSSMgr.color2
+	});
+	tblHeader.add(label);
 	commentVBox = Titanium.UI.createTableView({
+		headerView: tblHeader,
+		scrollable:false,
+		moving:false,
 		data:commentList,
 		separatorColor:CSSMgr.color0,
-		style:Titanium.UI.iPhone.TableViewStyle.PLAIN,
+		style:Titanium.UI.iPhone.TableViewStyle.GROUPED,
 		top:topStart,
 		filterAttribute:'filter',
-		backgroundColor:CSSMgr.color0
 	});
+	commentVBox.backgroundImage = '../dockedbg.png';
 	win.add(commentVBox);
 };
 
