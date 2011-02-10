@@ -17,6 +17,7 @@ var model = win.model;
 var submitBtn = null;
 var notesText = null;
 var descText = null;
+var publicFlag = true;
 
 
 
@@ -41,6 +42,8 @@ function checkFormData() {
  */
 function buildForm() {
 	
+	var currentLake = model.getCurrentLake();
+	
 	var panel = Ti.UI.createView({ 
 		backgroundColor:CSSMgr.color2,
 		top:20,
@@ -51,12 +54,12 @@ function buildForm() {
 		borderRadius:20,
 		clickName:'bg'
 	});
-	
+
 	var lakeText = Titanium.UI.createLabel({
 		color: CSSMgr.color0,
-		text: hotSpot.location, 
+		text: ( hotSpot != null ? hotSpot.location : currentLake.name ), 
 		font: { fontSize:15, fontFamily: model.myFont, fontWeight: 'bold' },
-		top: 10,
+		top: 5,
 		left: 0,
 		width: 300,
 		textAlign: 'center',
@@ -66,9 +69,9 @@ function buildForm() {
 	
 	var latText = Titanium.UI.createLabel({
 		color: CSSMgr.color0,
-		text: Geo.toLat(hotSpot.lat, 'dms', 2),
+		text: ( hotSpot != null ? Geo.toLat(hotSpot.lat, 'dms', 2) : Geo.toLat(model.getUserLat(), 'dms', 2) ),
 		font: { fontSize:13, fontFamily: model.myFont, fontWeight: 'bold' },
-		top: 40,
+		top: 25,
 		left: 0,
 		width: 150,
 		textAlign: 'center',
@@ -78,9 +81,9 @@ function buildForm() {
 	
 	var lngText = Titanium.UI.createLabel({
 		color: CSSMgr.color0,
-		text: Geo.toLon(hotSpot.lat, 'dms', 2),
+		text: ( hotSpot != null ? Geo.toLon(hotSpot.lng, 'dms', 2) : Geo.toLon(model.getUserLng(), 'dms', 2) ),
 		font: { fontSize:13, fontFamily: model.myFont, fontWeight: 'bold' },
-		top: 40,
+		top: 25,
 		left: 150,
 		width: 150,
 		textAlign: 'center',
@@ -91,13 +94,12 @@ function buildForm() {
 	//
 	// label
 	//
-	var currentLake = model.getCurrentLake().name;
 	var prompt1 = currentLake;
 	var descLbl = Titanium.UI.createLabel({
 		color: CSSMgr.color0,
 		text: Msgs.DESC_LBL,
 		font: { fontFamily: model.myFont, fontWeight: 'bold' },
-		top: 70,
+		top: 55,
 		left: 10,
 		width: 300,
 		textAlign: 'left',
@@ -110,8 +112,8 @@ function buildForm() {
 		width: 280,
 		left: 10,
 		enabled: canEdit,
-		value: hotSpot.desc,
-		top: 90,
+		value: ( hotSpot != null ? hotSpot.desc : '' ),
+		top: 75,
 		font: { fontFamily: model.myFont, fontWeight: 'normal' },
 		textAlign: 'left',
 		keyboardType: Titanium.UI.KEYBOARD_NUMBERS_PUNCTUATION,
@@ -121,10 +123,10 @@ function buildForm() {
 	});
 	descText.addEventListener('change', function(e){
 		var str = descText.value;
-		if (str != null && str.length > 100) {
-			var modStr = str.substr(0, 100);
+		if (str != null && str.length > 50) {
+			var modStr = str.substr(0, 50);
 			notesText.value = modStr;
-			Tools.reportMsg(Msgs.APP_NAME, Msgs.MSG_TOO_LONG);	
+			Tools.reportMsg(Msgs.APP_NAME, 'Description is too long');	
 			return;
 		}
 		checkFormData();
@@ -135,7 +137,7 @@ function buildForm() {
 		color: CSSMgr.color0,
 		text: Msgs.NOTES_LBL,
 		font: { fontFamily: model.myFont, fontWeight: 'bold' },
-		top: 140,
+		top: 125,
 		left: 10,
 		width: 300,
 		textAlign: 'left',
@@ -147,7 +149,7 @@ function buildForm() {
 		height:80,
 		width:280,
 		left:10,
-		top:160,
+		top:145,
 		font:{ fontSize:15, fontFamily: model.myFont, fontWeight: 'normal' },
 		appearance:Titanium.UI.KEYBOARD_APPEARANCE_ALERT,	
 		keyboardType:Titanium.UI.KEYBOARD_NUMBERS_PUNCTUATION,
@@ -155,7 +157,7 @@ function buildForm() {
 		borderColor:CSSMgr.color0,
 		borderRadius:5,
 		enabled: canEdit,
-		value: hotSpot.notes
+		value: ( hotSpot != null ? hotSpot.notes : '' )
 	});
 	notesText.addEventListener('change', function(e){
 		var str = notesText.value;
@@ -169,21 +171,28 @@ function buildForm() {
 	});
 	panel.add(notesText);
 	
-	var categoryLbl = Titanium.UI.createLabel({
+	/*
+	var catLbl = Titanium.UI.createLabel({
 		color: CSSMgr.color0,
-		text: Msgs.CATEGORY_LBL,
-		font: { fontFamily: model.myFont, fontWeight: 'bold' },
-		top: 190,
-		left: 10,
-		width: 300,
+		text: 'Category',
+		font: {
+			fontFamily: 
+			model.myFont,
+			fontWeight: 'bold'
+		},
 		textAlign: 'left',
+		top: 235,
+		left: 10,
+		width: 100,
 		height: 'auto'
 	});
+	panel.add(catLbl);
+	*/
 	
 	var categoryBtn = Titanium.UI.createTabbedBar({
     	labels:HotSpot.categoryLabels,
     	backgroundColor:CSSMgr.color4,
-    	top:270,
+    	top:235,
 		left:10,
     	style:Titanium.UI.iPhone.SystemButtonStyle.BAR,
     	height:25,
@@ -195,9 +204,42 @@ function buildForm() {
 		Ti.API.info('User selected index -- ' + e.index);
 		checkFormData();
 	});
-	Ti.API.info('Setting category ---> ' + hotSpot.category);
-	categoryBtn.index = hotSpot.category;
+	if (hotSpot != null) {
+		Ti.API.info('Setting category ---> ' + hotSpot.category);
+		categoryBtn.index = hotSpot.category;
+	}
+	else {
+		categoryBtn.index = 0;
+	}
 	panel.add(categoryBtn);
+	
+	var publicLbl = Titanium.UI.createLabel({
+		color: CSSMgr.color0,
+		text: 'PUBLIC: ',
+		font: {
+			fontSize:17,
+			fontFamily: 
+			model.myFont,
+			fontWeight: 'bold'
+		},
+		textAlign: 'right',
+		top: 287,
+		left: 0,
+		width: 150,
+		height: 'auto'
+	});
+	panel.add(publicLbl);
+	var publicBtn = Titanium.UI.createSwitch({
+		value: true,
+		top: 285,
+		backgroundSelectedColor: CSSMgr.color4,
+		left: 150
+	});
+	publicBtn.addEventListener('change', function(e){
+		publicFlag = e.value;
+	});
+	panel.add(publicBtn);
+
 	
 	if (canEdit) {
 		/*
@@ -228,8 +270,9 @@ function buildForm() {
 			if (hotSpot == null) {
 				hotSpot = {
 					category: categoryBtn.index,
-					username: currentUser.displayName,
+					username: user.displayName,
 					resourceId: myLocation.id,
+					location: myLocation.name,
 					llId: user.id,
 					desc: descText.value,
 					notes: notesText.value,
@@ -290,6 +333,7 @@ function handleHotSpotAddedOrUpdated(e) {
  * Initialize the form
  */
 function init() {
+	Ti.API.info('hotSpotEditor.init(): canEdit=' + canEdit);
 	Base.attachMyBACKButton(win);
 	Ti.App.addEventListener('NEW_HOTSPOT_ADDED', handleHotSpotAddedOrUpdated);
 	buildForm();

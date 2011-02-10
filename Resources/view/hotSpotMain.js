@@ -94,6 +94,7 @@ function buildMenu() {
 				url: e.rowData.ptr,
 				backgroundColor: CSSMgr.color0,
 				barColor: CSSMgr.color0,
+				canEdit: e.rowData.canEdit,
 				title: Msgs.APP_NAME 
 			});
 			currentHSWin.model = model;
@@ -128,6 +129,7 @@ function init() {
 		title:'Mark HotSpot',
 		hasChild:true,
 		hotSpot:null,
+		canEdit:true,
 		leftImage:'../phone_playmovie.png',
 		ptr:'hotSpotEditor.js'
 	}
