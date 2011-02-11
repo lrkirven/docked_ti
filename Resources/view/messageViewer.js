@@ -1,4 +1,5 @@
 Ti.include('../util/msgs.js');
+Ti.include('../util/geo.js');
 Ti.include('../util/tools.js');
 Ti.include('../props/cssMgr.js');
 Ti.include('../model/modelLocator.js');
@@ -55,7 +56,11 @@ Ti.App.addEventListener('LOCATION_CHANGED', function(e) {
 	}
 });
 
-
+/**
+ * This method build a search window for the user to search for lake to visit.
+ * 
+ * @param {Object} visible
+ */
 function buildSearchView(visible) {
 	searchPage = Ti.UI.createView({
 		backgroundColor: CSSMgr.color0,
@@ -405,6 +410,11 @@ Ti.App.addEventListener('SEARCH_RESULTS_RECD', function(e) {
 	}
 });
 
+/**
+ * This method handles event when we are receiving buzz messages from the server.
+ * 
+ * @param {Object} e
+ */
 Titanium.App.addEventListener('LOCAL_MSG_EVENTS_RECD', function(e) {
 	if (e.status == 0) {
 		Ti.API.info('Handling event -- LOCAL_MSG_EVENTS_RECD --> ' + e.result);
@@ -426,6 +436,12 @@ Titanium.App.addEventListener('LOCAL_MSG_EVENTS_RECD', function(e) {
 	}
 });
 
+/**
+ * This mthod handles receiving buzz msg from the server when we are visiting
+ * a remote location and not actual at the that lake.
+ * 
+ * @param {Object} e
+ */
 Titanium.App.addEventListener('REMOTE_MSG_EVENTS_RECD', function(e) {
 	if (e.status == 0) {
 		Ti.API.info('Handling event -- REMOTE_MSG_EVENTS_RECD --> ' + e.result);

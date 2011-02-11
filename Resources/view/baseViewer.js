@@ -58,18 +58,25 @@
 	Base.appendMsgBody = function(row, fontSize) {
 		var msgEvent = row.msgEvent;
 		var msgBody = null;
+		var distBearLbl = null;
 		var userLocale = null;
 		var userMsg = null;
 		
+		var dist = Tools.distanceFromAB(model.getUserLat(), model.getUserLng(), msgEvent.lat, msgEvent.lng);
+		var brng = Tools.calcBearing(model.getUserLat(), model.getUserLng(), msgEvent.lat, msgEvent.lng);
+		
+		var distBearVal = dist + ' mi away, bearing ' + brng;
+		row.msgEvent.distBearVal = distBearVal;
+		
 		if (msgEvent.messageData != null && msgEvent.messageData.length > 35) {
 			
-			row.height = 90;
+			row.height = 100;
 			
 			msgBody = Ti.UI.createView({
 				backgroundColor:CSSMgr.color0,
 				left:60,
 				top:0,
-				height:90,
+				height:130,
 				width:230,
 				clickName:'msgBody'
 			});
@@ -98,11 +105,23 @@
 				clickName:'userLocale',
 				text:(msgEvent.username + ' on ' + msgEvent.location + ', ' + msgEvent.timeDisplay)
 			});
-			
 			msgBody.add(userLocale);
+			
+			distBearLbl = userLocale = Ti.UI.createLabel({
+				color:CSSMgr.color2,
+				font:{fontSize:11, fontWeight:'normal', fontFamily:model.myFont},
+				left:5,
+				top:55,
+				height:40,
+				textAlign:'left',
+				width:220,
+				clickName:'distBear',
+				text:distBearVal
+			});
+			msgBody.add(distBearLbl);
 		}
 		else {
-			row.height = 65;
+			row.height = 75;
 			
 			msgBody = Ti.UI.createView({
 				backgroundColor:CSSMgr.color0,
@@ -131,16 +150,27 @@
 				font:{fontSize:11, fontWeight:'normal', fontFamily:model.myFont},
 				left:5,
 				top:15,
-				height:50,
+				height:40,
 				textAlign:'left',
 				width:220,
 				clickName:'userLocale',
 				text:(msgEvent.username + ' on ' + msgEvent.location + ', ' + msgEvent.timeDisplay)
 			});
-			
 			msgBody.add(userLocale);
+			
+			distBearLbl = Ti.UI.createLabel({
+				color:CSSMgr.color2,
+				font:{fontSize:11, fontWeight:'normal', fontFamily:model.myFont},
+				left:5,
+				top:25,
+				height:50,
+				textAlign:'left',
+				width:220,
+				clickName:'distBear',
+				text:distBearVal
+			});
+			msgBody.add(distBearLbl);
 		}
-		
 		row.add(msgBody);	
 		
 	}; 
