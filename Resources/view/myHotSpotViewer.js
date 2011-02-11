@@ -94,7 +94,7 @@ function updateHotSpotTable(list) {
 	Ti.API.info('updateHotSpotTable: # of items(s): ' + (list != null ? list.length : 0));
 	if (list.length > 0) {
 		Ti.API.info('updateHotSpotTable: hotSpotTable --> ' + hotSpotTable);
-		var dataRowList = Base.buildHotSpotRows(list, 'hotSpotEditor.js');
+		var dataRowList = Base.buildHotSpotRows(list, 'hotSpotSelectedMain.js');
 		Ti.API.info('updateHotSpotTable: rows -- ' + dataRowList.length);
 		hotSpotTable.setData(dataRowList);
 		hotSpotTable.visible = true;

@@ -238,6 +238,9 @@ function buildForm() {
 	publicBtn.addEventListener('change', function(e){
 		publicFlag = e.value;
 	});
+	if (hotSpot != null) {
+		publicBtn.value = hotSpot.publicFlag;
+	}
 	panel.add(publicBtn);
 
 	
@@ -274,6 +277,7 @@ function buildForm() {
 					resourceId: myLocation.id,
 					location: myLocation.name,
 					llId: user.id,
+					publicFlag: publicBtn.value,
 					desc: descText.value,
 					notes: notesText.value,
 					lat: model.getUserLat(),
@@ -288,6 +292,7 @@ function buildForm() {
 				hotSpot.desc = descText.value;
 				hotSpot.notes = notesText.value;
 				hotSpot.category = categoryBtn.index; 
+				hotSpot.publicFlag = publicBtn.value;
 				hotSpot.createDate = null;
 			}
 		

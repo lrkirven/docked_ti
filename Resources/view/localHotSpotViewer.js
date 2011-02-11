@@ -88,7 +88,7 @@ function updateHotSpotTableViewDisplay(list) {
 	Ti.API.info('updateHotSpotTableViewDisplay: # of items(s): ' + (list != null ? list.length : 0));
 	if (list.length > 0) {
 		Ti.API.info('updateHotSpotTableViewDisplay: msgView --> ' + msgView);
-		var dataRowList = Base.buildHotSpotRows(list, 'hotSpotEditor.js');
+		var dataRowList = Base.buildHotSpotRows(list, 'hotSpotSelectedMain.js');
 		Ti.API.info('updateHotSpotTableViewDisplay: rows -- ' + dataRowList.length);
 		msgView.setData(dataRowList);
 		msgView.visible = true;
