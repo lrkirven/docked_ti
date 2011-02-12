@@ -4,21 +4,27 @@ Ti.include('baseViewer.js');
 
 var win = Ti.UI.currentWindow;
 var model = win.model;
+var hotSpot = win.hotSpot;
 
 /**
  * Initial entry
  */
 function init() {
 	Base.attachMyBACKButton(win);
-	var webview = Ti.UI.createWebView();
-	var lat = model.getUserLat();
-	var lng = model.getUserLng();
-	webview.url = model.getBaseUrl() + '/buzzmap?lat=' + lat + '&lng=' + lng;
-	webview.scalesPageToFit = true;
-	webview.addEventListener('load', function(e){
-		Ti.API.debug("MapView loaded: " + e.url);
-	});
-	win.add(webview);
+	if (hotSpot != null) {
+		var webview = Ti.UI.createWebView();
+		var lat = hotSpot.lat;
+		var lng = hotSpot.lng;
+		webview.url = model.getBaseUrl() + '/hsmap?id=' + hotSpot.hotSpotId;
+		webview.scalesPageToFit = true;
+		webview.addEventListener('load', function(e){
+			Ti.API.debug("MapView loaded: " + e.url);
+		});
+		win.add(webview);
+	}
+	else {
+		Ti.API.error('Incoming hotSpot object is MISSING');
+	}
 };
 
 
