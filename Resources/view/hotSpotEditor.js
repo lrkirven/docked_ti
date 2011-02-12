@@ -237,6 +237,7 @@ function buildForm() {
 	});
 	publicBtn.addEventListener('change', function(e){
 		publicFlag = e.value;
+		checkFormData();
 	});
 	if (hotSpot != null) {
 		publicBtn.value = hotSpot.publicFlag;
@@ -324,7 +325,7 @@ function handleHotSpotAddedOrUpdated(e) {
 		postingInd.hide();
 		Tools.reportMsg(Msgs.APP_NAME, "HotSpot saved!");
 		performExit();
-		Ti.App.fireEvent('OPEN_MY_HOTSPOTS', {});
+		Ti.App.fireEvent('RESET_MY_HOTSPOTS', {});
 		win.close();
 	}
 	else {

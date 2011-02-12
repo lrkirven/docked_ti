@@ -62,10 +62,8 @@
 		var userLocale = null;
 		var userMsg = null;
 		
-		var dist = Tools.distanceFromAB(model.getUserLat(), model.getUserLng(), msgEvent.lat, msgEvent.lng);
-		var brng = Tools.calcBearing(model.getUserLat(), model.getUserLng(), msgEvent.lat, msgEvent.lng);
 		
-		var distBearVal = dist + ' mi away, bearing ' + brng;
+		var distBearVal = Tools.calcDistBear(model.getUserLat(), model.getUserLng(), msgEvent.lat, msgEvent.lng);
 		row.msgEvent.distBearVal = distBearVal;
 		
 		if (msgEvent.messageData != null && msgEvent.messageData.length > 35) {
@@ -357,10 +355,10 @@
 				 */	
 				var row = Ti.UI.createTableViewRow({
 					selectedBackgroundColor:CSSMgr.color2,
-					backgroundColor:CSSMgr.color0,
-					height:70,
+					backgroundColor:CSSMgr.color2,
+					height:80,
 					width:300,
-					borderColor:CSSMgr.color0,
+					borderColor:CSSMgr.color2,
 					borderRadius: 20,
 					className:'HotSpotRow' + i,
 					clickName:'row',
@@ -371,7 +369,6 @@
 				Ti.API.info('buildHotSpotRows: row=' + row);
 				
 				var dataPanel = Ti.UI.createView({
-					backgroundColor:CSSMgr.color0,
 					left:0,
 					top:0,
 					height:'auto',
@@ -380,8 +377,8 @@
 				});
 			
 				var descLbl = Ti.UI.createLabel({
-					color: CSSMgr.color2,
-					font: { fontSize: bigFontSize, fontWeight: 'normal', fontFamily: model.myFont },
+					color: CSSMgr.color0,
+					font: { fontSize: bigFontSize, fontWeight: 'bold', fontFamily: model.myFont },
 					left: 10,
 					top: 0,
 					height: 25,
@@ -392,7 +389,7 @@
 				dataPanel.add(descLbl)
 			
 				var locationLbl = Ti.UI.createLabel({
-					color: CSSMgr.color3,
+					color: CSSMgr.color5,
 					font: { fontSize: smallFontSize, fontWeight: 'bold', fontFamily: model.myFont },
 					left: 10,
 					top: 20, 
@@ -404,26 +401,40 @@
 				dataPanel.add(locationLbl);
 				
 				var latlngPanel = Ti.UI.createView({
-					backgroundColor:CSSMgr.color0,
-					left: 10,
+					left: 0,
+					right: 0,
 					top: 40,
-					height: 20,
+					height: 40,
 					width: 300,
 					clickName:'latlngBody'
 				});
 			
-				var latlngStr = Geo.toLat(hs.lat, 'dms', 2) + ' - ' + Geo.toLon(model.getUserLng(), 'dms', 2);	
+				var latlngStr = Geo.toLat(hs.lat, 'dms', 2) + ' - ' + Geo.toLon(hs.lng, 'dms', 2);	
 				var latlngText = Titanium.UI.createLabel({
-					color: CSSMgr.color3,
+					color: CSSMgr.color0,
 					text: latlngStr,
 					font: { fontSize:smallFontSize, fontFamily: model.myFont, fontWeight: 'bold' },
 					top: 0,
-					left: 0,
+					left: 10,
 					width: 300,
 					textAlign: 'left',
 					height:20 
 				});
 				latlngPanel.add(latlngText);
+				
+				var distBearVal = Tools.calcDistBear(model.getUserLat(), model.getUserLng(), hs.lat, hs.lng);
+				var distBearText = Titanium.UI.createLabel({
+					color: CSSMgr.color0,
+					text: distBearVal,
+					font: { fontSize:smallFontSize, fontFamily: model.myFont, fontWeight: 'bold' },
+					top: 15,
+					left: 10,
+					width: 300,
+					textAlign: 'left',
+					height:20 
+				});
+				latlngPanel.add(distBearText);
+		
 	
 				dataPanel.add(latlngPanel);
 				
@@ -532,6 +543,7 @@
 	Base.attachMyBACKButton = function(w) {
 		var b = Titanium.UI.createButton({title:'BACK'});
 		b.addEventListener('click', function() {
+			Ti.API.info('Closing window --' + w);
 			w.close();
 		});
 		w.leftNavButton = b;	

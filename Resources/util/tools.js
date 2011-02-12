@@ -77,7 +77,14 @@
 		
 		var res = (Tools.toDeg(brng) + 360) % 360;
 		return Tools.toPrecisionFixed(res, 4);
-	}
+	};
+	
+	Tools.calcDistBear = function(lat1, lng1, lat2, lng2) {
+		var dist = Tools.distanceFromAB(lat1, lng1, lat2, lng2);
+		var brng = Tools.calcBearing(lat1, lng1, lat2, lng2);
+		var distBearVal = dist + ' mi away, bearing ' + brng;
+		return distBearVal;	
+	};
 	
 	Tools.reportMsg = function(title, msg) {
 		var alertDialog = Titanium.UI.createAlertDialog({

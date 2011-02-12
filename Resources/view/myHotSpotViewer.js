@@ -23,16 +23,19 @@ var selectedLake = null;
  */
 function buildHotSpotTableView(offset) {
 	var t = Titanium.UI.createTableView({
+		// style:Titanium.UI.iPhone.TableViewStyle.GROUPED,
 		style: Titanium.UI.iPhone.TableViewStyle.PLAIN,
 		selectionStyle:Ti.UI.iPhone.TableViewCellSelectionStyle.GRAY,
 		rowBackgroundColor: CSSMgr.color0,
-		backgroundColor: CSSMgr.color0,
+		// backgroundColor: CSSMgr.color0,
+		separatorColor:CSSMgr.color5,
 		top:offset,
-		borderColor:CSSMgr.color0,
+		// borderColor:CSSMgr.color0,
 		left:0,
 		width:320,
 		height:450
 	});
+	t.backgroundImage = '../dockedbg.png';
 	//
 	// listener
 	//	
@@ -101,8 +104,8 @@ function updateHotSpotTable(list) {
 		Ti.API.info('updateHotSpotTable: hotSpotTable --> ' + hotSpotTable);
 	}
 	else {
+		hotSpotTable.visible = false;
 		Tools.reportMsg(Msgs.APP_NAME, 'No HotSpots found');
-		win.close();
 	}
 };
 
@@ -150,8 +153,8 @@ Ti.App.addEventListener('HOTSPOT_DATA_RECD', function(e) {
 	}
 });
 
-Titanium.App.addEventListener('OPEN_MY_HOTSPOTS', function(e) { 
-	Ti.API.info('Got OPEN_MY_HOTSPOTS event ...');
+Titanium.App.addEventListener('RESET_MY_HOTSPOTS', function(e) { 
+	Ti.API.info('Got RESET_MY_HOTSPOTS event ...');
 	getHotSpots();
 });
 

@@ -8,6 +8,8 @@ Ti.include('baseViewer.js');
 
 var win = Ti.UI.currentWindow;
 var model = win.model;
+var hotSpot = win.hotSpot;
+var canEdit = win.canEdit;
 var windowList = [];
 var selectedLake = null;
 var selectedMenu = null;
@@ -15,7 +17,12 @@ var menu0 = null;
 var userCountLbl = null;
 var mainInd = null;
 var userLabel = null;
+var currentWin = null;
 
+
+Titanium.App.addEventListener('RESET_MY_HOTSPOTS', function(e) { 
+	win.close();
+});
 
 /**
  * This method build the table that contains all of the buzz messages.
@@ -46,16 +53,16 @@ function buildSelectedHotSpotTable() {
 	selectedMenu.addEventListener('click', function(e) {
 		Ti.API.info('User selcted to go here: ' + e.rowData.ptr);
 		if (e.rowData.ptr) {
-			var w = Titanium.UI.createWindow({
+			currentWin = Titanium.UI.createWindow({
 				url:e.rowData.ptr,
 				backgroundColor:CSSMgr.color0,
     			barColor:CSSMgr.color0,
 				title:Msgs.APP_NAME,
-				localFlag:e.rowData.localFlag
+				hotSpot:hotSpot,
+				canEdit:canEdit,
+				model:model
 			});
-			w.model = model;
-			Titanium.UI.currentTab.open(w, {animated:true});
-			windowList.push(w);
+			Titanium.UI.currentTab.open(currentWin, {animated:true});
 		}
 	});
 	win.add(selectedMenu);	
