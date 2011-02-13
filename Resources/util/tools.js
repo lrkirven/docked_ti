@@ -87,6 +87,12 @@
 		return distBearVal;	
 	};
 	
+	Tools.calcDistBearObject = function(lat1, lng1, lat2, lng2) {
+		var dist = Tools.distanceFromAB(lat1, lng1, lat2, lng2);
+		var brng = Tools.calcBearing(lat1, lng1, lat2, lng2);
+		return { distance:dist, bearing:brng };
+	};
+	
 	Tools.reportMsg = function(title, msg) {
 		var alertDialog = Titanium.UI.createAlertDialog({
 			message: msg,
