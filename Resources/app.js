@@ -277,6 +277,11 @@ Titanium.App.addEventListener('PING_RESPONSE_DATA', function(e) {
 	}
 });
 
+/**
+ * THis method handle changes in the user's position.
+ * 
+ * @param {Object} e
+ */
 function handleInitialUserPosition(e) {
 	if (e.error) {
 		Tools.reportMsg(Msgs.APP_NAME, 'System Error :: ' + JSON.stringify(e.error));
@@ -287,6 +292,10 @@ function handleInitialUserPosition(e) {
 	var lng = e.coords.longitude;
 	var timestamp = e.coords.timestamp;
 	var accuracy = e.coords.accuracy;
+	
+	model.setActualLng(lng);
+	model.setActualLat(lat);
+	Ti.App.fireEvent('REAL_POSITION_CHANGED', {});
 
 	var bUpdateServer = false;
 	var now = new Date();

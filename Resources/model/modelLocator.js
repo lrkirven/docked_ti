@@ -14,6 +14,8 @@ function ModelLocator() {
 	var pendingRawImage = null;
 	var userLat = 0;
 	var userLng = 0;
+	var actualLat = 0;
+	var actualLng = 0;
 	var lastMove = 0;
 	var resourceId = 0;
 	var myFont = 'Verdana';	
@@ -200,6 +202,18 @@ function ModelLocator() {
 			},
 			getUserLng : function() {
 				return userLng;
+			},
+			setActualLat : function(lat) {
+				actualLat = lat;	
+			},
+			getActualLat : function() {
+				return actualLat;
+			},
+			setActualLng : function(lng) {
+				actualLng	= lng;	
+			},
+			getActualLng : function() {
+				return actualLng;
 			},
 			setLastLocTime : function(last) {
 				lastLocTime = last;	

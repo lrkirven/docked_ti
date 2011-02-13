@@ -91,9 +91,11 @@ function buildForm() {
 		var name = displayNameText.value;
 		if (name != null && name.length > 0) {
 			saveBtn.enabled = true;	
-			if (name.length > 50) {
-				name = name.substr(0, 50);
+			if (name.length > 25) {
+				name = name.substr(0, 25);
 				displayNameText.value = name;
+				Tools.reportMsg(Msgs.APP_NAME, 'Your display name is too long (<25).');	
+				return;				
 			}
 		}
 		else {
