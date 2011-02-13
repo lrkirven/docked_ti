@@ -76,11 +76,11 @@ function PicasaClient(myEmailAddr, myPassword) {
 							myClient._getAlbums();
 						}
 						else {
-							alert("Unable to complete service authentication. [1]");	
+							alert("Unable to complete authentication. [1]");	
 						}
 					}
 					else {
-						alert("Unable to complete service authentication. [2]");	
+						alert("Unable to complete authentication. [2] -- " + results);	
 						/*
 						alert('Unable to retrieve auth token :: ' + this.responseText);
 						*/

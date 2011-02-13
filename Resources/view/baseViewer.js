@@ -386,7 +386,7 @@
 					clickName: 'hsDesc',
 					text: hs.desc
 				});
-				dataPanel.add(descLbl)
+				dataPanel.add(descLbl);
 			
 				var locationLbl = Ti.UI.createLabel({
 					color: CSSMgr.color5,

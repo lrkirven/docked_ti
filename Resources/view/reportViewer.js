@@ -83,6 +83,7 @@ function init() {
 		Titanium.UI.currentTab.open(w, {animated:true});
 		// windowList.push(w);
 	});
+	reportTbl.backgroundImage = '../dockedbg.png';
 	win.add(reportTbl);
 	
 	/*
@@ -99,7 +100,6 @@ function init() {
 	});
 	win.add(mainInd);
 	
-	reportTbl.backgroundImage = '../dockedbg.png';
 };
 
 init();

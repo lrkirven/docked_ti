@@ -1,5 +1,6 @@
 Ti.include('../props/cssMgr.js');
 Ti.include('../util/tools.js');
+Ti.include('../util/msgs.js');
 Ti.include('../model/modelLocator.js');
 Ti.include('../client/restClient.js');
 
@@ -387,7 +388,7 @@ function updateDisplayList() {
 		separatorColor:CSSMgr.color0,
 		style:Titanium.UI.iPhone.TableViewStyle.GROUPED,
 		top:topStart,
-		filterAttribute:'filter',
+		filterAttribute:'filter'
 	});
 	commentVBox.backgroundImage = '../dockedbg.png';
 	win.add(commentVBox);

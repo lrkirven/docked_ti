@@ -47,7 +47,7 @@ function buildHotSpotTableView(offset) {
 				backgroundColor: CSSMgr.color0,
 				barColor: CSSMgr.color0,
 				hotSpot: e.rowData.hotSpot,
-				canEdit: true,
+				canEdit: true
 			});
 			rendererWin.model = model;
 			Ti.API.info('---------------> ' + e.rowData);

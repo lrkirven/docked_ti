@@ -16,6 +16,7 @@
 	};
 	
 	Tools.toPrecisionFixed = function(val, precision) {
+		var n;
 	    if (isNaN(val)) {
 			return 'NaN';
 		}
@@ -27,13 +28,13 @@
 			while (precision--) {
 				n += '0';
 			}
-			 return n 
-		}  // can't take log of zero
+			 return n; 
+		}  
 		
 	    // no of digits before decimal
 	    var scale = Math.ceil( Math.log(numb) * Math.LOG10E );
 		
-	    var n = String(Math.round(numb * Math.pow(10, precision-scale)));
+	    n = String(Math.round(numb * Math.pow(10, precision-scale)));
 		
 		// add trailing zeros & insert decimal as required
 	    if (scale > 0) { 
@@ -53,7 +54,7 @@
 	      n = '0.' + n;
 	    }
 	    return sign + n;
-  	}
+  	};
 	
 	Tools.distanceFromAB = function(lat1, lng1, lat2, lng2) {
 		var precision = 4;
@@ -68,11 +69,11 @@
 	};
 	
 	Tools.calcBearing = function(lat1, lng1, lat2, lng2){
-		var lat1 = Tools.toRad(lat1);
-		var lat2 = Tools.toRad(lat2);
+		var lat1Rad = Tools.toRad(lat1);
+		var lat2Rad = Tools.toRad(lat2);
 		var dLon = Tools.toRad((lng2 - lng1));
-		var y = Math.sin(dLon) * Math.cos(lat2);
-		var x = Math.cos(lat1) * Math.sin(lat2) - Math.sin(lat1) * Math.cos(lat2) * Math.cos(dLon);
+		var y = Math.sin(dLon) * Math.cos(lat2Rad);
+		var x = Math.cos(lat1Rad) * Math.sin(lat2Rad) - Math.sin(lat1Rad) * Math.cos(lat2Rad) * Math.cos(dLon);
 		var brng = Math.atan2(y, x);
 		
 		var res = (Tools.toDeg(brng) + 360) % 360;
