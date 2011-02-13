@@ -366,6 +366,9 @@
 					hasChild:true,
 					renderer:rendererFile
 				});
+				if (hs.header != null) {
+					row.header = hs.header;
+				}
 				Ti.API.info('buildHotSpotRows: row=' + row);
 				
 				var dataPanel = Ti.UI.createView({
@@ -577,10 +580,19 @@
 	 * @param {Object} remoteName
 	 */
 	Base.buildLocationHeader = function(currentWin, localFlag, remoteName) {
+		/*
 		var h = Ti.UI.createView({
 			height: 50,
 			width: 320,
 			top: -100,
+			borderColor: CSSMgr.color0,
+			backgroundColor: CSSMgr.color0
+		});
+		*/
+		var h = Ti.UI.createView({
+			height: 50,
+			width: 320,
+			top: 0,
 			borderColor: CSSMgr.color0,
 			backgroundColor: CSSMgr.color0
 		});
@@ -688,18 +700,37 @@
 		h.add(userLabel);
 		h.add(userCountLbl);
 		
+		/*
 		var t2 = Titanium.UI.createAnimation({top:0, duration:750});
 		h.animate(t2);
+		*/
 		currentWin.add(h);
 		
 		return h;
 	};
 	
+	
+	/**
+	 * This method displays a simple header very similar to the location header.
+	 * 
+	 * @param {Object} currentWin
+	 * @param {Object} myTitle
+	 */
 	Base.buildPlainHeader = function(currentWin, myTitle) {
+		/*
 		var h = Ti.UI.createView({
 			height: 50,
 			width: 320,
 			top: -100,
+			borderColor: CSSMgr.color0,
+			backgroundColor: CSSMgr.color0
+		});
+		*/
+		
+		var h = Ti.UI.createView({
+			height: 50,
+			width: 320,
+			top: 0,
 			borderColor: CSSMgr.color0,
 			backgroundColor: CSSMgr.color0
 		});
@@ -723,8 +754,10 @@
 		//
 		h.add(label0);
 		
+		/*
 		var t2 = Titanium.UI.createAnimation({top:0, duration:750});
 		h.animate(t2);
+		*/
 		currentWin.add(h);
 		
 		return h;

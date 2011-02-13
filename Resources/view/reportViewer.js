@@ -76,6 +76,7 @@ function init() {
 			backgroundColor:CSSMgr.color0,
    			barColor:CSSMgr.color0,
 			state:e.rowData.state,
+			stateTitle:e.rowData.title,
 			barImage: '../Header.png'
 		});
 		w.model = model;

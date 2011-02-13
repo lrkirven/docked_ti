@@ -22,20 +22,22 @@ var selectedLake = null;
  * This method builds a table to display messages at a remote locale.
  */
 function buildHotSpotTableView(offset) {
+	
 	var t = Titanium.UI.createTableView({
 		style:Titanium.UI.iPhone.TableViewStyle.GROUPED,
 		// style: Titanium.UI.iPhone.TableViewStyle.PLAIN,
 		selectionStyle:Ti.UI.iPhone.TableViewCellSelectionStyle.GRAY,
-		rowBackgroundColor: CSSMgr.color0,
-		// backgroundColor: CSSMgr.color0,
-		separatorColor:CSSMgr.color5,
+		// rowBackgroundColor: CSSMgr.color0,
+		backgroundColor: CSSMgr.color0,
+		separatorColor:CSSMgr.color0,
 		top:offset,
 		// borderColor:CSSMgr.color0,
+		color:CSSMgr.color0,
+		fontSize:16,
 		left:0,
-		width:320,
-		height:450
+		width:320
 	});
-	t.backgroundImage = '../dockedbg.png';
+	// t.backgroundImage = '../dockedbg.png';
 	//
 	// listener
 	//	
@@ -72,14 +74,14 @@ function buildHotSpotPage(offset, visible) {
 	// empty msg view
 	//
 	hsPage = Ti.UI.createView({
-		backgroundColor: CSSMgr.color0,
+		// backgroundColor: CSSMgr.color0,
 		visible:visible,
 		top:45,
 		left:0,
-		height:450,
 		width:'auto',
 		clickName: 'hsPage'
 	});
+	hsPage.backgroundImage = '../dockedbg.png';
 	
 	hotSpotTable = buildHotSpotTableView(0);
 	Ti.API.info('buildHotSpotTable: Adding hotSpotTable=' + hotSpotTable);
@@ -125,9 +127,17 @@ function formatDataForHeaders(list) {
 	for (i=0; i<list.length; i++) {
 		hotSpot = list[i];
 		if (hotSpot.category != currentCat) {
-			currentCat++;
-			hotSpot.header = HotSpot.categoryLabels[currentCat];
-			Ti.API.info('formatDataForHeaders: Added header = ' + hotSpot.header);
+			while (1) {
+				currentCat++;
+				if (currentCat == hotSpot.category) {
+					hotSpot.header = HotSpot.categoryLabels[currentCat];
+					Ti.API.info('formatDataForHeaders: Added header = ' + hotSpot.header);
+					break;
+				}
+				else if (currentCat > 5) {
+					break;
+				}
+			}
 		}
 		modList.push(hotSpot);
 	}

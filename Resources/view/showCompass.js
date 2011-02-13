@@ -40,11 +40,11 @@ function init() {
 	Ti.API.info('showCompass: hotSpot --> ' + hs);
 	Base.attachMyBACKButton(win);
 	
-	win.backgroundColor = CSSMgr.color0;
+	win.backgroundColor = CSSMgr.color2;
 
 	var distBearObj = Tools.calcDistBearObject(model.getUserLat(), model.getUserLng(), hs.lat, hs.lng);
 	var distLbl = Titanium.UI.createLabel({
-		color: CSSMgr.color2,
+		color: CSSMgr.color0,
 		text: 'Distance: ',
 		font: { fontSize:13, fontFamily: model.myFont, fontWeight: 'bold' },
 		top: 0,
@@ -55,7 +55,7 @@ function init() {
 	});
 	win.add(distLbl);
 	distVal = Titanium.UI.createLabel({
-		color: CSSMgr.color2,
+		color: CSSMgr.color0,
 		text: distBearObj.distance + ' miles',
 		font: { fontSize:13, fontFamily: model.myFont, fontWeight: 'normal' },
 		top: 0,
@@ -67,7 +67,7 @@ function init() {
 	win.add(distVal);
 	
 	var bearingLbl = Titanium.UI.createLabel({
-		color: CSSMgr.color2,
+		color: CSSMgr.color0,
 		text: 'Bearing: ',
 		font: { fontSize:13, fontFamily: model.myFont, fontWeight: 'bold' },
 		top: 20,
@@ -78,7 +78,7 @@ function init() {
 	});
 	win.add(bearingLbl);
 	bearingVal = Titanium.UI.createLabel({
-		color: CSSMgr.color2,
+		color: CSSMgr.color0,
 		text: distBearObj.bearing + '\u00B0',
 		font: { fontSize:13, fontFamily: model.myFont, fontWeight: 'normal' },
 		top: 20,
@@ -90,8 +90,8 @@ function init() {
 	win.add(bearingVal);
 	
 	compass = Ti.UI.createImageView({
-		image: '../brass-compass-1.png',
-		top: 20,
+		image: '../clipart-compass-2.png',
+		top: 15,
 		left: 0,
 		width: 320,
 		height: 380,

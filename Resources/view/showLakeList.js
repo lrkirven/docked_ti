@@ -111,10 +111,10 @@ function init() {
 		headerView: tblHeader,
 		style: Titanium.UI.iPhone.TableViewStyle.GROUPED,
 		selectionStyle:Ti.UI.iPhone.TableViewCellSelectionStyle.GRAY,
-		rowBackgroundColor: CSSMgr.color2
+		rowBackgroundColor: CSSMgr.color2,
+		backgroundImage: '../dockedbg.png'
 	});
 	win.add(lakeTbl);
-	lakeTbl.backgroundImage = '../dockedbg.png';
 	
 	var reportTbl = model.getReportTable();
 	var reportData = reportTbl[state];
