@@ -57,7 +57,7 @@ function buildSelectedHotSpotTable() {
 				url:e.rowData.ptr,
 				backgroundColor:CSSMgr.color0,
     			barColor:CSSMgr.color0,
-				title:Msgs.APP_NAME,
+				barImage: '../Header.png',
 				hotSpot:hotSpot,
 				canEdit:canEdit,
 				model:model

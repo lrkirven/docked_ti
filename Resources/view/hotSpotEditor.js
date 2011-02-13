@@ -232,6 +232,7 @@ function buildForm() {
 	var publicBtn = Titanium.UI.createSwitch({
 		value: true,
 		top: 285,
+		touchEnabled:canEdit,
 		backgroundSelectedColor: CSSMgr.color4,
 		left: 150
 	});

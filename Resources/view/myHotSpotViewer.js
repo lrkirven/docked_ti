@@ -23,8 +23,8 @@ var selectedLake = null;
  */
 function buildHotSpotTableView(offset) {
 	var t = Titanium.UI.createTableView({
-		// style:Titanium.UI.iPhone.TableViewStyle.GROUPED,
-		style: Titanium.UI.iPhone.TableViewStyle.PLAIN,
+		style:Titanium.UI.iPhone.TableViewStyle.GROUPED,
+		// style: Titanium.UI.iPhone.TableViewStyle.PLAIN,
 		selectionStyle:Ti.UI.iPhone.TableViewCellSelectionStyle.GRAY,
 		rowBackgroundColor: CSSMgr.color0,
 		// backgroundColor: CSSMgr.color0,
@@ -43,7 +43,7 @@ function buildHotSpotTableView(offset) {
 		if (e.rowData.renderer) {
 			var rendererWin = Titanium.UI.createWindow({
 				url: e.rowData.renderer,
-				title: Msgs.APP_NAME,
+				barImage: '../Header.png',
 				backgroundColor: CSSMgr.color0,
 				barColor: CSSMgr.color0,
 				hotSpot: e.rowData.hotSpot,

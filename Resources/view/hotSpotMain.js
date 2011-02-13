@@ -95,7 +95,7 @@ function buildMenu() {
 				backgroundColor: CSSMgr.color0,
 				barColor: CSSMgr.color0,
 				canEdit: e.rowData.canEdit,
-				title: Msgs.APP_NAME 
+				barImage: '../Header.png'
 			});
 			currentHSWin.model = model;
 			Titanium.UI.currentTab.open(currentHSWin, { animated: true }); 

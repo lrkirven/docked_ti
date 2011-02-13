@@ -126,7 +126,7 @@ function buildBuzzMsgTable() {
 				url:e.rowData.ptr,
 				backgroundColor:CSSMgr.color0,
     			barColor:CSSMgr.color0,
-				title:Msgs.APP_NAME,
+				barImage: '../Header.png',
 				localFlag:e.rowData.localFlag
 			});
 			w.model = model;

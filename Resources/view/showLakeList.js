@@ -44,7 +44,7 @@ Titanium.App.addEventListener('ONE_REPORT_RECD', function(e) {
 		url: 'reportDetails.js',
 		backgroundColor:CSSMgr.color0,
 		barColor:CSSMgr.color0,
-		title:e.result.keyword,
+		barImage: '../Header.png',
 		report:{ title:e.result.keyword, timeDisplay:e.result.timeDisplay, reportBody:e.result.reportBody }
 	});
 	w.model = model;

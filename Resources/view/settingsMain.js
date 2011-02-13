@@ -68,15 +68,14 @@ function init() {
 		style:Titanium.UI.iPhone.TableViewStyle.GROUPED,
 		selectionStyle:Ti.UI.iPhone.TableViewCellSelectionStyle.GRAY,
 		rowBackgroundColor:CSSMgr.color2
-		// rowBackgroundColor:'#ffffff'
 	});
 	settingsMenu.addEventListener('click', function(e){
 		if (e.rowData.ptr) {
 			var w = Titanium.UI.createWindow({
 				url:e.rowData.ptr,
-				backgroundColor:'#CCCCCC',
+				backgroundColor: CSSMgr.color2,
     			barColor:CSSMgr.color0,
-				title:e.rowData.title
+				barImage: '../Header.png'
 			});
 			w.model = model;
 			w.db = db;

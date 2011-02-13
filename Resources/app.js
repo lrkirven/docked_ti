@@ -569,10 +569,10 @@ function buildAppTabs() {
 	////////////////////////////////////////////////////////////
 	
 	var buzzWin = Titanium.UI.createWindow({
-		title: Msgs.APP_NAME,
 		color: CSSMgr.color2,
 		font: { fontSize: 20, fontFamily: myFont },
 		barColor: CSSMgr.color0,
+		barImage: 'Header.png',
 		url: 'view/buzzMain.js'
 	});
 	buzzWin.addEventListener('focus', function(e){
@@ -581,7 +581,7 @@ function buildAppTabs() {
 	buzzWin.model = model;
 	buzzWin.db = db;
 	buzzTab = Titanium.UI.createTab({
-		icon: 'KS_nav_ui.png',
+		icon: 'Chat.png',
 		window: buzzWin
 	});
 	
@@ -592,10 +592,10 @@ function buildAppTabs() {
 	////////////////////////////////////////////////////////////
 	
 	var hsWin = Titanium.UI.createWindow({
-		title: Msgs.APP_NAME,
 		color: CSSMgr.color2,
 		font: { fontSize: 20, fontFamily: myFont },
 		barColor: CSSMgr.color0,
+		barImage: 'Header.png',
 		url: 'view/hotSpotMain.js'
 	});
 	hsWin.addEventListener('focus', function(e){
@@ -604,7 +604,7 @@ function buildAppTabs() {
 	hsWin.model = model;
 	hsWin.db = db;
 	hotspotTab = Titanium.UI.createTab({
-		icon: 'KS_nav_ui.png',
+		icon: 'Hotspot.png',
 		window: hsWin
 	});
 	
@@ -616,9 +616,9 @@ function buildAppTabs() {
 	////////////////////////////////////////////////////////////
 	
 	var reportsWin = Titanium.UI.createWindow({
-		title: Msgs.APP_NAME,
 		font: { fontSize: 20, fontFamily: myFont },
 		barColor: CSSMgr.color0,
+		barImage: 'Header.png',
 		url: 'view/reportViewer.js'
 	});
 	reportsWin.addEventListener('focus', function(e){
@@ -626,7 +626,7 @@ function buildAppTabs() {
 	});
 	reportsWin.model = model;
 	reportsTab = Titanium.UI.createTab({
-		icon: 'KS_nav_ui.png',
+		icon: 'Fish.png',
 		window: reportsWin
 	});
 	var label3 = Titanium.UI.createLabel({
@@ -646,9 +646,9 @@ function buildAppTabs() {
 	////////////////////////////////////////////////////////////
 	
 	var settingsWin = Titanium.UI.createWindow({
-		title: Msgs.APP_NAME,
 		font: { fontSize: 20, fontFamily: myFont },
 		barColor: CSSMgr.color0,
+		barImage: 'Header.png',
 		url: 'view/settingsMain.js'
 	});
 	settingsWin.addEventListener('focus', function(e){

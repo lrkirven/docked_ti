@@ -211,7 +211,7 @@ function buildForm() {
 		if (e.rowData.url) {
 			var helperWin = Titanium.UI.createWindow({
 				url: e.rowData.url,
-				title: e.rowData.title,
+				barImage: 'Header.png',
 				backgroundColor: CSSMgr.color0,
 				barColor: CSSMgr.color0
 			});
