@@ -683,9 +683,9 @@ function resetTabs() {
 	tabGroup.addTab(settingsTab);
 };
 
-//
-// application init
-//
+/**
+ * Entry point
+ */
 function init() {
 	
 	var now = new Date();	

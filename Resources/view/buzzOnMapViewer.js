@@ -1,4 +1,8 @@
+Ti.include('../util/msgs.js');
+Ti.include('../util/tools.js');
+Ti.include('../props/cssMgr.js');
 Ti.include('../model/modelLocator.js');
+Ti.include('../client/restClient.js');
 
 Ti.include('baseViewer.js');
 
@@ -7,30 +11,64 @@ var model = win.model;
 var nativeMap = null;
 var googleMap = null;
 
+Titanium.App.addEventListener('LOCAL_MSG_EVENTS_RECD', function(e) {
+	var i = 0;
+	var buzzMsg = null;
+	var buzzMsgIconList = [];
+	if (e.status == 0) {
+		Ti.API.info('Handling event -- LOCAL_MSG_EVENTS_RECD --> ' + e.result);
+		var list = e.result;
+		for (i=0; i<list.length; i++) {
+			buzzMsg = list[i];	
+			var img = Titanium.Map.createAnnotation({
+    			latitude:buzzMsg.lat,
+    			longitude:buzzMsg.lng,
+    			title:buzzMsg.username + '@' + '[' + buzzMsg.location + ']' ,
+    			subtitle:buzzMsg.messageData,
+    			pincolor:Titanium.Map.ANNOTATION_RED,
+				image:'../buzzMarker.png',
+    			animate:true,
+    			myid:buzzMsg.msgId // CUSTOM ATTRIBUTE THAT IS PASSED INTO EVENT OBJECTS
+			});
+			buzzMsgIconList.push(img);
+		}
+		nativeMap.annotations = buzzMsgIconList;
+	}
+	else {
+		Tools.reportMsg(Msgs.APP_NAME, e.errorMsg);			
+	}
+});
+
+
+function check4LocalMsgEvents() {
+	var client = new RestClient();
+	var activeLake = model.getCurrentLake();
+	if (activeLake != null) {
+		Ti.API.info('check4MsgEvent(): resourceId ---> ' + activeLake.id);
+		client.getLocalMsgEvents(activeLake.id);
+	}
+	else {
+		Ti.API.info('check4MsgEvent(): Not in a region to view messages!!!!');
+	}
+};
+
+/**
+ * Loads native map
+ */
 function loadNativeMap() {
 	
-	var myLat = model.getActualLat();	
-	var myLng = model.getActualLng();
+	var myLat = model.getUserLat();	
+	var myLng = model.getUserLng();
 	
-	var img = Titanium.Map.createAnnotation({
-    	latitude:myLat,
-    	longitude:myLng,
-    	title:model.getCurrentLake().name,
-    	subtitle:'hey, how are you doing at that end of the lake with my friend from Odessa, Texas',
-    	pincolor:Titanium.Map.ANNOTATION_RED,
-    	animate:true,
-    	leftButton: model.getFBProfileUrl(),
-    	myid:1 // CUSTOM ATTRIBUTE THAT IS PASSED INTO EVENT OBJECTS
+	var mapview = Titanium.Map.createView({
+   		mapType: Titanium.Map.STANDARD_TYPE,
+   		region: {latitude:myLat, longitude:myLng, latitudeDelta:0.01, longitudeDelta:0.01},
+   		animate:true,
+   		regionFit:true,
+   		userLocation:true,
+   		annotations:[]
 	});
 
-	var mapview = Titanium.Map.createView({
-    	mapType: Titanium.Map.STANDARD_TYPE,
-    	region: {latitude:myLat, longitude:myLng, latitudeDelta:0.01, longitudeDelta:0.01},
-    	animate:true,
-    	regionFit:true,
-    	userLocation:true,
-    	annotations:[img]
-	});
 	return mapview;
 };
 
@@ -49,17 +87,19 @@ function loadGoogleMap(url) {
 function init() {
 	Base.attachMyBACKButton(win);
 
-	/*	
 	var targetUrl = model.getBaseUrl() + '/buzzmap?lat=' + lat + '&lng=' + lng;
 	googleMap = loadGoogleMap(targetUrl);
 	googleMap.addEventListener('error', function(e){
 		nativeMap = loadNativeMap();
 		win.add(nativeMap);
+		check4LocalMsgEvents();
 	});
 	win.add(googleMap);
-	*/
+	
+	/*
 	nativeMap = loadNativeMap();
 	win.add(nativeMap);
+	*/
 };
 
 

@@ -150,7 +150,7 @@ function init() {
 		hasChild: true,
 		leftImage: '../phone_playmovie.png',
 		localFlag: true,
-		ptr: 'messageViewer.js'
+		ptr: 'buzzViewer.js'
 	}, {
 		title: 'Map',
 		hasChild: true,
@@ -167,15 +167,15 @@ function init() {
 		leftImage: '../phone_playmovie.png',
 		localFlag: false,
 		// ptr: 'remoteViewer.js'
-		ptr: 'messageViewer.js'
+		ptr: 'buzzViewer.js'
 	}];
 	
-	inPolygonAnonymousMM = [{
+	inPolygonAnbuzzonymousMM = [{
 		title: 'Browse',
 		hasChild: true,
 		leftImage: '../phone_playmovie.png',
 		localFlag: true,
-		ptr: 'messageViewer.js'
+		ptr: 'buzzViewer.js'
 	}, {
 		title: 'Map',
 		hasChild: true,
@@ -186,8 +186,7 @@ function init() {
 		hasChild: true,
 		localFlag: false,
 		leftImage: '../phone_playmovie.png',
-		// ptr: 'remoteViewer.js'
-		ptr: 'messageViewer.js'
+		ptr: 'buzzViewer.js'
 	}];
 	
 	outPolygonMM = [{
@@ -195,8 +194,7 @@ function init() {
 		hasChild: true,
 		localFlag: false,
 		leftImage: '../phone_playmovie.png',
-		// ptr: 'remoteViewer.js'
-		ptr: 'messageViewer.js'
+		ptr: 'buzzViewer.js'
 	}];
 	
 	Ti.API.info('buzzMain.init(): Entered ');

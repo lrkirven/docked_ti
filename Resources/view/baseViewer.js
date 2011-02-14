@@ -460,7 +460,7 @@
 		var msgTitle = null;
 		
 		if (msgEventList != null) {
-			Ti.API.info('buildRowCollection: size: ' + msgEventList.length);
+			Ti.API.info('buildBuzzRows: size: ' + msgEventList.length);
 			for (i=0; i<msgEventList.length; i++) {
 				//
 				// data fields
@@ -496,7 +496,7 @@
 					hasChild:true,
 					renderer:rendererFile
 				});
-				Ti.API.info('buildRowCollection: row=' + row);
+				Ti.API.info('buildBuzzRows: row=' + row);
 				
 				//
 				// build message body
@@ -507,11 +507,11 @@
 					fontSize = 13;
 				}
 				if (msgEvent.photoUrl == undefined) {
-					Ti.API.info('buildRowCollection: BASIC msg body ...');
+					Ti.API.info('buildBuzzRows: BASIC msg body ...');
 					Base.appendMsgBody(row, fontSize);
 				}
 				else {
-					Ti.API.info('buildRowCollection: PHOTO msg body ...');
+					Ti.API.info('buildBuzzRows: PHOTO msg body ...');
 					Base.appendMsgBodyWithPhoto(row, fontSize);
 				}
 				
@@ -528,10 +528,10 @@
 				if (msgEvent.commentCounter > 0) {
 					replyCounter.text = '+' + msgEvent.commentCounter;
 				} 
-				Ti.API.info('buildRowCollection: replyCounter=' + replyCounter);
+				Ti.API.info('buildBuzzRows: replyCounter=' + replyCounter);
 				row.add(replyCounter);
 				// add row
-				Ti.API.info('buildRowCollection: Adding row=' + row);
+				Ti.API.info('buildBuzzRows: Adding row=' + row);
 				myDataRowList.push(row);
 			}
 		}
