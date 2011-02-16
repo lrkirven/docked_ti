@@ -28,7 +28,7 @@ function buildHotSpotTableView(offset) {
 		// style: Titanium.UI.iPhone.TableViewStyle.PLAIN,
 		selectionStyle:Ti.UI.iPhone.TableViewCellSelectionStyle.GRAY,
 		// rowBackgroundColor: CSSMgr.color0,
-		backgroundColor: CSSMgr.color0,
+		// backgroundColor: CSSMgr.color0,
 		separatorColor:CSSMgr.color0,
 		top:offset,
 		// borderColor:CSSMgr.color0,
@@ -81,7 +81,6 @@ function buildHotSpotPage(offset, visible) {
 		width:'auto',
 		clickName: 'hsPage'
 	});
-	hsPage.backgroundImage = '../dockedbg.png';
 	
 	hotSpotTable = buildHotSpotTableView(0);
 	Ti.API.info('buildHotSpotTable: Adding hotSpotTable=' + hotSpotTable);

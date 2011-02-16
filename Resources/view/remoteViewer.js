@@ -21,16 +21,7 @@ function appendProfilePhoto(row) {
 	var msgEvent = row.msgEvent;
 	if (msgEvent.profileUrl == undefined) {
 		var defaultIDImage = null;
-		defaultIDImage = Ti.UI.createImageView({
-			image: '../user.png',
-			backgroundColor:CSSMgr.color0,
-			borderColor:CSSMgr.color1,
-			top:0,
-			left:0,
-			width:50,
-			height:50,
-			clickName:'defaultIDImage'
-		});
+		defaultIDImage = Base.createProfilePic(0, 0);
 		row.add(defaultIDImage);
 		Ti.API.info('appendProfilePhoto: Added default id image=' + defaultIDImage);
 	}

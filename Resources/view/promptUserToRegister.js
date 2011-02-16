@@ -29,16 +29,7 @@ function buildForm() {
 	});
 
 	
-	var defaultIDImage = Ti.UI.createImageView({
-		image: '../user.png',
-		backgroundColor:CSSMgr.color0,
-		borderColor:CSSMgr.color2,
-		top:10,
-		left:20,
-		width:50,
-		height:50,
-		clickName:'defaultIDImage'
-	});
+	var defaultIDImage = Base.createProfilePic(10, 20);
 	panel.add(defaultIDImage);
 	
 	var appName = Titanium.UI.createLabel({

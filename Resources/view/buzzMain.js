@@ -148,44 +148,43 @@ function init() {
 	inPolygonMM = [{
 		title: 'Browse',
 		hasChild: true,
-		leftImage: '../phone_playmovie.png',
+		leftImage: '../ChatBubble2.png',
 		localFlag: true,
 		ptr: 'buzzViewer.js'
 	}, {
 		title: 'Map',
 		hasChild: true,
-		leftImage: '../phone_playmovie.png',
+		leftImage: '../ChatBubble2.png',
 		ptr: 'buzzOnMapViewer.js'
 	}, {
 		title: 'Post',
 		hasChild: true,
-		leftImage: '../phone_playmovie.png',
+		leftImage: '../ChatBubble2.png',
 		ptr: 'composeMsg.js'
 	}, {
 		title: 'Visit other Lakers',
 		hasChild: true,
-		leftImage: '../phone_playmovie.png',
+		leftImage: '../ChatBubble2.png',
 		localFlag: false,
-		// ptr: 'remoteViewer.js'
 		ptr: 'buzzViewer.js'
 	}];
 	
 	inPolygonAnbuzzonymousMM = [{
 		title: 'Browse',
 		hasChild: true,
-		leftImage: '../phone_playmovie.png',
+		leftImage: '../ChatBubble2.png',
 		localFlag: true,
 		ptr: 'buzzViewer.js'
 	}, {
 		title: 'Map',
 		hasChild: true,
-		leftImage: '../phone_playmovie.png',
+		leftImage: '../ChatBubble2.png',
 		ptr: 'buzzOnMapViewer.js'
 	}, {
 		title: 'Visit other Lakers',
 		hasChild: true,
 		localFlag: false,
-		leftImage: '../phone_playmovie.png',
+		leftImage: '../ChatBubble2.png',
 		ptr: 'buzzViewer.js'
 	}];
 	
@@ -193,7 +192,7 @@ function init() {
 		title: 'Visit other lakes',
 		hasChild: true,
 		localFlag: false,
-		leftImage: '../phone_playmovie.png',
+		leftImage: '../ChatBubble2.png',
 		ptr: 'buzzViewer.js'
 	}];
 	

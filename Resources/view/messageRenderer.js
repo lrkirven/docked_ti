@@ -36,16 +36,7 @@ function check4MsgEvents() {
 function appendProfilePhoto(m) {
 	var p = null;
 	if (m.profileUrl == undefined) {
-		p = Ti.UI.createImageView({
-			image: '../user.png',
-			backgroundColor: CSSMgr.color0,
-			borderColor: CSSMgr.color1,
-			top: 0,
-			left: 0,
-			width: 50,
-			height: 50,
-			clickName: 'defaultIDImage'
-		});
+		p = Base.createProfilePic(0, 0);
 	}
 	else {
 		p = Ti.UI.createImageView({
@@ -82,15 +73,7 @@ function createNewCommentsSection(m) {
 	var p = null;
 	var u = model.getCurrentUser();
 	if (u == null || !model.getUseFBProfilePic()) {
-		p = Ti.UI.createImageView({
-			image: '../user.png',
-			borderColor: CSSMgr.color1,
-			top: 0,
-			left: 0,
-			width: 50,
-			height: 50,
-			clickName: 'defaultProfileImg'
-		});
+		p = Base.createProfilePic();
 	}
 	else {
 		p = Ti.UI.createImageView({
@@ -145,9 +128,6 @@ function createNewCommentsSection(m) {
 		if (currentUser.profileUrl != null) {
 			newComment.profileUrl = currentUser.profileUrl;
 		}
-		else {
-			newComment.profileUrl = '../user.png';
-		}
 		Ti.API.info('Adding comment with profile url ---> ' + newComment.profileUrl);
 		client.postComment(currentUser.id, newComment);	
 	});
@@ -165,7 +145,6 @@ function createNewCommentsSection(m) {
  */
 function createExistingCommentRow(commentInst, index) {
 	var fontSize = 13;
-	var profileUrl = '../user.png'; 
 
 	//
 	// check if you has a profile Url
@@ -182,17 +161,23 @@ function createExistingCommentRow(commentInst, index) {
 		touchEnabled:false,
 		clickName:'oldCommentBody' + index
 	});
-	
-	var p = Ti.UI.createImageView({
-		image: profileUrl,
-		backgroundColor:CSSMgr.color0,
-		borderColor:CSSMgr.color1,
-		top:0,
-		left:0,
-		width:50,
-		height:50,
-		clickName:'photo'
-	});
+
+	var p = null;	
+	if (commentInst.profileUrl == null) {
+		p = Base.createProfilePic();
+	}
+	else {
+		p = Ti.UI.createImageView({
+			image: profileUrl,
+			backgroundColor: CSSMgr.color0,
+			borderColor: CSSMgr.color1,
+			top: 0,
+			left: 0,
+			width: 50,
+			height: 50,
+			clickName: 'photo'
+		});
+	}
 	c0.add(p);
 	
 	var c1 = Ti.UI.createView({

@@ -48,6 +48,21 @@
 		return pre;
 	};
 	
+	Base.createProfilePic = function(top, left) {
+		var defaultProfilePic = Ti.UI.createImageView({
+			image: '../Profile.png',
+			backgroundImage: '../dockedbg.png',
+			// backgroundColor:CSSMgr.color0,
+			borderColor:CSSMgr.color2,
+			top: top,
+			left: left,
+			width:50,
+			height:50,
+			clickName:'defaultIDImage'
+		});	
+		return defaultProfilePic;
+	};
+	
 	/**
 	 * This method builds a message view without an attached photo to be added to an individual 
 	 * row inside of the table.
@@ -305,16 +320,7 @@
 		var msgEvent = row.msgEvent;
 		if (msgEvent.profileUrl == undefined) {
 			var defaultIDImage = null;
-			defaultIDImage = Ti.UI.createImageView({
-				image: '../user.png',
-				backgroundColor:CSSMgr.color0,
-				borderColor:CSSMgr.color1,
-				top:0,
-				left:0,
-				width:50,
-				height:50,
-				clickName:'defaultIDImage'
-			});
+			defaultIDImage = Base.createProfilePic(0, 0);
 			row.add(defaultIDImage);
 		}
 		else {

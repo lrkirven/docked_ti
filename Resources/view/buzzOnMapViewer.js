@@ -72,10 +72,13 @@ function loadNativeMap() {
 	return mapview;
 };
 
+/**
+ * Loads remote Google Map from Docked service.
+ * 
+ * @param {Object} url
+ */
 function loadGoogleMap(url) {
 	var googleMap = Ti.UI.createWebView();
-	var lat = hotSpot.lat;
-	var lng = hotSpot.lng;
 	googleMap.url = url;
 	googleMap.scalesPageToFit = true;
 	return googleMap;
@@ -86,8 +89,9 @@ function loadGoogleMap(url) {
  */
 function init() {
 	Base.attachMyBACKButton(win);
-
-	var targetUrl = model.getBaseUrl() + '/buzzmap?lat=' + lat + '&lng=' + lng;
+	var myLat = model.getUserLat();	
+	var myLng = model.getUserLng();
+	var targetUrl = model.getBaseUrl() + '/buzzmap?lat=' + myLat + '&lng=' + myLng;
 	googleMap = loadGoogleMap(targetUrl);
 	googleMap.addEventListener('error', function(e){
 		nativeMap = loadNativeMap();

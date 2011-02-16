@@ -113,16 +113,7 @@ function buildForm() {
 		panel.add(userProfilePhoto);
 	}
 	else {
-		var defaultIDImage = Ti.UI.createImageView({
-			image: '../user.png',
-			backgroundColor:CSSMgr.color0,
-			borderColor:CSSMgr.color2,
-			top: 10,
-			left: 10,
-			width:50,
-			height:50,
-			clickName:'defaultIDImage'
-		});
+		var defaultIDImage = Base.createProfilePic(10, 10);
 		panel.add(defaultIDImage);
 	}
 	

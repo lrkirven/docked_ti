@@ -6,6 +6,8 @@ Ti.include('../model/modelLocator.js');
 Ti.include('../client/picasaClient.js');
 Ti.include('../client/restClient.js');
 
+Ti.include('baseViewer.js');
+
 var win = Ti.UI.currentWindow;
 var model = win.model;
 var db = win.db;
@@ -37,18 +39,10 @@ function buildForm() {
 		clickName:'bg'
 	});
 
-	var defaultIDImage = Ti.UI.createImageView({
-		image: '../user.png',
-		backgroundColor:CSSMgr.color0,
-		borderColor:CSSMgr.color2,
-		top:10,
-		left:20,
-		width:50,
-		height:50,
-		clickName:'defaultIDImage'
-	});
+	var defaultIDImage = Base.createProfilePic(10, 20);
 	panel.add(defaultIDImage);
-	
+
+	/*	
 	var appName = Titanium.UI.createLabel({
 		color: CSSMgr.color0,
 		text: Msgs.APP_NAME,
@@ -62,6 +56,7 @@ function buildForm() {
 		height: 'auto'
 	});
 	panel.add(appName);
+	*/
 
 	var lbl = Titanium.UI.createLabel({
 		color: CSSMgr.color0,

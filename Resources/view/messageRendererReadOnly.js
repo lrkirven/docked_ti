@@ -1,6 +1,11 @@
+Ti.include('../util/msgs.js');
+Ti.include('../util/tools.js');
 Ti.include('../props/cssMgr.js');
 Ti.include('../model/modelLocator.js');
 Ti.include('../client/restClient.js');
+
+
+Ti.include('baseViewer.js');
 
 /**
  * local variables
@@ -22,16 +27,7 @@ Ti.API.info('Entering messageRendererReadOnly --> ' + this.msgEvent);
 function appendProfilePhoto(m) {
 	var p = null;
 	if (m.profileUrl == undefined) {
-		p = Ti.UI.createImageView({
-			image: '../user.png',
-			backgroundColor: CSSMgr.color0,
-			borderColor: CSSMgr.color1,
-			top: 0,
-			left: 0,
-			width: 50,
-			height: 50,
-			clickName: 'defaultIDImage'
-		});
+		p = Base.createProfilePic(0, 0);
 	}
 	else {
 		p = Ti.UI.createImageView({
@@ -58,7 +54,7 @@ function appendProfilePhoto(m) {
 function createExistingCommentRow(commentInst, index) {
 	var fontSize = 13;
 	// var profileUrl = 'http://philestore1.phreadz.com/_users/2d/04/e4/16/bennycrime/2010/02/19/bennycrime_1266618797_60.jpg';
-	var profileUrl = '../user.png'; 
+	var profileUrl = '../Profile.png'; 
 
 	//
 	// check if you has a profile Url

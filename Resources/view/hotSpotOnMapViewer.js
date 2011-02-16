@@ -19,9 +19,8 @@ function loadNativeMap() {
     	longitude:lng,
     	title:hotSpot.location,
     	subtitle:hotSpot.desc,
-    	pincolor:Titanium.Map.ANNOTATION_RED,
+		image:'../Marker.png',
     	animate:true,
-    	leftButton: '../Hotspot.png',
     	myid:1 // CUSTOM ATTRIBUTE THAT IS PASSED INTO EVENT OBJECTS
 	});
 

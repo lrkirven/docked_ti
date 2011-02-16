@@ -117,12 +117,12 @@ function init() {
 	inPolygonMM = [{
 		title:'My HotSpots',
 		hasChild:true,
-		leftImage:'../phone_playmovie.png',
+		leftImage: '../Hotspot.png',
 		ptr: 'myHotSpotViewer.js'
 	}, {
 		title:'Local HotSpots',
 		hasChild:true,
-		leftImage:'../phone_playmovie.png',
+		leftImage: '../Hotspot.png',
 		ptr: 'localHotSpotViewer.js'
 	},
 	 {
@@ -130,7 +130,7 @@ function init() {
 		hasChild:true,
 		hotSpot:null,
 		canEdit:true,
-		leftImage:'../phone_playmovie.png',
+		leftImage: '../Hotspot.png',
 		ptr:'hotSpotEditor.js'
 	}
 	];
@@ -138,21 +138,21 @@ function init() {
 	inPolygonAnonymousMM = [{
 		title:'Local HotSpots',
 		hasChild:true,
-		leftImage:'../phone_playmovie.png',
+		leftImage: '../Hotspot.png',
 		ptr:'localHotSpotViewer.js'
 	}];
 	
 	outPolygonMM = [{
 		title:'My HotSpots',
 		hasChild:true,
-		leftImage:'../phone_playmovie.png',
+		leftImage: '../Hotspot.png',
 		ptr: 'myHotSpotViewer.js'
 	},
 	{
 		title:'Mark HotSpot',
 		hasChild:true,
 		writeFlag:true,
-		leftImage:'../phone_playmovie.png',
+		leftImage: '../Hotspot.png',
 		ptr:'markHotSpot.js'
 	}];
 	

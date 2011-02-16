@@ -581,7 +581,7 @@ function buildAppTabs() {
 	buzzWin.model = model;
 	buzzWin.db = db;
 	buzzTab = Titanium.UI.createTab({
-		icon: 'Chat.png',
+		icon: 'ChatBubble2.png',
 		window: buzzWin
 	});
 	
@@ -657,7 +657,7 @@ function buildAppTabs() {
 	settingsWin.model = model;
 	settingsWin.db = db;
 	settingsTab = Titanium.UI.createTab({
-		icon: 'KS_nav_platform.png',
+		icon: 'Gears.png',
 		window: settingsWin
 	});
 };

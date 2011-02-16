@@ -82,18 +82,18 @@ function init() {
 	menu0 = [{
 		title: 'Info',
 		hasChild: true,
-		leftImage: '../phone_playmovie.png',
+		leftImage: '../Hotspot.png',
 		localFlag: true,
 		ptr: 'hotSpotEditor.js'
 	}, {
 		title: 'Map',
 		hasChild: true,
-		leftImage: '../phone_playmovie.png',
+		leftImage: '../Hotspot.png',
 		ptr: 'hotSpotOnMapViewer.js'
 	}, {
 		title: 'Compass',
 		hasChild: true,
-		leftImage: '../phone_playmovie.png',
+		leftImage: '../Hotspot.png',
 		ptr: 'showCompass.js'
 	}];
 	

@@ -22,13 +22,13 @@ function init() {
 		{
 			title: 'Share with Facebook',
 			hasChild: true,
-			leftImage: '../phone_playmovie.png',
+			leftImage: '../Gears.png',
 			ptr: 'fbSettings.js'
 		}, 
 		{
 			title: 'User Preferences',
 			hasChild: true,
-			leftImage: '../phone_playmovie.png',
+			leftImage: '../Gears.png',
 			ptr: 'composeMsg.js'
 		}];
 	}
@@ -37,13 +37,13 @@ function init() {
 		{
 			title: 'Share with Facebook',
 			hasChild: true,
-			leftImage: '../phone_playmovie.png',
+			leftImage: '../Gears.png',
 			ptr: 'fbSettings.js'
 		}, 
 		{
 			title: 'User Preferences',
 			hasChild: true,
-			leftImage: '../phone_playmovie.png',
+			leftImage: '../Gears.png',
 			ptr: 'userPrefs.js'
 		}];
 	}

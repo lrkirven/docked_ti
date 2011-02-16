@@ -52,7 +52,7 @@ function getMyFacebookInfo() {
 			if (Titanium.Platform.name == 'android')  {
 				// iphone moved to a single image property - android needs to do the same
 				imageView = Ti.UI.createImageView({
-					url:row.pic_square == null ? '../images/custom_tableview/user.png' : row.pic_square,
+					url:row.pic_square == null ? '../images/custom_tableview/Profile.png' : row.pic_square,
 					left:10,
 					width:50,
 					height:50
@@ -60,7 +60,7 @@ function getMyFacebookInfo() {
 			}
 			else {
 				imageView = Ti.UI.createImageView({
-					image:row.pic_square == null ? '../images/custom_tableview/user.png' : row.pic_square,
+					image:row.pic_square == null ? '../images/custom_tableview/Profile.png' : row.pic_square,
 					left:10,
 					width:50,
 					height:50
@@ -163,7 +163,7 @@ function runQuery() {
 			if (Titanium.Platform.name == 'android')  {
 				// iphone moved to a single image property - android needs to do the same
 				imageView = Ti.UI.createImageView({
-					url:row.pic_square == null ? '../images/custom_tableview/user.png' : row.pic_square,
+					url:row.pic_square == null ? '../images/custom_tableview/Profile.png' : row.pic_square,
 					left:10,
 					width:50,
 					height:50
@@ -171,7 +171,7 @@ function runQuery() {
 			}
 			else {
 				imageView = Ti.UI.createImageView({
-					image:row.pic_square == null ? '../images/custom_tableview/user.png' : row.pic_square,
+					image:row.pic_square == null ? '../images/custom_tableview/Profile.png' : row.pic_square,
 					left:10,
 					width:50,
 					height:50

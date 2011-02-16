@@ -33,7 +33,7 @@ function convertRawData2TableItems(list) {
 			reportId:val.reportId, 
 			timeDisplay:val.timeDisplay, 
 			hasChild:true, 
-			leftImage:'../phone_playmovie.png' };	
+			leftImage:'../Fish.png' };	
 		dp.push(obj);
 	}	
 	return dp;

@@ -4,6 +4,8 @@ Ti.include('../props/cssMgr.js');
 Ti.include('../model/modelLocator.js');
 Ti.include('../client/restClient.js');
 
+Ti.include('baseViewer.js');
+
 var win = Ti.UI.currentWindow;
 var model = win.model;
 var db = win.db;
@@ -116,7 +118,7 @@ function buildForm() {
 	Ti.API.info('fbFlag --> ' + fbFlag);
 	
 	var panel = Ti.UI.createView({
-		backgroundColor: '#cccccc',
+		backgroundColor: CSSMgr.color2,
 		top: 15,
 		bottom: 15,
 		left: 10,
@@ -126,16 +128,7 @@ function buildForm() {
 		clickName: 'bg'
 	});
 	
-	var defaultIDImage = Ti.UI.createImageView({
-		image: '../user.png',
-		backgroundColor:CSSMgr.color0,
-		borderColor:CSSMgr.color2,
-		top:10,
-		left:10,
-		width:50,
-		height:50,
-		clickName:'defaultIDImage'
-	});
+	var defaultIDImage = Base.createProfilePic(10, 10);
 	panel.add(defaultIDImage);
 	
 	var fbLbl = Titanium.UI.createLabel({
