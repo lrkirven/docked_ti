@@ -148,23 +148,23 @@ function init() {
 	inPolygonMM = [{
 		title: 'Browse',
 		hasChild: true,
-		leftImage: '../ChatBubble2.png',
+		leftImage: '../images/ChatBubble2.png',
 		localFlag: true,
 		ptr: 'buzzViewer.js'
 	}, {
 		title: 'Map',
 		hasChild: true,
-		leftImage: '../ChatBubble2.png',
+		leftImage: '../images/ChatBubble2.png',
 		ptr: 'buzzOnMapViewer.js'
 	}, {
 		title: 'Post',
 		hasChild: true,
-		leftImage: '../ChatBubble2.png',
+		leftImage: '../images/ChatBubble2.png',
 		ptr: 'composeMsg.js'
 	}, {
 		title: 'Visit other Lakers',
 		hasChild: true,
-		leftImage: '../ChatBubble2.png',
+		leftImage: '../images/ChatBubble2.png',
 		localFlag: false,
 		ptr: 'buzzViewer.js'
 	}];
@@ -172,19 +172,19 @@ function init() {
 	inPolygonAnbuzzonymousMM = [{
 		title: 'Browse',
 		hasChild: true,
-		leftImage: '../ChatBubble2.png',
+		leftImage: '../images/ChatBubble2.png',
 		localFlag: true,
 		ptr: 'buzzViewer.js'
 	}, {
 		title: 'Map',
 		hasChild: true,
-		leftImage: '../ChatBubble2.png',
+		leftImage: '../images/ChatBubble2.png',
 		ptr: 'buzzOnMapViewer.js'
 	}, {
 		title: 'Visit other Lakers',
 		hasChild: true,
 		localFlag: false,
-		leftImage: '../ChatBubble2.png',
+		leftImage: '../images/ChatBubble2.png',
 		ptr: 'buzzViewer.js'
 	}];
 	
@@ -192,7 +192,7 @@ function init() {
 		title: 'Visit other lakes',
 		hasChild: true,
 		localFlag: false,
-		leftImage: '../ChatBubble2.png',
+		leftImage: '../images/ChatBubble2.png',
 		ptr: 'buzzViewer.js'
 	}];
 	

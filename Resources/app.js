@@ -358,8 +358,8 @@ function handleInitialUserPosition(e) {
 		//
 		// hardcoding Lake Ray Roberts
 		//
-		lat = 32.85;
-		lng = -96.50;
+		lat = 32.859258;
+		lng = -96.520557;
 		
 		model.setUserLng(lng);
 		model.setUserLat(lat);
@@ -388,6 +388,8 @@ function handleInitialUserPosition(e) {
 		Titanium.API.info('Last Ping updated to ---> ' + tm);
 		model.setLastPing(tm);
 		client.ping(llId, lat, lng);
+		// googleMapReverseGeocode(lat, lng);
+		// yahooMapReverseGeoCode(lat, lng);
 	}
 };
 
@@ -559,6 +561,41 @@ Ti.App.addEventListener('GOTO_TAB', function(e) {
 	tabGroup.setActiveTab(e.nextTab);
 });
 
+function yahooMapReverseGeoCode(lat, lng) {
+	Titanium.Yahoo.yql('select * from yahoo.maps.findLocation where q="' + lat + ',' + lng + '" and gflags="R"',function(e) {
+		Ti.API.info('YAHOO RESP :: ' + e.data.ResultSet.Results);
+		var item = e.data.ResultSet.Results;
+		var j = null;
+		for (j in item) {
+			Ti.API.info('key=' + j + ' value=' + item[j]);
+		}
+	});	
+};
+
+function googleMapReverseGeocode(lat,lng){
+    var url="http://maps.google.com/maps/api/geocode/json?latlng="+lat+","+lng+"&sensor=false";
+    xhr = Titanium.Network.createHTTPClient();
+    xhr.open('GET',url);
+    xhr.onload = function() {
+		Ti.API.info("RESP :: " + this.responseText);
+        var json = this.responseText;
+        var gotitems = eval('(' + json + ')');
+		var i = 0;
+		var j = null;
+		var lastLocList = [];
+		var count = 0;
+		for (i=0; i<gotitems.results.length; i++) {
+        	var item = gotitems.results[i];
+        	Ti.API.info(i + ') LOCATION : '+ gotitems.results[i].formatted_address);
+			lastLocList.push(gotitems.results[i].formatted_address);
+			if (lastLocList.length == 3) {
+				break;
+			}	
+		}
+    }
+	xhr.send(); 
+};
+
 
 function buildAppTabs() {
 	
@@ -581,7 +618,10 @@ function buildAppTabs() {
 	buzzWin.model = model;
 	buzzWin.db = db;
 	buzzTab = Titanium.UI.createTab({
-		icon: 'ChatBubble2.png',
+		height:'auto', 
+		width:'auto,',
+		title: 'Buzz',
+		icon: 'images/ChatBubble2.png',
 		window: buzzWin
 	});
 	

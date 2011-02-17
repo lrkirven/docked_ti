@@ -51,6 +51,13 @@ function RestClient(){
 			 */	
 			postMessage : function(llId, msg, addToMyHotSpots) {
                	Titanium.API.info("postMessage: Entered");
+				
+				if (!Titanium.Network.online) {
+					Ti.App.fireEvent('NEW_MSG_EVENT_ADDED', { status:69,
+						errorMsg: Msgs.NO_DATA_SERVICE
+					});
+				}
+				
 				var xhr = Ti.Network.createHTTPClient();
                 xhr.setTimeout(90000);
 				
@@ -120,6 +127,13 @@ function RestClient(){
 			//
 			postComment : function(from, comment) {
                	Titanium.API.info("postComment: Entered");
+				
+				if (!Titanium.Network.online) {
+					Ti.App.fireEvent('NEW_COMMENT_ADDED', { status:69,
+						errorMsg: Msgs.NO_DATA_SERVICE
+					});
+				}
+				
 				var xhr = Ti.Network.createHTTPClient();
                 xhr.setTimeout(90000);
 				
@@ -179,6 +193,13 @@ function RestClient(){
 			},
 			addOrUpdateHotSpot : function(userToken, hotSpot, newFlag) {
                	Titanium.API.info("addOrUpdateHotSpot: Entered");
+				
+				if (!Titanium.Network.online) {
+					Ti.App.fireEvent('NEW_HOTSPOT_ADDED', { status:69,
+						errorMsg: Msgs.NO_DATA_SERVICE
+					});
+				}
+				
 				var xhr = Ti.Network.createHTTPClient();
 				var newInstFlag = newFlag;
                 xhr.setTimeout(90000);
@@ -245,6 +266,13 @@ function RestClient(){
 			 */
 			registerUser : function(emailAddr, displayName, registerSecret) {
                	Titanium.API.info("registerUser: Entered");
+				
+				if (!Titanium.Network.online) {
+					Ti.App.fireEvent('USER_REGISTERED', { status:69,
+						errorMsg: Msgs.NO_DATA_SERVICE
+					});
+				}
+				
 				var xhr = Ti.Network.createHTTPClient();
                 xhr.setTimeout(90000);
 				
@@ -316,6 +344,13 @@ function RestClient(){
 			//
 			updateDisplayName : function(from, displayName) {
                	Titanium.API.info("updateDisplayName: Entered");
+				
+				if (!Titanium.Network.online) {
+					Ti.App.fireEvent('UPDATED_DISPLAY_NAME', { status:69,
+						errorMsg: Msgs.NO_DATA_SERVICE
+					});
+				}
+				
 				var xhr = Ti.Network.createHTTPClient();
                 xhr.setTimeout(90000);
 				
@@ -380,6 +415,13 @@ function RestClient(){
 			//
 			updateProfileUrl : function(from, profileUrl) {
                	Titanium.API.info("updateProfileUrl: Entered");
+				
+				if (!Titanium.Network.online) {
+					Ti.App.fireEvent('UPDATED_PROFILE_URL', { status:69,
+						errorMsg: Msgs.NO_DATA_SERVICE
+					});
+				}
+				
 				var xhr = Ti.Network.createHTTPClient();
                 xhr.setTimeout(90000);
 				
@@ -442,6 +484,13 @@ function RestClient(){
 			//
 			getLocalMsgEvents : function(resourceId) {
                	Titanium.API.info("getLocalMsgEvents: Entered");
+				
+				if (!Titanium.Network.online) {
+					Ti.App.fireEvent('LOCAL_MSG_EVENTS_RECD', { status:69,
+						errorMsg: Msgs.NO_DATA_SERVICE
+					});
+				}
+				
 				var xhr = Ti.Network.createHTTPClient();
                 xhr.setTimeout(90000);
 				
@@ -508,6 +557,13 @@ function RestClient(){
 			},
 			getRemoteMsgEvents : function(resourceId) {
                	Titanium.API.info("getRemoteMsgEvents: Entered");
+				
+				if (!Titanium.Network.online) {
+					Ti.App.fireEvent('REMOTE_MSG_EVENTS_RECD', { status:69,
+						errorMsg: Msgs.NO_DATA_SERVICE
+					});
+				}
+				
 				var xhr = Ti.Network.createHTTPClient();
                 xhr.setTimeout(90000);
 				
@@ -577,6 +633,13 @@ function RestClient(){
 			//
 			searchLakesByKeyword : function(keyword) {
                	Titanium.API.info("searchLakesByKeyword: Entered");
+				
+				if (!Titanium.Network.online) {
+					Ti.App.fireEvent('REMOTE_MSG_EVENTS_RECD', { status:69,
+						errorMsg: Msgs.NO_DATA_SERVICE
+					});
+				}
+				
 				var xhr = Ti.Network.createHTTPClient();
                 xhr.setTimeout(90000);
 				
@@ -712,6 +775,13 @@ function RestClient(){
 			},
 			getShortReportsByState : function(state) {
                	Titanium.API.info("getShortReportsByState: Entered");
+				
+				if (!Titanium.Network.online) {
+					Ti.App.fireEvent('SHORT_REPORT_DATA_RECD', { status:69,
+						errorMsg: Msgs.NO_DATA_SERVICE
+					});
+				}
+				
 				var xhr = Ti.Network.createHTTPClient();
                 xhr.setTimeout(90000);
 				
@@ -778,6 +848,13 @@ function RestClient(){
 			},
 			getReportByReportId : function(reportId) {
                	Titanium.API.info("getReportByReportId: Entered");
+				
+				if (!Titanium.Network.online) {
+					Ti.App.fireEvent('ONE_REPORT_RECD', { status:69,
+						errorMsg: Msgs.NO_DATA_SERVICE
+					});
+				}
+				
 				var xhr = Ti.Network.createHTTPClient();
                 xhr.setTimeout(90000);
 				
@@ -844,6 +921,13 @@ function RestClient(){
 			},
 			getHotSpotsByLake : function(resourceId) {
                	Titanium.API.info("getHotSpotsByLake: Entered");
+				
+				if (!Titanium.Network.online) {
+					Ti.App.fireEvent('HOTSPOT_DATA_RECD', { status:69,
+						errorMsg: Msgs.NO_DATA_SERVICE
+					});
+				}
+				
 				var xhr = Ti.Network.createHTTPClient();
                 xhr.setTimeout(90000);
 				
@@ -910,6 +994,13 @@ function RestClient(){
 			},
 			getHotSpotsByUserToken : function(userToken) {
                	Titanium.API.info("getHotSpotsByUserToken: Entered");
+				
+				if (!Titanium.Network.online) {
+					Ti.App.fireEvent('HOTSPOT_DATA_RECD', { status:69,
+						errorMsg: Msgs.NO_DATA_SERVICE
+					});
+				}
+				
 				var xhr = Ti.Network.createHTTPClient();
                 xhr.setTimeout(90000);
 				
@@ -979,6 +1070,13 @@ function RestClient(){
 			//
 			ping : function(llId, lat, lng) {
                	Titanium.API.info("ping: Entered");
+				
+				if (!Titanium.Network.online) {
+					Ti.App.fireEvent('PING_RESPONSE_DATA', { status:69,
+						errorMsg: Msgs.NO_DATA_SERVICE
+					});
+				}
+				
 				var xhr = Ti.Network.createHTTPClient();
                 xhr.setTimeout(90000);
 				
