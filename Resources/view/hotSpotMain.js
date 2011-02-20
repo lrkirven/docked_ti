@@ -1,5 +1,6 @@
-Ti.include('../util/tools.js');
+Ti.include('../util/common.js');
 Ti.include('../util/msgs.js');
+Ti.include('../util/tools.js');
 Ti.include('../props/cssMgr.js');
 Ti.include('../model/modelLocator.js');
 Ti.include('../client/restClient.js');
@@ -101,7 +102,7 @@ function buildMenu() {
 			Titanium.UI.currentTab.open(currentHSWin, { animated: true }); 
 		}
 	});
-	hsMenu.backgroundImage = '.../images/Background.png';	
+	hsMenu.backgroundImage = '../images/Background.png';	
 };
 
 /**

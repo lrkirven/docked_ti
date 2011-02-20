@@ -5,7 +5,6 @@ Ti.include('../util/hotspot.js');
 Ti.include('../props/cssMgr.js');
 Ti.include('../model/modelLocator.js');
 Ti.include('../props/cssMgr.js');
-Ti.include('../client/picasaClient.js');
 Ti.include('../client/restClient.js');
 
 Ti.include('baseViewer.js');

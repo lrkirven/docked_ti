@@ -2,7 +2,7 @@ function RestClient() {
 	
 	var secureBaseUrl = 'https://www.zarcode4fishin.appspot.com';
 	var baseUrl = 'http://mobile.lazylaker.net';
-	var version = 'v1'; 
+	var version = Common.VERSION; 
 	var myMsgRestURL = baseUrl + '/resources/' + version + '/buzz/'
 	var myMsgRestURLSecure = secureBaseUrl + '/resources/' + version + '/buzz/'
 	var myLakeRestURL = baseUrl + '/resources/' + version + '/lakes/';

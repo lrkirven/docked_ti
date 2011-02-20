@@ -1,5 +1,5 @@
 
-function PicasaClient(myEmailAddr, myPassword) {
+function PicasaClient() {
 	var picasaBase = 'http://picasaweb.google.com/data';
 	var collectionType = '/feed';
 	var projection = '/api';
@@ -11,10 +11,22 @@ function PicasaClient(myEmailAddr, myPassword) {
 	var appSource = 'ZARCODE-LazyLaker-1.0';
 	var bucketList = null;
 	var lastBucket = null;
+	var picasaUser = null;
+	var picasaPassword = null;
 	
 	var myClient = {
-		email:myEmailAddr,
-		password:myPassword,
+		setPicasaUser : function (u) {
+				picasaUser = u;	
+		},
+		getPicasaUser : function() {
+			return picasaUser;
+		},
+		setPicasaPassword : function (p) {
+				picasaPassword = p;	
+		},
+		getPicasaPassword : function() {
+			return picasaPassword;
+		},
 		_authorize: function(method) {
 			Ti.API.info('_authorize(): Trying to do ClientLogin!!');
 			var xhr = Titanium.Network.createHTTPClient();
@@ -246,6 +258,24 @@ function PicasaClient(myEmailAddr, myPassword) {
 			}
 		},
 		upload: function(e, p, b) {
+			myClient.rawImage = b;
+			if (googleAuthToken == null) {
+				// alert('upload: authorizing ...');
+				Ti.API.info('upload: authorizing ...');
+				myClient._authorize('upload');
+			}
+			else if (lastBucket == null) {
+				// alert('Calling _getAlbums() ...');
+				Ti.API.info('upload: Get last bucket ...');
+				myClient._getAlbums('upload');		
+			}
+			else {
+				// alert('upload: uploading ...');
+				Ti.API.info('upload: Start actual upload ...');
+				myClient._upload(b);
+			}
+		},
+		upload2: function(b) {
 			myClient.rawImage = b;
 			if (googleAuthToken == null) {
 				// alert('upload: authorizing ...');

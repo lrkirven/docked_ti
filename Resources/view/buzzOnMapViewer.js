@@ -1,3 +1,4 @@
+Ti.include('../util/common.js');
 Ti.include('../util/msgs.js');
 Ti.include('../util/tools.js');
 Ti.include('../props/cssMgr.js');
@@ -91,7 +92,7 @@ function init() {
 	Base.attachMyBACKButton(win);
 	var myLat = model.getUserLat();	
 	var myLng = model.getUserLng();
-	var targetUrl = model.getBaseUrl() + '/buzzmap?lat=' + myLat + '&lng=' + myLng;
+	var targetUrl = model.getBaseUrl() + '/buzzmap?lat=' + myLat + '&lng=' + myLng + '&version=' + Common.VERSION;
 	googleMap = loadGoogleMap(targetUrl);
 	googleMap.addEventListener('error', function(e){
 		nativeMap = loadNativeMap();

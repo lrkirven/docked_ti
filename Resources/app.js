@@ -1,3 +1,4 @@
+Ti.include('util/common.js');
 Ti.include('util/msgs.js');
 Ti.include('util/date.format.js');
 Ti.include('util/tools.js');
@@ -609,7 +610,7 @@ function buildAppTabs() {
 		color: CSSMgr.color2,
 		font: { fontSize: 20, fontFamily: myFont },
 		barColor: CSSMgr.color0,
-		barImage: 'Header.png',
+		barImage: 'images/Header.png',
 		url: 'view/buzzMain.js'
 	});
 	buzzWin.addEventListener('focus', function(e){
@@ -620,7 +621,6 @@ function buildAppTabs() {
 	buzzTab = Titanium.UI.createTab({
 		height:'auto', 
 		width:'auto,',
-		title: 'Buzz',
 		icon: 'images/ChatBubble.png',
 		window: buzzWin
 	});
@@ -635,7 +635,7 @@ function buildAppTabs() {
 		color: CSSMgr.color2,
 		font: { fontSize: 20, fontFamily: myFont },
 		barColor: CSSMgr.color0,
-		barImage: 'Header.png',
+		barImage: 'images/Header.png',
 		url: 'view/hotSpotMain.js'
 	});
 	hsWin.addEventListener('focus', function(e){
@@ -644,7 +644,7 @@ function buildAppTabs() {
 	hsWin.model = model;
 	hsWin.db = db;
 	hotspotTab = Titanium.UI.createTab({
-		icon: 'images/Hotspot.png',
+		icon: 'images/HotSpot.png',
 		window: hsWin
 	});
 	
@@ -658,7 +658,7 @@ function buildAppTabs() {
 	var reportsWin = Titanium.UI.createWindow({
 		font: { fontSize: 20, fontFamily: myFont },
 		barColor: CSSMgr.color0,
-		barImage: 'Header.png',
+		barImage: 'images/Header.png',
 		url: 'view/reportViewer.js'
 	});
 	reportsWin.addEventListener('focus', function(e){
@@ -688,7 +688,7 @@ function buildAppTabs() {
 	var settingsWin = Titanium.UI.createWindow({
 		font: { fontSize: 20, fontFamily: myFont },
 		barColor: CSSMgr.color0,
-		barImage: 'Header.png',
+		barImage: 'images/Header.png',
 		url: 'view/settingsMain.js'
 	});
 	settingsWin.addEventListener('focus', function(e){

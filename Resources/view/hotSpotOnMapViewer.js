@@ -1,3 +1,4 @@
+Ti.include('../util/common.js');
 Ti.include('../model/modelLocator.js');
 
 Ti.include('baseViewer.js');
@@ -39,7 +40,7 @@ function loadGoogleMap() {
 	var googleMap = Ti.UI.createWebView();
 	var lat = hotSpot.lat;
 	var lng = hotSpot.lng;
-	googleMap.url = model.getBaseUrl() + '/hsmap?id=' + hotSpot.hotSpotId;
+	googleMap.url = model.getBaseUrl() + '/hsmap?id=' + hotSpot.hotSpotId + '&version=' + Common.VERSION;
 	googleMap.scalesPageToFit = true;
 	return googleMap;
 };

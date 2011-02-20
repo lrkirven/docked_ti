@@ -1,8 +1,8 @@
+Ti.include('../util/common.js');
 Ti.include('../util/msgs.js');
 Ti.include('../util/tea.js');
 Ti.include('../props/cssMgr.js');
 Ti.include('../model/modelLocator.js');
-Ti.include('../client/picasaClient.js');
 Ti.include('../client/restClient.js');
 
 var win = Ti.UI.currentWindow;

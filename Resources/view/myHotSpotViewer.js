@@ -1,3 +1,4 @@
+Ti.include('../util/common.js');
 Ti.include('../util/msgs.js');
 Ti.include('../util/geo.js');
 Ti.include('../util/tools.js');
