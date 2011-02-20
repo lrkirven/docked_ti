@@ -15,7 +15,6 @@ var inPolygonMM = null;
 var outPolygonMM = null;
 var userCountLbl = null;
 var mainInd = null;
-var userLabel = null;
 
 
 /**
@@ -69,7 +68,12 @@ Titanium.App.addEventListener('PING_RESPONSE_DATA', function(e) {
 
 Titanium.App.addEventListener('UPDATED_DISPLAY_NAME', function(e) { 
 	if (e.status == 0) {
-		userLabel.text = e.displayName;
+		/*
+		 * trying access user label
+		 */
+		if (headerView.children[2] != null) {
+			headerView.children[2].text = e.displayName;
+		}
 	}
 });
 
