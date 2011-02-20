@@ -26,7 +26,7 @@ Titanium.App.addEventListener('LOCAL_MSG_EVENTS_RECD', function(e) {
     			title:buzzMsg.username + '@' + '[' + buzzMsg.location + ']' ,
     			subtitle:buzzMsg.messageData,
     			pincolor:Titanium.Map.ANNOTATION_RED,
-				image:'../buzzMarker.png',
+				image:'../images/buzzMarker.png',
     			animate:true,
     			myid:buzzMsg.msgId // CUSTOM ATTRIBUTE THAT IS PASSED INTO EVENT OBJECTS
 			});

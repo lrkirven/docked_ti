@@ -77,7 +77,7 @@ function init() {
    			barColor:CSSMgr.color0,
 			state:e.rowData.state,
 			stateTitle:e.rowData.title,
-			barImage: '../Header.png'
+			barImage: '../images/Header.png'
 		});
 		w.model = model;
 		Titanium.UI.currentTab.open(w, {animated:true});

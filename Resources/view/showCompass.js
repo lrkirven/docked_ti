@@ -90,7 +90,7 @@ function init() {
 	win.add(bearingVal);
 	
 	compass = Ti.UI.createImageView({
-		image: '../clipart-compass-2.png',
+		image: '../images/clipart-compass-2.png',
 		top: 15,
 		left: 0,
 		width: 320,

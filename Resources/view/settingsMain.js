@@ -75,7 +75,7 @@ function init() {
 				url:e.rowData.ptr,
 				backgroundColor: CSSMgr.color2,
     			barColor:CSSMgr.color0,
-				barImage: '../Header.png'
+				barImage: '../images/Header.png'
 			});
 			w.model = model;
 			w.db = db;

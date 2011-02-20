@@ -95,13 +95,13 @@ function buildMenu() {
 				backgroundColor: CSSMgr.color0,
 				barColor: CSSMgr.color0,
 				canEdit: e.rowData.canEdit,
-				barImage: '../Header.png'
+				barImage: '../images/Header.png'
 			});
 			currentHSWin.model = model;
 			Titanium.UI.currentTab.open(currentHSWin, { animated: true }); 
 		}
 	});
-	hsMenu.backgroundImage = '../images/Background.png';	
+	hsMenu.backgroundImage = '.../images/Background.png';	
 };
 
 /**

@@ -339,7 +339,7 @@ function buildTableView() {
 		if (e.rowData.renderer) {
 			var rendererWin = Titanium.UI.createWindow({
 				url: e.rowData.renderer,
-				barImage: '../Header.png',
+				barImage: '../images/Header.png',
 				localFlag:localFlag,
 				backgroundColor: CSSMgr.color0,
 				barColor: CSSMgr.color0

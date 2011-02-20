@@ -19,7 +19,7 @@ function loadNativeMap() {
     	longitude:lng,
     	title:hotSpot.location,
     	subtitle:hotSpot.desc,
-		image:'../Marker.png',
+		image:'../images/Marker.png',
     	animate:true,
     	myid:1 // CUSTOM ATTRIBUTE THAT IS PASSED INTO EVENT OBJECTS
 	});

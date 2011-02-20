@@ -130,7 +130,7 @@ function buildBuzzMsgTable() {
 				url:e.rowData.ptr,
 				backgroundColor:CSSMgr.color0,
     			barColor:CSSMgr.color0,
-				barImage: '../Header.png',
+				barImage: '../images/Header.png',
 				localFlag:e.rowData.localFlag
 			});
 			w.model = model;
