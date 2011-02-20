@@ -1,11 +1,18 @@
-function RestClient(){
+function RestClient() {
+	
 	var secureBaseUrl = 'https://www.zarcode4fishin.appspot.com';
 	var baseUrl = 'http://mobile.lazylaker.net';
-	var myMsgRestURL = baseUrl + '/resources/buzz/';
-	var myLakeRestURL = baseUrl + '/resources/lakes/';
-	var myUserRestURL = baseUrl + '/resources/users/';
-	var myReportRestURL = baseUrl + '/resources/reports/';
-	var myHotSpotRestURL = baseUrl + '/resources/hotspots/';
+	var version = 'v1'; 
+	var myMsgRestURL = baseUrl + '/resources/' + version + '/buzz/'
+	var myMsgRestURLSecure = secureBaseUrl + '/resources/' + version + '/buzz/'
+	var myLakeRestURL = baseUrl + '/resources/' + version + '/lakes/';
+	var myLakeRestURLSecure = secureBaseUrl + '/resources/' + version + '/lakes/';
+	var myUserRestURL = baseUrl + '/resources/' + version + '/users/';
+	var myUserRestURLSecure = secureBaseUrl + '/resources/' + version + '/users/';
+	var myReportRestURL = baseUrl + '/resources/' + version + '/reports/';
+	var myReportRestURLSecure = secureBaseUrl + '/resources/' + version + '/reports/';
+	var myHotSpotRestURL = baseUrl + '/resources/' + version + '/hotspots/';
+	var myHotSpotRestURLSecure = baseUrl + '/resources/' + version + '/hotspots/';
 	
 	var httpCodes = { // Http namespace
 		OK:200,
@@ -107,8 +114,7 @@ function RestClient(){
                 // create connection
                 //
 				var appContent = 'newMsg';
-				var msgUrl = '/resources/buzz/';
-				var targetURL = secureBaseUrl + msgUrl + msg.resourceId + '/' + appContent + "?addToMyHotSpots=" + addToMyHotSpots ;
+				var targetURL = myMsgRestURLSecure + msg.resourceId + '/' + appContent + "?addToMyHotSpots=" + addToMyHotSpots ;
 				Titanium.API.info('postMessage: REST URL: ' + targetURL);
                 xhr.open('POST', targetURL);
 				xhr.setRequestHeader('Content-Type', 'application/json');
@@ -178,8 +184,7 @@ function RestClient(){
                 // create connection
                 //
 				var appContent = 'comment';
-				var msgUrl = '/resources/buzz/';
-				var targetURL = secureBaseUrl + msgUrl + comment.resourceId + '/' + appContent + '?id=' + from;
+				var targetURL = myMsgRestURLSecure + comment.resourceId + '/' + appContent + '?id=' + from;
 				Titanium.API.info('postComment: REST URL: ' + targetURL);
                 xhr.open('POST', targetURL);
 				xhr.setRequestHeader('Content-Type', 'application/json');
@@ -322,8 +327,7 @@ function RestClient(){
                 //
                 // create connection
                 //
-				var userUrl = '/resources/users/register';
-				var targetURL = secureBaseUrl + userUrl;
+				var targetURL = myUserRestURLSecure + 'register';
 				Titanium.API.info('registerUser: REST URL: ' + targetURL);
                 xhr.open('POST', targetURL);
 				xhr.setRequestHeader('Content-Type', 'application/json');
@@ -394,8 +398,7 @@ function RestClient(){
                 //
                 // create connection
                 //
-				var userUrl = '/resources/users/update';
-				var targetURL = secureBaseUrl + userUrl;
+				var targetURL = myUserRestURLSecure + 'update';
 				Titanium.API.info('updateDisplayName: REST URL: ' + targetURL);
                 xhr.open('POST', targetURL);
 				xhr.setRequestHeader('Content-Type', 'application/json');
@@ -464,8 +467,7 @@ function RestClient(){
                 //
                 // create connection
                 //
-				var userUrl = '/resources/users/update';
-				var targetURL = secureBaseUrl + userUrl;
+				var targetURL = myUserRestURLSecure + 'update';
 				Titanium.API.info('updateProfileUrl: REST URL: ' + targetURL);
                 xhr.open('POST', targetURL);
 				xhr.setRequestHeader('Content-Type', 'application/json');
@@ -1142,8 +1144,7 @@ function RestClient(){
                 //
                 // create connection
                 //
-				var userUrl = '/resources/users/ping';
-				var targetURL = secureBaseUrl + userUrl;
+				var targetURL = myUserRestURLSecure + 'ping';
 				// var targetURL = baseUrl + userUrl;
 				Titanium.API.info('ping: REST URL: ' + targetURL);
                 xhr.open('POST', targetURL);
