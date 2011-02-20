@@ -72,8 +72,8 @@ function buildForm() {
 		var name = displayNameText.value;
 		if (name != null && name.length > 0) {
 			continueBtn.enabled = true;	
-			if (name.length > 50) {
-				name = name.substr(0, 50);
+			if (name.length > 15) {
+				name = name.substr(0, 15);
 				displayNameText.value = name;
 			}
 		}
