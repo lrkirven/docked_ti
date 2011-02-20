@@ -44,6 +44,18 @@ function buildForm() {
 	});	
 	panel.add(titlePic);
 	
+	var lbl0 = Titanium.UI.createLabel({
+		color: CSSMgr.color0,
+		text: "Become a member of the 'Docked' community and communicate with water enthusists across the USA. ",
+		font: { fontFamily: model.myFont, fontSize: 14, fontWeight: 'bold' },
+		top: 70,
+		left: 10,
+		width: 280,
+		textAlign: 'center',
+		height: 'auto'
+	});
+	panel.add(lbl0);
+	
 	/*
 	var appName = Titanium.UI.createLabel({
 		color: CSSMgr.color0,
