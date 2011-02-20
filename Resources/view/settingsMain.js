@@ -21,17 +21,11 @@ function init() {
 	if (model.getCurrentUser() == null) {
 		menuProvider = [
 		{
-			title: 'Share with Facebook',
+			title: 'Provide Feedback',
 			hasChild: true,
 			leftImage: '../images/Gears.png',
-			ptr: 'fbSettings.js'
-		}, 
-		{
-			title: 'User Preferences',
-			hasChild: true,
-			leftImage: '../images/Gears.png',
-			ptr: 'composeMsg.js'
-		}];
+			ptr: 'feedback.js'
+		}]; 
 	}
 	else {
 		menuProvider = [
@@ -40,12 +34,18 @@ function init() {
 			hasChild: true,
 			leftImage: '../images/Gears.png',
 			ptr: 'fbSettings.js'
-		}, 
+		},
 		{
 			title: 'User Preferences',
 			hasChild: true,
 			leftImage: '../images/Gears.png',
 			ptr: 'userPrefs.js'
+		},
+		{
+			title: 'Provide Feedback',
+			hasChild: true,
+			leftImage: '../images/Gears.png',
+			ptr: 'feedback.js'
 		}];
 	}
 	
@@ -91,7 +91,7 @@ function init() {
 			color: CSSMgr.color2,
 			text: 'Register to become an active member of the Docked community: ',
 			font: { fontFamily: model.myFont, fontSize: 15, fontWeight: 'bold' },
-			top: 150,
+			bottom: 100,
 			left: 10,
 			width: 280,
 			textAlign: 'left',
@@ -104,7 +104,7 @@ function init() {
 			style: Titanium.UI.iPhone.SystemButtonStyle.BORDERED,
 			color:CSSMgr.color0,
 			selectedColor:CSSMgr.color2,
-			top: 195,
+			bottom: 60,
 			left: 10,
 			height: 30,
 			width: 100

@@ -21,7 +21,7 @@ Ti.Geolocation.purpose = "Recieve User Location";
 
 var myFont = 'Verdana';
 var db = Titanium.Database.open('db.docked.co');
-// db.execute('DROP TABLE IF EXISTS AppParams');
+db.execute('DROP TABLE IF EXISTS AppParams');
 db.execute('CREATE TABLE IF NOT EXISTS AppParams (id INTEGER PRIMARY KEY, name VARCHAR(30), valueStr TEXT, valueInt INTEGER)');
 var tabGroup = null;
 var buzzTab = null;
