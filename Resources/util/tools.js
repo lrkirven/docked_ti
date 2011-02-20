@@ -53,6 +53,9 @@
 		  }
 	      n = '0.' + n;
 	    }
+		if (n.length > 6) {
+			n = n.slice(0, 6);	
+		}
 	    return sign + n;
   	};
 	

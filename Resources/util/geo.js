@@ -54,7 +54,7 @@ Geo.parseDMS = function(dmsStr) {
   }
   if (/^-|[WS]$/i.test(dmsStr.trim())) deg = -deg; // take '-', west and south as -ve
   return Number(deg);
-}
+};
 
 /**
  * Convert decimal degrees to deg/min/sec format
@@ -115,7 +115,7 @@ Geo.toDMS = function(deg, format, dp) {
   }
   
   return dms;
-}
+};
 
 /**
  * Convert numeric degrees to deg/min/sec latitude (suffixed with N/S)
@@ -128,7 +128,7 @@ Geo.toDMS = function(deg, format, dp) {
 Geo.toLat = function(deg, format, dp) {
   var lat = Geo.toDMS(deg, format, dp);
   return lat=='' ? '' : lat.slice(1) + (deg<0 ? 'S' : 'N');  // knock off initial '0' for lat!
-}
+};
 
 /**
  * Convert numeric degrees to deg/min/sec longitude (suffixed with E/W)
@@ -155,6 +155,6 @@ Geo.toBrng = function(deg, format, dp) {
   deg = (Number(deg)+360) % 360;  // normalise -ve values to 180º..360º
   var brng =  Geo.toDMS(deg, format, dp);
   return brng.replace('360', '0');  // just in case rounding took us up to 360º!
-}
+};
 
 /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -  */
