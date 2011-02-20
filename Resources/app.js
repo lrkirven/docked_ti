@@ -621,7 +621,7 @@ function buildAppTabs() {
 		height:'auto', 
 		width:'auto,',
 		title: 'Buzz',
-		icon: 'images/ChatBubble2.png',
+		icon: 'images/ChatBubble.png',
 		window: buzzWin
 	});
 	
@@ -644,7 +644,7 @@ function buildAppTabs() {
 	hsWin.model = model;
 	hsWin.db = db;
 	hotspotTab = Titanium.UI.createTab({
-		icon: 'Hotspot.png',
+		icon: 'images/Hotspot.png',
 		window: hsWin
 	});
 	
@@ -666,7 +666,7 @@ function buildAppTabs() {
 	});
 	reportsWin.model = model;
 	reportsTab = Titanium.UI.createTab({
-		icon: 'Fish.png',
+		icon: 'images/Fish.png',
 		window: reportsWin
 	});
 	var label3 = Titanium.UI.createLabel({
@@ -697,7 +697,7 @@ function buildAppTabs() {
 	settingsWin.model = model;
 	settingsWin.db = db;
 	settingsTab = Titanium.UI.createTab({
-		icon: 'Gears.png',
+		icon: 'images/Gears.png',
 		window: settingsWin
 	});
 };
