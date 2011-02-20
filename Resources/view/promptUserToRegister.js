@@ -4,6 +4,7 @@ Ti.include('../props/cssMgr.js');
 Ti.include('../model/modelLocator.js');
 Ti.include('../client/restClient.js');
 
+Ti.include('baseViewer.js');
 
 var win = Ti.UI.currentWindow;
 var model = win.model;
@@ -27,10 +28,23 @@ function buildForm() {
 		clickName:'bg'
 	});
 
-	
+	/*
 	var defaultIDImage = Base.createProfilePic(10, 20);
 	panel.add(defaultIDImage);
+	*/
 	
+	var titlePic = Ti.UI.createImageView({
+		image: '../images/Header.png',
+		borderColor:CSSMgr.color2,
+		top: -2,
+		left: -5,
+		width:320,
+		height:50,
+		clickName:'titleImage'
+	});	
+	panel.add(titlePic);
+	
+	/*
 	var appName = Titanium.UI.createLabel({
 		color: CSSMgr.color0,
 		text: Msgs.APP_NAME,
@@ -44,6 +58,7 @@ function buildForm() {
 		height: 'auto'
 	});
 	panel.add(appName);
+	*/
 	
 	win.add(panel);
 	

@@ -1,4 +1,4 @@
-Ti.include('../util/common.js');
+Ti.include('../utilcommon.js');
 Ti.include('../util/msgs.js');
 Ti.include('../util/tea.js');
 Ti.include('../props/cssMgr.js');

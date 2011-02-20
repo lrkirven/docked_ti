@@ -332,7 +332,7 @@ function buildTableView() {
 		// style:Titanium.UI.iPhone.TableViewStyle.GROUPED,
 		style: Titanium.UI.iPhone.TableViewStyle.PLAIN,
 		top: 55,
-		separatorColor:CSSMgr.color5,
+		separatorColor:CSSMgr.color2,
 		filterAttribute: 'filter',
 		backgroundColor: CSSMgr.color0
 	});

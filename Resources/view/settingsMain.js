@@ -88,7 +88,7 @@ function init() {
 
 	if (model.getCurrentUser() == null) {
 		var lbl0 = Titanium.UI.createLabel({
-			color: CSSMgr.color0,
+			color: CSSMgr.color2,
 			text: 'Register to become an active member of the Docked community: ',
 			font: { fontFamily: model.myFont, fontSize: 15, fontWeight: 'bold' },
 			top: 150,

@@ -28,7 +28,7 @@ function buildHotSpotTableView(){
 		style:Titanium.UI.iPhone.TableViewStyle.PLAIN,
 		// style:Titanium.UI.iPhone.TableViewStyle.GROUPED,
 		visible:false,
-		separatorColor:CSSMgr.color5,
+		separatorColor:CSSMgr.color2,
 		top:0,
 		left:0,
 		width:325,

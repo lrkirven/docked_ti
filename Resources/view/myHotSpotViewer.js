@@ -30,7 +30,7 @@ function buildHotSpotTableView(offset) {
 		selectionStyle:Ti.UI.iPhone.TableViewCellSelectionStyle.GRAY,
 		rowBackgroundColor: CSSMgr.color0,
 		backgroundColor: CSSMgr.color0,
-		separatorColor:CSSMgr.color5,
+		separatorColor:CSSMgr.color2,
 		top:offset,
 		// borderColor:CSSMgr.color0,
 		color:CSSMgr.color0,

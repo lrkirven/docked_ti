@@ -14,6 +14,7 @@ var selectedLake = null;
 var buzzMenu = null;
 var inPolygonMM = null;
 var outPolygonMM = null;
+var inPolygonAnonymousMM = null;
 var userCountLbl = null;
 var mainInd = null;
 
@@ -174,7 +175,7 @@ function init() {
 		ptr: 'buzzViewer.js'
 	}];
 	
-	inPolygonAnbuzzonymousMM = [{
+	inPolygonAnonymousMM = [{
 		title: 'Browse',
 		hasChild: true,
 		leftImage: '../images/ChatBubble2.png',
