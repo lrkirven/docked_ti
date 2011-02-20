@@ -50,7 +50,7 @@
 	
 	Base.createProfilePic = function(top, left) {
 		var defaultProfilePic = Ti.UI.createImageView({
-			image: '../Profile.png',
+			image: '../images/Profile.png',
 			backgroundImage: '../images/Background.png',
 			// backgroundColor:CSSMgr.color0,
 			borderColor:CSSMgr.color2,

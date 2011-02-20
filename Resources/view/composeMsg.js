@@ -1,3 +1,4 @@
+Ti.include('../util/common.js');
 Ti.include('../util/msgs.js');
 Ti.include('../util/date.format.js');
 Ti.include('../util/tools.js');

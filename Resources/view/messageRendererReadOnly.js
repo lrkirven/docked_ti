@@ -54,8 +54,7 @@ function appendProfilePhoto(m) {
  */
 function createExistingCommentRow(commentInst, index) {
 	var fontSize = 13;
-	// var profileUrl = 'http://philestore1.phreadz.com/_users/2d/04/e4/16/bennycrime/2010/02/19/bennycrime_1266618797_60.jpg';
-	var profileUrl = '../Profile.png'; 
+	var profileUrl = '../images/Profile.png'; 
 
 	//
 	// check if you has a profile Url

@@ -36,7 +36,7 @@ a.addEventListener('complete', function() {
 });
 		
 var photo = Ti.UI.createView({ 
-	backgroundImage:'../../images/custom_tableview/Profile.png',
+	backgroundImage:'../images/Profile.png',
 	top:10,
 	left:10,
 	width:300,
