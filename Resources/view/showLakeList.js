@@ -33,7 +33,7 @@ function convertRawData2TableItems(list) {
 			reportId:val.reportId, 
 			timeDisplay:val.timeDisplay, 
 			hasChild:true, 
-			leftImage:'../Fish.png' };	
+			leftImage:'../images/Fish.png' };	
 		dp.push(obj);
 	}	
 	return dp;
@@ -112,7 +112,7 @@ function init() {
 		style: Titanium.UI.iPhone.TableViewStyle.GROUPED,
 		selectionStyle:Ti.UI.iPhone.TableViewCellSelectionStyle.GRAY,
 		rowBackgroundColor: CSSMgr.color2,
-		backgroundImage: '../dockedbg.png'
+		backgroundImage: '../images/Background.png'
 	});
 	win.add(lakeTbl);
 	

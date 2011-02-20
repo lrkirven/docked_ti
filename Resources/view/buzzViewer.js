@@ -353,7 +353,7 @@ function buildTableView() {
 			});
 		}
 	});
-	t.backgroundImage = '../dockedbg.png';
+	t.backgroundImage = '../images/Background.png';
 	return t;
 };
 

@@ -232,7 +232,7 @@ function init() {
 	});
 	preloader.color = CSSMgr.color3;
 	win.add(preloader);
-	win.backgroundImage = '../dockedbg.png';	
+	win.backgroundImage = '../images/Background.png';	
 };
 
 //

@@ -22,13 +22,13 @@ function init() {
 		{
 			title: 'Share with Facebook',
 			hasChild: true,
-			leftImage: '../Gears.png',
+			leftImage: '../images/Gears.png',
 			ptr: 'fbSettings.js'
 		}, 
 		{
 			title: 'User Preferences',
 			hasChild: true,
-			leftImage: '../Gears.png',
+			leftImage: '../images/Gears.png',
 			ptr: 'composeMsg.js'
 		}];
 	}
@@ -37,13 +37,13 @@ function init() {
 		{
 			title: 'Share with Facebook',
 			hasChild: true,
-			leftImage: '../Gears.png',
+			leftImage: '../images/Gears.png',
 			ptr: 'fbSettings.js'
 		}, 
 		{
 			title: 'User Preferences',
 			hasChild: true,
-			leftImage: '../Gears.png',
+			leftImage: '../images/Gears.png',
 			ptr: 'userPrefs.js'
 		}];
 	}
@@ -114,7 +114,7 @@ function init() {
 		});
 		win.add(button0);
 	}
-	settingsMenu.backgroundImage = '../dockedbg.png';
+	settingsMenu.backgroundImage = '../images/Background.png';
 	
 	/*
 	 * iAd 

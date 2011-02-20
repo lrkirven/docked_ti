@@ -24,12 +24,12 @@ var selectedLake = null;
 function buildHotSpotTableView(offset) {
 	
 	var t = Titanium.UI.createTableView({
-		style:Titanium.UI.iPhone.TableViewStyle.GROUPED,
-		// style: Titanium.UI.iPhone.TableViewStyle.PLAIN,
+		// style:Titanium.UI.iPhone.TableViewStyle.GROUPED,
+		style: Titanium.UI.iPhone.TableViewStyle.PLAIN,
 		selectionStyle:Ti.UI.iPhone.TableViewCellSelectionStyle.GRAY,
-		// rowBackgroundColor: CSSMgr.color0,
-		// backgroundColor: CSSMgr.color0,
-		separatorColor:CSSMgr.color0,
+		rowBackgroundColor: CSSMgr.color0,
+		backgroundColor: CSSMgr.color0,
+		separatorColor:CSSMgr.color5,
 		top:offset,
 		// borderColor:CSSMgr.color0,
 		color:CSSMgr.color0,
@@ -37,7 +37,7 @@ function buildHotSpotTableView(offset) {
 		left:0,
 		width:320
 	});
-	// t.backgroundImage = '../dockedbg.png';
+	t.backgroundImage = '../images/Background.png';
 	//
 	// listener
 	//	
@@ -112,38 +112,6 @@ function updateHotSpotTable(list) {
 
 
 /**
- * This method formats data objects to displayed in a table with 
- * headers.
- * 
- * @param {Object} list
- */
-function formatDataForHeaders(list) {
-	var i = 0;
-	var modList = [];	
-	var hotSpot = null;
-	var currentCat = -1;
-	
-	for (i=0; i<list.length; i++) {
-		hotSpot = list[i];
-		if (hotSpot.category != currentCat) {
-			while (1) {
-				currentCat++;
-				if (currentCat == hotSpot.category) {
-					hotSpot.header = HotSpot.categoryLabels[currentCat];
-					Ti.API.info('formatDataForHeaders: Added header = ' + hotSpot.header);
-					break;
-				}
-				else if (currentCat > 5) {
-					break;
-				}
-			}
-		}
-		modList.push(hotSpot);
-	}
-	return modList;
-};
-
-/**
  * This method handles incoming hotspot data from the server.
  * 
  * @param {Object} e
@@ -151,11 +119,11 @@ function formatDataForHeaders(list) {
 Ti.App.addEventListener('HOTSPOT_DATA_RECD', function(e) {
 	if (e.status == 0) {
 		Ti.API.info('Handling event -- HOTSPOT_DATA_RECD --> ' + e.result);
-		var modList = formatDataForHeaders(e.result);
+		var modList = HotSpot.formatDataForHeaders(e.result);
 		updateHotSpotTable(modList);
 		Ti.API.info('Adding view=' + hotSpotTable + ' page=' + hsPage);
 		hsPage.visible = true;
-		hsPage.backgroundImage = '../dockedbg.png';
+		hsPage.backgroundImage = '../images/Background.png';
 	}
 	else {
 		Tools.reportMsg(Msgs.APP_NAME, e.errorMsg);

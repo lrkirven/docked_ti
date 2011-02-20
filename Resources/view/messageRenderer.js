@@ -375,7 +375,7 @@ function updateDisplayList() {
 		top:topStart,
 		filterAttribute:'filter'
 	});
-	commentVBox.backgroundImage = '../dockedbg.png';
+	commentVBox.backgroundImage = '../images/Background.png';
 	win.add(commentVBox);
 };
 

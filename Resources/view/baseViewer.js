@@ -51,7 +51,7 @@
 	Base.createProfilePic = function(top, left) {
 		var defaultProfilePic = Ti.UI.createImageView({
 			image: '../Profile.png',
-			backgroundImage: '../dockedbg.png',
+			backgroundImage: '../images/Background.png',
 			// backgroundColor:CSSMgr.color0,
 			borderColor:CSSMgr.color2,
 			top: top,
@@ -116,7 +116,8 @@
 				textAlign:'left',
 				width:220,
 				clickName:'userLocale',
-				text:(msgEvent.username + ' on ' + msgEvent.location + ', ' + msgEvent.timeDisplay)
+				// text:(msgEvent.username + ' @ ' + msgEvent.location + ', ' + msgEvent.timeDisplay)
+				text:(msgEvent.username + ', ' + msgEvent.timeDisplay)
 			});
 			msgBody.add(userLocale);
 			
@@ -167,7 +168,8 @@
 				textAlign:'left',
 				width:220,
 				clickName:'userLocale',
-				text:(msgEvent.username + ' on ' + msgEvent.location + ', ' + msgEvent.timeDisplay)
+				// text:(msgEvent.username + ' on ' + msgEvent.location + ', ' + msgEvent.timeDisplay)
+				text:(msgEvent.username + ', ' + msgEvent.timeDisplay)
 			});
 			msgBody.add(userLocale);
 			
@@ -361,7 +363,7 @@
 				 */	
 				var row = Ti.UI.createTableViewRow({
 					selectedBackgroundColor:CSSMgr.color2,
-					backgroundColor:CSSMgr.color2,
+					backgroundColor:CSSMgr.color0,
 					height:80,
 					width:300,
 					borderColor:CSSMgr.color2,
@@ -386,7 +388,7 @@
 				});
 			
 				var descLbl = Ti.UI.createLabel({
-					color: CSSMgr.color0,
+					color: CSSMgr.color2,
 					font: { fontSize: bigFontSize, fontWeight: 'bold', fontFamily: model.myFont },
 					left: 10,
 					top: 0,
@@ -398,7 +400,7 @@
 				dataPanel.add(descLbl);
 			
 				var locationLbl = Ti.UI.createLabel({
-					color: CSSMgr.color5,
+					color: CSSMgr.color2,
 					font: { fontSize: smallFontSize, fontWeight: 'bold', fontFamily: model.myFont },
 					left: 10,
 					top: 20, 
@@ -420,7 +422,7 @@
 			
 				var latlngStr = Geo.toLat(hs.lat, 'dms', 2) + ' - ' + Geo.toLon(hs.lng, 'dms', 2);	
 				var latlngText = Titanium.UI.createLabel({
-					color: CSSMgr.color0,
+					color: CSSMgr.color2,
 					text: latlngStr,
 					font: { fontSize:smallFontSize, fontFamily: model.myFont, fontWeight: 'bold' },
 					top: 0,
@@ -433,7 +435,7 @@
 				
 				var distBearVal = Tools.calcDistBear(model.getUserLat(), model.getUserLng(), hs.lat, hs.lng);
 				var distBearText = Titanium.UI.createLabel({
-					color: CSSMgr.color0,
+					color: CSSMgr.color2,
 					text: distBearVal,
 					font: { fontSize:smallFontSize, fontFamily: model.myFont, fontWeight: 'bold' },
 					top: 15,

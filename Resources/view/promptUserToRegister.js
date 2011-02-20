@@ -85,7 +85,7 @@ function buildForm() {
 	panel.add(registerBtn);
 	panel.add(laterBtn);
 
-	win.backgroundImage = '../dockedbg.png';
+	win.backgroundImage = '../images/Background.png';
 };
 
 /**

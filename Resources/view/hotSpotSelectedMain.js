@@ -21,7 +21,7 @@ var currentWin = null;
 
 
 Titanium.App.addEventListener('RESET_MY_HOTSPOTS', function(e) { 
-	win.close();
+	hotSpot = e.hotSpot;
 });
 
 /**
@@ -66,7 +66,7 @@ function buildSelectedHotSpotTable() {
 		}
 	});
 	win.add(selectedMenu);	
-	selectedMenu.backgroundImage = '../dockedbg.png';
+	selectedMenu.backgroundImage = '../images/Background.png';
 };
 
 /**

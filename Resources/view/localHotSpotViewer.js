@@ -1,6 +1,7 @@
 Ti.include('../util/msgs.js');
 Ti.include('../util/geo.js');
 Ti.include('../util/tools.js');
+Ti.include('../util/hotspot.js');
 Ti.include('../props/cssMgr.js');
 Ti.include('../model/modelLocator.js');
 Ti.include('../client/restClient.js');
@@ -23,8 +24,8 @@ var selectedLake = null;
  */
 function buildHotSpotTableView(){
 	var t = Titanium.UI.createTableView({
-		// style:Titanium.UI.iPhone.TableViewStyle.PLAIN,
-		style:Titanium.UI.iPhone.TableViewStyle.GROUPED,
+		style:Titanium.UI.iPhone.TableViewStyle.PLAIN,
+		// style:Titanium.UI.iPhone.TableViewStyle.GROUPED,
 		visible:false,
 		separatorColor:CSSMgr.color5,
 		top:0,
@@ -33,7 +34,7 @@ function buildHotSpotTableView(){
 		height:350,
 		backgroundColor:CSSMgr.color0
 	});
-	t.backgroundImage = '../dockedbg.png';
+	t.backgroundImage = '../images/Background.png';
 	//
 	// listener
 	//	
@@ -86,6 +87,9 @@ function buildHotSpotTable(visible) {
 	win.add(hsPage);	
 };
 
+
+
+
 function updateHotSpotTableViewDisplay(list) {
 	Ti.API.info('updateHotSpotTableViewDisplay: # of items(s): ' + (list != null ? list.length : 0));
 	if (list.length > 0) {
@@ -129,7 +133,8 @@ function updateSearchTableViewDisplay(searchResults) {
 Ti.App.addEventListener('HOTSPOT_DATA_RECD', function(e) {
 	if (e.status == 0) {
 		Ti.API.info('Handling event -- HOTSPOT_DATA_RECD --> ' + e.result);
-		updateHotSpotTableViewDisplay(e.result);
+		var modList = HotSpot.formatDataForHeaders(e.result);
+		updateHotSpotTableViewDisplay(modList);
 		Ti.API.info('updateMsgTableViewDisplay: DONE');
 		Ti.API.info('Adding view=' + msgView + ' page=' + hsPage);
 		hsPage.visible = true;

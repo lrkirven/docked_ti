@@ -101,7 +101,7 @@ function buildMenu() {
 			Titanium.UI.currentTab.open(currentHSWin, { animated: true }); 
 		}
 	});
-	hsMenu.backgroundImage = '../dockedbg.png';	
+	hsMenu.backgroundImage = '../images/Background.png';	
 };
 
 /**
@@ -117,12 +117,12 @@ function init() {
 	inPolygonMM = [{
 		title:'My HotSpots',
 		hasChild:true,
-		leftImage: '../Hotspot.png',
+		leftImage: '../images/Hotspot.png',
 		ptr: 'myHotSpotViewer.js'
 	}, {
 		title:'Local HotSpots',
 		hasChild:true,
-		leftImage: '../Hotspot.png',
+		leftImage: '../images/Hotspot.png',
 		ptr: 'localHotSpotViewer.js'
 	},
 	 {
@@ -130,7 +130,7 @@ function init() {
 		hasChild:true,
 		hotSpot:null,
 		canEdit:true,
-		leftImage: '../Hotspot.png',
+		leftImage: '../images/Hotspot.png',
 		ptr:'hotSpotEditor.js'
 	}
 	];
@@ -138,21 +138,21 @@ function init() {
 	inPolygonAnonymousMM = [{
 		title:'Local HotSpots',
 		hasChild:true,
-		leftImage: '../Hotspot.png',
+		leftImage: '../images/Hotspot.png',
 		ptr:'localHotSpotViewer.js'
 	}];
 	
 	outPolygonMM = [{
 		title:'My HotSpots',
 		hasChild:true,
-		leftImage: '../Hotspot.png',
+		leftImage: '../images/Hotspot.png',
 		ptr: 'myHotSpotViewer.js'
 	},
 	{
 		title:'Mark HotSpot',
 		hasChild:true,
 		writeFlag:true,
-		leftImage: '../Hotspot.png',
+		leftImage: '../images/Hotspot.png',
 		ptr:'markHotSpot.js'
 	}];
 	

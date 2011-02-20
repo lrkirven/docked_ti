@@ -249,7 +249,7 @@ function buildForm() {
 	panel.add(switchBtn1);
 	
 	win.add(panel);
-	win.backgroundImage = '../dockedbg.png';
+	win.backgroundImage = '../images/Background.png';
 };
 
 function init() {

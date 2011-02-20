@@ -139,7 +139,7 @@ function buildBuzzMsgTable() {
 		}
 	});
 	win.add(buzzMenu);	
-	buzzMenu.backgroundImage = '../dockedbg.png';
+	buzzMenu.backgroundImage = '../images/Background.png';
 };
 
 /**

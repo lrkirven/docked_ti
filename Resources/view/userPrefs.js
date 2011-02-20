@@ -86,8 +86,8 @@ function buildForm() {
 		var name = displayNameText.value;
 		if (name != null && name.length > 0) {
 			saveBtn.enabled = true;	
-			if (name.length > 25) {
-				name = name.substr(0, 25);
+			if (name.length > 15) {
+				name = name.substr(0, 15);
 				displayNameText.value = name;
 				Tools.reportMsg(Msgs.APP_NAME, 'Your display name is too long (<25).');	
 				return;				
@@ -133,7 +133,7 @@ function buildForm() {
 	}
 	panel.add(saveBtn);
 	win.add(panel);
-	win.backgroundImage = '../dockedbg.png';
+	win.backgroundImage = '../images/Background.png';
 };
 
 

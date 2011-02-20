@@ -473,7 +473,7 @@ function init() {
 	
 	Ti.App.addEventListener('NEW_MSG_EVENT_ADDED', handleNewMsgPosted);
 	buildForm();
-	win.backgroundImage = '../dockedbg.png';
+	win.backgroundImage = '../images/Background.png';
 	win.open();	
 };
 

@@ -10,6 +10,8 @@ Ti.include('../client/restClient.js');
 
 Ti.include('baseViewer.js');
 
+var MAX_DESC_LENG = 30;
+
 var win = Ti.UI.currentWindow;
 var canEdit = win.canEdit;
 var hotSpot = win.hotSpot;
@@ -18,6 +20,8 @@ var submitBtn = null;
 var notesText = null;
 var descText = null;
 var publicFlag = true;
+var categoryBtn = null;
+var publicBtn = null;
 
 
 
@@ -123,8 +127,8 @@ function buildForm() {
 	});
 	descText.addEventListener('change', function(e){
 		var str = descText.value;
-		if (str != null && str.length > 50) {
-			var modStr = str.substr(0, 50);
+		if (str != null && str.length > MAX_DESC_LENG) {
+			var modStr = str.substr(0, MAX_DESC_LENG);
 			notesText.value = modStr;
 			Tools.reportMsg(Msgs.APP_NAME, 'Description is too long');	
 			return;
@@ -189,7 +193,7 @@ function buildForm() {
 	panel.add(catLbl);
 	*/
 	
-	var categoryBtn = Titanium.UI.createTabbedBar({
+	categoryBtn = Titanium.UI.createTabbedBar({
     	labels:HotSpot.categoryLabels,
     	backgroundColor:CSSMgr.color4,
     	top:235,
@@ -229,7 +233,7 @@ function buildForm() {
 		height: 'auto'
 	});
 	panel.add(publicLbl);
-	var publicBtn = Titanium.UI.createSwitch({
+	publicBtn = Titanium.UI.createSwitch({
 		value: true,
 		top: 285,
 		touchEnabled:canEdit,
@@ -326,7 +330,16 @@ function handleHotSpotAddedOrUpdated(e) {
 		postingInd.hide();
 		Tools.reportMsg(Msgs.APP_NAME, "HotSpot saved!");
 		performExit();
-		Ti.App.fireEvent('RESET_MY_HOTSPOTS', {});
+		var newHotSpot = {};
+		newHotSpot.desc = descText.value;
+		newHotSpot.notes = notesText.value;
+		newHotSpot.category = categoryBtn.index; 
+		newHotSpot.publicFlag = publicBtn.value;
+		newHotSpot.lat = hotSpot.lat;
+		newHotSpot.lng = hotSpot.lng;
+		newHotSpot.location = hotSpot.location;
+		newHotSpot.createDate = null;
+		Ti.App.fireEvent('RESET_MY_HOTSPOTS', { hotSpot:newHotSpot });
 		win.close();
 	}
 	else {
@@ -344,7 +357,7 @@ function init() {
 	Base.attachMyBACKButton(win);
 	Ti.App.addEventListener('NEW_HOTSPOT_ADDED', handleHotSpotAddedOrUpdated);
 	buildForm();
-	win.backgroundImage = '../dockedbg.png';
+	win.backgroundImage = '../images/Background.png';
 	win.open();	
 };
 
