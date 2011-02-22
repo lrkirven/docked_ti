@@ -338,12 +338,12 @@ function buildForm() {
 			 */
 			var pUser = model.getPicasaUser();
 			var pPassword = model.getPicasaPassword();
-			var photoClient = new PicasaClient();
+			var client = new PicasaClient();
 			Ti.API.info('Using Picasa user: ' + pUser);
 			Ti.API.info('Using Picasa password: ' + pPassword);
-			photoClient.setPicasaUser(pUser);
-			photoClient.setPicasaPassword(pPassword);
-			imgClient.upload2(rawImage);
+			client.setPicasaUser(pUser);
+			client.setPicasaPassword(pPassword);
+			client.upload2(rawImage);
 		}
 		//
 		// just posting message

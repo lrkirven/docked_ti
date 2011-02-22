@@ -8,7 +8,7 @@ function PicasaClient() {
 	var picasaGoogleServiceName = 'lh2';
 	var googleAuthToken = null;
 	var rawImage = null;
-	var appSource = 'ZARCODE-LazyLaker-1.0';
+	var appSource = 'ZARCODE-Docked-1.0';
 	var bucketList = null;
 	var lastBucket = null;
 	var picasaUser = null;
@@ -34,8 +34,8 @@ function PicasaClient() {
 			
 			var params = {
 				accountType:'GOOGLE',
-				Email:myClient.email,
-				Passwd:myClient.password,
+				Email:picasaUser,
+				Passwd:picasaPassword,
 				service:picasaGoogleServiceName,
 				source:appSource
 			};
@@ -278,17 +278,17 @@ function PicasaClient() {
 		upload2: function(b) {
 			myClient.rawImage = b;
 			if (googleAuthToken == null) {
-				alert('upload: authorizing ...');
+				// alert('upload: authorizing ...');
 				Ti.API.info('upload: authorizing ...');
 				myClient._authorize('upload');
 			}
 			else if (lastBucket == null) {
-				alert('Calling _getAlbums() ...');
+				// alert('Calling _getAlbums() ...');
 				Ti.API.info('upload: Get last bucket ...');
 				myClient._getAlbums('upload');		
 			}
 			else {
-				alert('upload: uploading ...');
+				// alert('upload: uploading ...');
 				Ti.API.info('upload: Start actual upload ...');
 				myClient._upload(b);
 			}
