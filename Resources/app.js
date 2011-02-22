@@ -37,6 +37,9 @@ var posListenerSet = false;
 // DB related methods
 //////////////////////////////////////////////////////////////////////////////////
 
+/**
+ * Determines if user has registered
+ */
 function hasUserRegistered() {
 	var count = 0;
     var rowcpt = db.execute("SELECT COUNT(*) FROM AppParams WHERE name = 'LLID'");
@@ -47,6 +50,18 @@ function hasUserRegistered() {
     return (count > 0);
 };
 
+/**
+ * Adds user's registration to local database.
+ * 
+ * @param {Object} llId
+ * @param {Object} emailAddr
+ * @param {Object} displayName
+ * @param {Object} fbKey
+ * @param {Object} fbSecret
+ * @param {Object} pUser
+ * @param {Object} pPassword
+ * @param {Object} serverSecret
+ */
 function addRegistration(llId, emailAddr, displayName, fbKey, fbSecret, pUser, pPassword, serverSecret) {
 	var rows = 0;
     rows += db.execute("INSERT INTO AppParams (name, valueStr, valueInt) VALUES ('LLID', '" + llId + "', 0)");
@@ -138,7 +153,7 @@ function loadRegistration() {
     if (rowcpt.isValidRow()) {
         pUser = rowcpt.fieldByName('valueStr');
 		pUserStr = Tea.decrypt(pUser, model.getPW1());
-		model.setPicasaUser(fbSecretStr);
+		model.setPicasaUser(pUserStr);
     }
 	
 	// picasa password
@@ -200,6 +215,9 @@ function loadRegistration() {
 	Ti.API.info("loadRegistration(): Done");
 };
 
+/**
+ * Indicates if the user declinded registration.
+ */
 function hasUserDeclined() {
 	var count = 0;
     var rowcpt = db.execute("SELECT COUNT(*) FROM AppParams WHERE name = 'DECLINE_REGISTRATION'");
@@ -499,7 +517,7 @@ Titanium.App.addEventListener('USER_REGISTERED', function(e) {
 		var pPassword = token.picasaPassword;
 		var pPasswordStr = Tea.decrypt(pPassword, model.getPW1());
 		Ti.API.info('Picasa Password: [' + pPasswordStr + ']');
-		model.setPicasaPassword(pPassword.text);
+		model.setPicasaPassword(pPasswordStr);
 			
 		addRegistration(llid, emailAddr, nickname, fbKey, fbSecret, pUser, pPassword, serverSecret);
 				
@@ -723,32 +741,7 @@ function resetTabs() {
 	tabGroup.addTab(settingsTab);
 };
 
-/**
- * Entry point
- */
-function init() {
-	
-	var now = new Date();	
-	var timeStr = now.format();
-	Ti.API.info('APP STARTING :: ' + timeStr);
-	
-	
-	// reset db
-	db.execute("DELETE FROM AppParams WHERE name = 'DECLINE_REGISTRATION'");
-
-	//
-	// encrypt registration key woth anonymous key
-	//
-	var regSecretClear = model.getPW3();
-	var regSecret = Tea.encrypt(regSecretClear, model.getPW4());
-	model.setPW3(regSecret);
-	//
-	// set personal device id with encrypted anonymous key
-	//
-	var anonymousUserId = 'MY_DEVICE_ID' + '=' + Titanium.Platform.id;
-	var cipherText = Tea.encrypt(anonymousUserId, model.getPW4());
-	model.setDeviceId(cipherText);
-	
+function loadiPhoneView() {
 	//
 	// build init UI
 	//
@@ -806,7 +799,35 @@ function init() {
 			}
 		}
 	}
-	
+};
+
+/**
+ * Entry point
+ */
+function init() {
+	var now = new Date();	
+	var timeStr = now.format();
+	Ti.API.info('APP STARTING :: ' + timeStr);
+	/*
+	 * reset db
+	 */
+	db.execute("DELETE FROM AppParams WHERE name = 'DECLINE_REGISTRATION'");
+	/*
+	 * encrypt registration key with anonymous key
+	 */
+	var regSecretClear = model.getPW3();
+	var regSecret = Tea.encrypt(regSecretClear, model.getPW4());
+	model.setPW3(regSecret);
+	/*
+	 * set personal device id with encrypted anonymous key
+	 */
+	var anonymousUserId = 'MY_DEVICE_ID' + '=' + Titanium.Platform.id;
+	var cipherText = Tea.encrypt(anonymousUserId, model.getPW4());
+	model.setDeviceId(cipherText);
+	/*
+	 * load iPhone View
+	 */	
+	loadiPhoneView();
 };
 
 init();

@@ -299,7 +299,7 @@ function buildForm() {
 		// uploading image and posting message
 		//
 		var currentUser = model.getCurrentUser();
-		if (rawImage == null) {
+		if (rawImage != null) {
 			postingInd.message = "";
 			postingInd.show();
 			myLocation = model.getCurrentLake();
@@ -343,7 +343,7 @@ function buildForm() {
 			Ti.API.info('Using Picasa password: ' + pPassword);
 			photoClient.setPicasaUser(pUser);
 			photoClient.setPicasaPassword(pPassword);
-			// imgClient.upload2(rawImage);
+			imgClient.upload2(rawImage);
 		}
 		//
 		// just posting message

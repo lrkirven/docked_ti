@@ -1,9 +1,12 @@
+Ti.include('../util/common.js');
 Ti.include('../util/msgs.js');
-Ti.include('../props/cssMgr.js');
 Ti.include('../util/tools.js');
+Ti.include('../util/tea.js');
+Ti.include('../props/cssMgr.js');
 Ti.include('../model/modelLocator.js');
 Ti.include('../client/restClient.js');
-Ti.include('../util/tea.js');
+
+Ti.include('baseViewer.js');
 
 var win = Ti.UI.currentWindow;
 var model = win.model;
@@ -29,7 +32,7 @@ function buildForm() {
 	Ti.API.info('buildForm(): Creating registration form ...');
 	
 	var panel = Ti.UI.createView({ 
-		backgroundColor:'#cccccc',
+		backgroundColor:CSSMgr.color2,
 		top:50,
 		left:10,
 		width:300,

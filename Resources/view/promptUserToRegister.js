@@ -1,3 +1,4 @@
+Ti.include('../util/common.js');
 Ti.include('../util/msgs.js');
 Ti.include('../util/tea.js');
 Ti.include('../props/cssMgr.js');
@@ -46,7 +47,7 @@ function buildForm() {
 	
 	var lbl0 = Titanium.UI.createLabel({
 		color: CSSMgr.color0,
-		text: "Become a member of the 'Docked' community and communicate with water enthusists across the USA. ",
+		text: "Become a member of the 'Docked' community and communicate with water enthusiasts across the USA. ",
 		font: { fontFamily: model.myFont, fontSize: 14, fontWeight: 'bold' },
 		top: 70,
 		left: 10,

@@ -141,7 +141,7 @@ Geo.toLat = function(deg, format, dp) {
 Geo.toLon = function(deg, format, dp) {
   var lon = Geo.toDMS(deg, format, dp);
   return lon=='' ? '' : lon + (deg<0 ? 'W' : 'E');
-}
+};
 
 /**
  * Convert numeric degrees to deg/min/sec as a bearing (0º..360º)

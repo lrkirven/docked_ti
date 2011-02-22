@@ -278,17 +278,17 @@ function PicasaClient() {
 		upload2: function(b) {
 			myClient.rawImage = b;
 			if (googleAuthToken == null) {
-				// alert('upload: authorizing ...');
+				alert('upload: authorizing ...');
 				Ti.API.info('upload: authorizing ...');
 				myClient._authorize('upload');
 			}
 			else if (lastBucket == null) {
-				// alert('Calling _getAlbums() ...');
+				alert('Calling _getAlbums() ...');
 				Ti.API.info('upload: Get last bucket ...');
 				myClient._getAlbums('upload');		
 			}
 			else {
-				// alert('upload: uploading ...');
+				alert('upload: uploading ...');
 				Ti.API.info('upload: Start actual upload ...');
 				myClient._upload(b);
 			}

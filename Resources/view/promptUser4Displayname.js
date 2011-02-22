@@ -18,7 +18,7 @@ var displayNameText = null;
 function buildForm() {
 
 	var panel = Ti.UI.createView({ 
-		backgroundColor:'#cccccc',
+		backgroundColor:CSSMgr.color2,
 		top:30,
 		left:10,
 		width:300,
@@ -72,8 +72,8 @@ function buildForm() {
 		var name = displayNameText.value;
 		if (name != null && name.length > 0) {
 			continueBtn.enabled = true;	
-			if (name.length > 15) {
-				name = name.substr(0, 15);
+			if (name.length > Common.MAX_DISPLAY_NAME_LENGTH) {
+				name = name.substr(0, Common.MAX_DISPLAY_NAME_LENGTH);
 				displayNameText.value = name;
 			}
 		}
