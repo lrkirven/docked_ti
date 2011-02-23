@@ -24,16 +24,25 @@ var Geo = {};  // Geo namespace, representing static class
  * @throws  {TypeError} dmsStr is an object, perhaps DOM object without .value?
  */
 Geo.parseDMS = function(dmsStr) {
-  if (typeof deg == 'object') throw new TypeError('Geo.parseDMS - dmsStr is [DOM?] object');
+  if (typeof deg == 'object') {
+  	throw new TypeError('Geo.parseDMS - dmsStr is [DOM?] object');
+  }
   
   // check for signed decimal degrees without NSEW, if so return it directly
-  if (typeof dmsStr === 'number' && isFinite(dmsStr)) return Number(dmsStr);
+  if (typeof dmsStr === 'number' && isFinite(dmsStr)) {
+  	return Number(dmsStr);
+  }
   
   // strip off any sign or compass dir'n & split out separate d/m/s
   var dms = String(dmsStr).trim().replace(/^-/,'').replace(/[NSEW]$/i,'').split(/[^0-9.,]+/);
-  if (dms[dms.length-1]=='') dms.splice(dms.length-1);  // from trailing symbol
   
-  if (dms == '') return NaN;
+  if (dms[dms.length - 1] == '') {
+  	dms.splice(dms.length - 1);
+  }
+  
+  if (dms == '') {
+  	return NaN;
+  }
   
   // and convert to decimal degrees...
   switch (dms.length) {
@@ -69,52 +78,82 @@ Geo.parseDMS = function(dmsStr) {
  * @throws  {TypeError} deg is an object, perhaps DOM object without .value?
  */
 Geo.toDMS = function(deg, format, dp) {
-  if (typeof deg == 'object') throw new TypeError('Geo.toDMS - deg is [DOM?] object');
-  if (isNaN(deg)) return 'NaN';  // give up here if we can't make a number from deg
+	var d;
+	
+	if (typeof deg == 'object') {
+	  	throw new TypeError('Geo.toDMS - deg is [DOM?] object');
+ 	 }
+  	if (isNaN(deg)) {
+  		// give up here if we can't make a number from deg
+  		return 'NaN'; 
+  	}
   
     // default values
-  if (typeof format == 'undefined') format = 'dms';
-  if (typeof dp == 'undefined') {
-    switch (format) {
-      case 'd': dp = 4; break;
-      case 'dm': dp = 2; break;
-      case 'dms': dp = 0; break;
-      default: format = 'dms'; dp = 0;  // be forgiving on invalid format
-    }
-  }
+  	if (typeof format == 'undefined') {
+  		format = 'dms';
+  	}
+  	if (typeof dp == 'undefined') {
+   		switch (format) {
+    		case 'd': dp = 4; break;
+     		case 'dm': dp = 2; break;
+      		case 'dms': dp = 0; break;
+      		default: format = 'dms'; dp = 0;  // be forgiving on invalid format
+    	}
+  	}
   
-  deg = Math.abs(deg);  // (unsigned result ready for appending compass dir'n)
+  	deg = Math.abs(deg);  // (unsigned result ready for appending compass dir'n)
   
-  switch (format) {
-    case 'd':
-      d = deg.toFixed(dp);     // round degrees
-      if (d<100) d = '0' + d;  // pad with leading zeros
-      if (d<10) d = '0' + d;
-      dms = d + '\u00B0';      // add º symbol
-      break;
-    case 'dm':
-      var min = (deg*60).toFixed(dp);  // convert degrees to minutes & round
-      var d = Math.floor(min / 60);    // get component deg/min
-      var m = (min % 60).toFixed(dp);  // pad with trailing zeros
-      if (d<100) d = '0' + d;          // pad with leading zeros
-      if (d<10) d = '0' + d;
-      if (m<10) m = '0' + m;
-      dms = d + '\u00B0' + m + '\u2032';  // add º, ' symbols
-      break;
-    case 'dms':
-      var sec = (deg*3600).toFixed(dp);  // convert degrees to seconds & round
-      var d = Math.floor(sec / 3600);    // get component deg/min/sec
-      var m = Math.floor(sec/60) % 60;
-      var s = (sec % 60).toFixed(dp);    // pad with trailing zeros
-      if (d<100) d = '0' + d;            // pad with leading zeros
-      if (d<10) d = '0' + d;
-      if (m<10) m = '0' + m;
-      if (s<10) s = '0' + s;
-      dms = d + '\u00B0' + m + '\u2032' + s + '\u2033';  // add º, ', " symbols
-      break;
-  }
+  	switch (format) {
+  	
+	    case 'd':
+	      d = deg.toFixed(dp);     // round degrees
+	      if (d < 100) {
+		  	d = '0' + d; // pad with leading zeros
+		  }
+	      if (d < 10) {
+		  	d = '0' + d;
+		  }
+	      dms = d + '\u00B0';      // add º symbol
+	      break;
+		  
+	    case 'dm':
+	      var min = (deg*60).toFixed(dp);  // convert degrees to minutes & round
+	      d = Math.floor(min / 60);    // get component deg/min
+	      var m = (min % 60).toFixed(dp);  // pad with trailing zeros
+	      if (d < 100) {
+		  	d = '0' + d; // pad with leading zeros
+		  }
+	      if (d < 10) {
+		  	d = '0' + d;
+		  }
+	      if (m < 10) {
+		  	m = '0' + m;
+		  }
+	      dms = d + '\u00B0' + m + '\u2032';  // add º, ' symbols
+	      break;
+		  
+	    case 'dms':
+	      var sec = (deg*3600).toFixed(dp);  // convert degrees to seconds & round
+	      d = Math.floor(sec / 3600);    // get component deg/min/sec
+	      var m = Math.floor(sec/60) % 60;
+	      var s = (sec % 60).toFixed(dp);    // pad with trailing zeros
+	      if (d < 100) {
+		  	d = '0' + d;
+		  }
+	      if (d < 10) {
+		  	d = '0' + d;
+		  }
+	      if (m < 10) {
+		  	m = '0' + m;
+		  }
+	      if (s < 10) {
+		  	s = '0' + s;
+		  }
+	      dms = d + '\u00B0' + m + '\u2032' + s + '\u2033';  // add º, ', " symbols
+	      break;
+	  }
   
-  return dms;
+	return dms;
 };
 
 /**

@@ -176,7 +176,7 @@ function init() {
 			/*
 		 	 * preloader
 			 */
-			mainInd = Base.showPreloader(win, 'Initializing ...');
+			mainInd = Base.showPreloader(win, 'Initializing ...', false);
 		}
 		win.add(hsMenu);
 		
@@ -207,7 +207,7 @@ function init() {
 			/*
 		 	 * preloader
 			 */
-			mainInd = Base.showPreloader(win, 'Initializing ...');
+			mainInd = Base.showPreloader(win, 'Initializing ...', false);
 		}
 		win.add(hsMenu);
 	}

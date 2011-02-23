@@ -329,11 +329,6 @@ function buildForm() {
 			Ti.API.info('Pending msgEvent: ' + msgEvent);
 			
 			/*
-			var imgClient = new PicasaClient('lazylaker71@gmail.com', '19lazylaker');
-			imgClient.upload('lazylaker71@gmail.com', '19lazylaker', rawImage);
-			*/
-			
-			/*
 			 * Upload photo
 			 */
 			var pUser = model.getPicasaUser();
@@ -383,24 +378,6 @@ function buildForm() {
 	win.add(panel);
 	win.setRightNavButton(submitBtn);
 	composeMsgWinSubmitBtn = submitBtn;
-	
-	//
-	// preloader
-	//
-	postingInd = Titanium.UI.createActivityIndicator({
-		top: 50,
-		left: 140,
-		height: 150,
-		width: 50,
-		style: Titanium.UI.iPhone.ActivityIndicatorStyle.PLAIN
-	});
-	postingInd.font = {
-		fontFamily: model.myFont,
-		fontSize: 15,
-		fontWeight: 'bold'
-	};
-	postingInd.color = CSSMgr.color3;
-	win.add(postingInd);
 };
 
 function performExit() {
@@ -478,6 +455,8 @@ function init() {
 	
 	Ti.App.addEventListener('NEW_MSG_EVENT_ADDED', handleNewMsgPosted);
 	buildForm();
+	postingInd = Base.showPreloader(win, null, true);
+	postingInd.hide();
 	win.backgroundImage = '../images/Background.png';
 	win.open();	
 };

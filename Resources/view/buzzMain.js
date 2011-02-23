@@ -223,7 +223,7 @@ function init() {
 		getMyFacebookInfo();
 	}
 	
-	mainInd = Base.showPreloader(win, 'Initializing ...');
+	mainInd = Base.showPreloader(win, 'Initializing ...', false);
 	
 	setTimeout(function () { 
 		Ti.App.fireEvent('LOCATION_CHANGED', {});	

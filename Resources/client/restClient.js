@@ -3,8 +3,8 @@ function RestClient() {
 	var secureBaseUrl = 'https://www.zarcode4fishin.appspot.com';
 	var baseUrl = 'http://mobile.lazylaker.net';
 	var version = Common.VERSION; 
-	var myMsgRestURL = baseUrl + '/resources/' + version + '/buzz/'
-	var myMsgRestURLSecure = secureBaseUrl + '/resources/' + version + '/buzz/'
+	var myMsgRestURL = baseUrl + '/resources/' + version + '/buzz/';
+	var myMsgRestURLSecure = secureBaseUrl + '/resources/' + version + '/buzz/';
 	var myLakeRestURL = baseUrl + '/resources/' + version + '/lakes/';
 	var myLakeRestURLSecure = secureBaseUrl + '/resources/' + version + '/lakes/';
 	var myUserRestURL = baseUrl + '/resources/' + version + '/users/';
@@ -911,7 +911,7 @@ function RestClient() {
                 //
                 // create connection
                 //
-				var targetURL = myReportRestURL + 'reportId/' + reportId 
+				var targetURL = myReportRestURL + 'reportId/' + reportId; 
 				Titanium.API.info('getReportByReportId: REST URL: ' + targetURL);
                 xhr.open('GET', targetURL);
 				xhr.setRequestHeader('Accept', 'application/json');

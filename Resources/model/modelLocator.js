@@ -98,7 +98,7 @@ function ModelLocator() {
 				pw3 = p;	
 			},
 			getPW3 : function() {
-				return pw3
+				return pw3;
 			},
 			getPW4 : function() {
 				return pw4;

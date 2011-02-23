@@ -474,7 +474,7 @@ function init() {
 	//
 	// initial app preloader
 	//	
-	initPreloader = Base.showPreloader(win, null);
+	initPreloader = Base.showPreloader(win, null, false);
 
 	if (localFlag) {
 		//	

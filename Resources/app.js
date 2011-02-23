@@ -84,6 +84,7 @@ function addRegistration(llId, emailAddr, displayName, fbKey, fbSecret, pUser, p
 function loadRegistration() {
 	var rows = 0;
     var rowcpt = null;
+	var val = null;
 	
 	// server secret
 	rowcpt = db.execute("SELECT * FROM AppParams WHERE name = 'SERVERSECRET'");
@@ -168,9 +169,8 @@ function loadRegistration() {
 	
 	// sync to facebook
 	rowcpt = db.execute("SELECT * FROM AppParams WHERE name = 'SYNC_TO_FB'");
-	var sync2Fb = null;
     if (rowcpt.isValidRow()) {
-        var val = rowcpt.fieldByName('valueInt');
+        val = rowcpt.fieldByName('valueInt');
 		if (val > 0) {
 			Ti.API.info('loadRegistration(): SYNC_TO_FB TRUE');
 			model.setSync2Fb(true);	
@@ -185,9 +185,8 @@ function loadRegistration() {
 	}
 	
 	rowcpt = db.execute("SELECT * FROM AppParams WHERE name = 'USE_FB_PIC'");
-	var sync2Fb = null;
     if (rowcpt.isValidRow()) {
-        var val = rowcpt.fieldByName('valueInt');
+        val = rowcpt.fieldByName('valueInt');
 		if (val > 0) {
 			Ti.API.info('loadRegistration(): USE_FB_PIC TRUE');
 			model.setUseFBProfilePic(true);	
@@ -202,9 +201,8 @@ function loadRegistration() {
 	}
 	
 	rowcpt = db.execute("SELECT * FROM AppParams WHERE name = 'FB_PROFILE_PIC'");
-	var sync2Fb = null;
     if (rowcpt.isValidRow()) {
-        var val = rowcpt.fieldByName('valueStr');
+        val = rowcpt.fieldByName('valueStr');
 		Ti.API.info('loadRegistration(): FB Profile Url: ' + val);
 		model.setFBProfileUrl(val);	
     }
@@ -611,7 +609,7 @@ function googleMapReverseGeocode(lat,lng){
 				break;
 			}	
 		}
-    }
+    };
 	xhr.send(); 
 };
 
