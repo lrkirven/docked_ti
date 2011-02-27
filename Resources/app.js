@@ -22,6 +22,7 @@ Ti.Geolocation.purpose = "Recieve User Location";
 var myFont = 'Verdana';
 var db = Titanium.Database.open('db.docked.co');
 // db.execute('DROP TABLE IF EXISTS AppParams');
+// db.execute("DELETE FROM AppParams WHERE name = 'FB_ACCESS_TOKEN'");	
 db.execute('CREATE TABLE IF NOT EXISTS AppParams (id INTEGER PRIMARY KEY, name VARCHAR(30), valueStr TEXT, valueInt INTEGER)');
 var tabGroup = null;
 var buzzTab = null;
@@ -78,10 +79,14 @@ function addRegistration(llId, emailAddr, displayName, fbKey, fbSecret, pUser, p
 	Ti.API.info("addRegistration():  rows --> " +  rows);
 };
 
+function dbDeleteFacebookAccessToken() {
+	db.execute("DELETE FROM AppParams WHERE name = 'FB_ACCESS_TOKEN'");	
+};
+
 /**
  * Loads the user registration data from the local database
  */
-function loadRegistration() {
+function loadApplicationConfiguration() {
 	var rows = 0;
     var rowcpt = null;
 	var val = null;
@@ -122,7 +127,7 @@ function loadRegistration() {
         displayName = rowcpt.fieldByName('valueStr');
     }
 	
-	Ti.API.info('loadRegistration(): Creating user instance --> emailAddr=' + emailAddrStr + ' displayName=' + displayName + 'idClear=' + llIdStr);
+	Ti.API.info('loadApplicationConfiguration(): Creating user instance --> emailAddr=' + emailAddrStr + ' displayName=' + displayName + 'idClear=' + llIdStr);
 	
 	var user = { emailAddr:emailAddrStr, displayName:displayName, idClear:llIdStr, id:c2sLLId };
 	model.setCurrentUser(user);
@@ -172,45 +177,55 @@ function loadRegistration() {
     if (rowcpt.isValidRow()) {
         val = rowcpt.fieldByName('valueInt');
 		if (val > 0) {
-			Ti.API.info('loadRegistration(): SYNC_TO_FB TRUE');
+			Ti.API.info('loadApplicationConfiguration(): SYNC_TO_FB TRUE');
 			model.setSync2Fb(true);	
 		}
 		else {
-			Ti.API.info('loadRegistration(): SYNC_TO_FB FALSE');
+			Ti.API.info('loadApplicationConfiguration(): SYNC_TO_FB FALSE');
 			model.setSync2Fb(false);	
 		}
     }
 	else {
-		Ti.API.info('loadRegistration(): SYNC_TO_FB -- NOT FOUND');
+		Ti.API.info('loadApplicationConfiguration(): SYNC_TO_FB -- NOT FOUND');
 	}
 	
 	rowcpt = db.execute("SELECT * FROM AppParams WHERE name = 'USE_FB_PIC'");
     if (rowcpt.isValidRow()) {
         val = rowcpt.fieldByName('valueInt');
 		if (val > 0) {
-			Ti.API.info('loadRegistration(): USE_FB_PIC TRUE');
+			Ti.API.info('loadApplicationConfiguration(): USE_FB_PIC TRUE');
 			model.setUseFBProfilePic(true);	
 		}
 		else {
-			Ti.API.info('loadRegistration(): USE_FB_PIC FALSE');
+			Ti.API.info('loadApplicationConfiguration(): USE_FB_PIC FALSE');
 			model.setUseFBProfilePic(false);	
 		}
     }
 	else {
-		Ti.API.info('loadRegistration(): USE_FB_PIC -- NOT FOUND');
+		Ti.API.info('loadApplicationConfiguration(): USE_FB_PIC -- NOT FOUND');
 	}
 	
 	rowcpt = db.execute("SELECT * FROM AppParams WHERE name = 'FB_PROFILE_PIC'");
     if (rowcpt.isValidRow()) {
         val = rowcpt.fieldByName('valueStr');
-		Ti.API.info('loadRegistration(): FB Profile Url: ' + val);
+		Ti.API.info('loadApplicationConfiguration(): FB Profile Url: ' + val);
 		model.setFBProfileUrl(val);	
     }
 	else {
-		Ti.API.info('loadRegistration(): FB_PROFILE_PIC -- NOT FOUND');
+		Ti.API.info('loadApplicationConfiguration(): FB_PROFILE_PIC -- NOT FOUND');
 	}
 	
-	Ti.API.info("loadRegistration(): Done");
+	rowcpt = db.execute("SELECT * FROM AppParams WHERE name = 'FB_ACCESS_TOKEN'");
+    if (rowcpt.isValidRow()) {
+        val = rowcpt.fieldByName('valueStr');
+		Ti.API.info('loadApplicationConfiguration(): FB Access Token: ' + val);
+		model.setFbAccessToken(val);	
+    }
+	else {
+		Ti.API.info('loadApplicationConfiguration(): FB_PROFILE_PIC -- NOT FOUND');
+	}
+	
+	Ti.API.info("loadApplicationConfiguration(): Done");
 };
 
 /**
@@ -421,14 +436,6 @@ Titanium.App.addEventListener('GOOGLE_MAP_LOADED', function(e) {
 	Ti.API.info('My Google Map is loaded!!');
 });
 
-Titanium.App.addEventListener('UPDATED_PROFILE_URL', function(e) { 
-	if (e.status == 0) {
-		Ti.API.info('*** UPDATED_PROFILE_URL -->' + e.profileUrl);
-	}
-	else {
-		Tools.reportMsg(Msgs.APP_NAME, e.errorMsg);
-	}
-});
 
 Titanium.App.addEventListener('UPDATED_DISPLAY_NAME', function(e) { 
 	if (e.status == 0) {
@@ -753,7 +760,7 @@ function loadiPhoneView() {
 		//
 		// load registration from DB
 		//
-		loadRegistration();
+		loadApplicationConfiguration();
 		//
 		// open tab group
 		//

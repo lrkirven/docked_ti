@@ -219,7 +219,7 @@ function init() {
 	 */
 	Base.attachiAd(win);
 	
-	if (Titanium.Facebook.isLoggedIn()) {
+	if (Titanium.Facebook.loggedIn) {
 		getMyFacebookInfo();
 	}
 	

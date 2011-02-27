@@ -1,9 +1,11 @@
 Ti.include('../util/common.js');
 Ti.include('../util/msgs.js');
 Ti.include('../util/tools.js');
+Ti.include('../util/fbAuth.js');
 Ti.include('../props/cssMgr.js');
 Ti.include('../model/modelLocator.js');
 Ti.include('../client/restClient.js');
+Ti.include('../client/fbClient.js');
 
 Ti.include('baseViewer.js');
 
@@ -14,12 +16,12 @@ var switchBtn0 = null;
 var switchBtn1 = null;
 var tempFlag = false;
 var initFlag = true;
+var fbFlag = false;
+var fbProfileFlag = false;
 
 //////////////////////////////////////////////////////////////////////////////////
 // DB related methods
 //////////////////////////////////////////////////////////////////////////////////
-
-
 
 function dbUpdateSync2Fb(flag) {
 	var count = 0;
@@ -37,6 +39,17 @@ function dbUpdateSync2Fb(flag) {
 	else {
 		Ti.API.info('dbUpdateSync2Fb(): SUCCESS');	
 	}
+};
+
+function dbInsertFacebookAccessToken(token) {
+	var count = 0;
+    var rowcpt = 0;
+	db.rowsAffected = 0;
+	db.execute("INSERT INTO AppParams (name, valueStr, valueInt) VALUES ('FB_ACCESS_TOKEN', '" + token + "', 0)");
+};
+
+function dbDeleteFacebookAccessToken() {
+	db.execute("DELETE FROM AppParams WHERE name = 'FB_ACCESS_TOKEN'");	
 };
 
 function dbUpdateUseFbProfilePic(flag) {
@@ -70,10 +83,48 @@ function dbUpdateFbProfilePic(url) {
 	}
 };
 
+function connect2Facebook(bConnect) {
+	Ti.API.info('connect2Facebook(): bConnect=' + bConnect);
+	if (bConnect) {
+		var fbApiKey = model.getFBAPIKey();
+		var cachedToken = model.getFbAccessToken();
+		Ti.API.info('connect2Facebook(): cachedToken --> ' + cachedToken);
+		if (cachedToken == null) {
+			fbAuthModule.init(fbApiKey, 'publish_stream,user_photos,offline_access');
+			fbAuthModule.login(function(data){
+				Ti.API.info('Got success date ' + JSON.stringify(data));
+				Ti.API.info('Got access token ' + fbAuthModule.ACCESS_TOKEN);
+				model.setFbAccessToken(fbAuthModule.ACCESS_TOKEN);
+				dbInsertFacebookAccessToken(fbAuthModule.ACCESS_TOKEN)
+				fbFlag = true;
+			});
+		}
+		else {
+			Ti.API.info('Found previously cached access token ---> ' + cachedToken);
+			fbFlag = true;
+		}
+	}
+	else {
+		Ti.API.info('Removing local facebook access token!!');
+		dbDeleteFacebookAccessToken();
+		fbAuthModule.logout(null);
+		fbFlag = false;
+	}
+};
+
 
 //////////////////////////////////////////////////////////////////////////////////
 // Event listeners 
 //////////////////////////////////////////////////////////////////////////////////
+
+/*
+fbAuthModule.init("YOUR CLIENT ID","publish_stream,user_hometown,user_photos");
+fbAuthModule.login(function(data) {
+    Ti.API.debug('success date ' + JSON.stringify(data));
+    Ti.API.debug('access token ' + fbAuthModule.ACCESS_TOKEN);
+});
+*/
+
 
 /**
  * Listener to handle event to determine user's location to local lakes.
@@ -81,42 +132,42 @@ function dbUpdateFbProfilePic(url) {
  * @param {Object} e
  */
 Titanium.App.addEventListener('UPDATED_PROFILE_URL', function(e) {
-	Ti.API.info('Got UPDATED_PROFILE_URL event ...');
-	model.setUseFBProfilePic(tempFlag);
-	dbUpdateUseFbProfilePic(tempFlag);
+	if (e.profileUrl != null) {
+		Ti.API.info('Got UPDATED_PROFILE_URL event ... new profile url --> ' + e.profileUrl);
+		model.setFBProfileUrl(e.profileUrl);
+		dbUpdateFbProfilePic(e.profileUrl);
+	}
+	else {
+		Ti.API.info('Got UPDATED_PROFILE_URL event ... Removing existing profile url');
+		model.setFBProfileUrl(null);
+		dbUpdateUseFbProfilePic(false);
+	}
+});
+
+Titanium.App.addEventListener('FB_USER_PROFILE_RECD', function(e) {
+	Ti.API.info('Got FB PROFILE URL ...');
+	if (e.tag == 'profileUrl') {
+		var fbId = e.result.id;
+		var profileUrl = e.fbBaseUrl + '/' + fbId + '/' + 'picture';
+		Ti.API.info('CONSTRUCTED FB PROFILE URL --> ' + profileUrl);
+		model.setUseFBProfilePic(true);
+		dbUpdateUseFbProfilePic(true);
+		fbProfileFlag = true;
+		var client = new RestClient();
+		var user = model.getCurrentUser();
+		client.updateProfileUrl(user.id, profileUrl);
+	}
 });
 
 
-function getMyFacebookInfo() {
-	var query = "SELECT uid, name, pic_square, status FROM user where uid = " + Titanium.Facebook.getUserId() ;
-	Ti.API.info('user id ' + Titanium.Facebook.getUserId());
-	Titanium.Facebook.query(query, function(r) {
-		var data = [];
-		if (r.data.length > 0) {
-			var info = r.data[0];	
-			if (info.pic_square != null) {
-				Ti.API.info('fb profile url ---> ' + info.pic_square);
-				model.setFBProfileUrl(info.pic_square);
-				dbUpdateFbProfilePic(info.pic_square);
-			}
-			if (info.status != null && info.status.message != null) {
-				Ti.API.info('fb status ---> ' + info.status.message);
-				model.setFBStatus(info.status.message);
-			}
-			else {
-				Ti.API.info('fb status ---> EMPTY');
-				model.setFBStatus(null);
-			}
-		}
-	});	
-};
-
 function buildForm() {
 
-	// var fbFlag = Titanium.Facebook.isLoggedIn();
-	var fbFlag = true;
+	var savedToken = model.getFbAccessToken();
+	if (savedToken != null) {
+		fbFlag = true;
+	}
 	
-	Ti.API.info('fbFlag --> ' + fbFlag);
+	Ti.API.info('Using Facebook flag --> ' + fbFlag);
 	
 	var panel = Ti.UI.createView({
 		backgroundColor: CSSMgr.color2,
@@ -134,7 +185,7 @@ function buildForm() {
 	
 	var fbLbl = Titanium.UI.createLabel({
 		color: CSSMgr.color0,
-		text: 'Click button below to connect to your Facebook account: ',
+		text: 'Connect to your facebook account: ',
 		font: { fontFamily: model.myFont, fontSize: 15, fontWeight:'bold' },
 		top: 70,
 		left: 10,
@@ -143,45 +194,43 @@ function buildForm() {
 		height: 'auto'
 	});
 	panel.add(fbLbl);
+
+	var fbApiKey = model.getFBAPIKey();
+	var fbSecret = model.getFBSecret();		
 	
-	//
-	// Facebook Login Button
-	//
-	var fbButton = Titanium.Facebook.createLoginButton({
-		'style': 'wide',
-		'apikey': model.getFBAPIKey(),
-		'secret': model.getFBSecret(),
-		top: 120,
-		left: 0,
-		height: 30,
-		width: 200
+	var fbSwitch = Titanium.UI.createSwitch({
+		value: fbFlag,
+		top: 95,
+		left: 10,
+		enabled: true
 	});
-	panel.add(fbButton);
-	
-	fbButton.addEventListener('login', function(){
-		Ti.API.info('Logged In = ' + Titanium.Facebook.isLoggedIn());
-		var flag = Titanium.Facebook.isLoggedIn();
-		switchBtn0.enabled = flag;
-		switchBtn1.enabled = flag;
-		model.setSync2Fb(false);
-		dbUpdateSync2Fb(false);
-		model.setUseFBProfilePic(false);
-		dbUpdateUseFbProfilePic(false);
-		getMyFacebookInfo();
+	fbSwitch.addEventListener('change', function(e) {
+		if (e.value) {
+			switchBtn0.enabled = true;
+			switchBtn1.enabled = true;
+			model.setSync2Fb(false);
+			dbUpdateSync2Fb(false);
+			model.setUseFBProfilePic(false);
+			dbUpdateUseFbProfilePic(false);
+			connect2Facebook(true);
+		}
+		else {
+			model.setSync2Fb(false);
+			dbUpdateSync2Fb(false);
+			model.setUseFBProfilePic(false);
+			dbUpdateUseFbProfilePic(false);
+			switchBtn0.enabled = false;
+			switchBtn1.enabled = false;
+			connect2Facebook(false);
+		}
 	});
-	
-	fbButton.addEventListener('logout', function(){
-		Ti.API.info('Logged In = ' + Titanium.Facebook.isLoggedIn());
-		var flag = Titanium.Facebook.isLoggedIn();
-		switchBtn0.enabled = flag;
-		switchBtn1.enabled = flag;
-	});
+	panel.add(fbSwitch);
 	
 	var lbl0 = Titanium.UI.createLabel({
 		color: CSSMgr.color0,
-		text: 'Use Facebook Profile Picture: ',
+		text: 'Use facebook profile picture: ',
 		font: { fontFamily: model.myFont, fontSize: 15, fontWeight:'bold' },
-		top: 170,
+		top: 135,
 		left: 10,
 		width: 280,
 		textAlign: 'left',
@@ -189,32 +238,33 @@ function buildForm() {
 	});
 	panel.add(lbl0);
 	
-	var useFbFlag = model.getUseFBProfilePic();
-	Ti.API.info('useFbFlag = ' + useFbFlag);
+	fbProfileFlag = model.getUseFBProfilePic();
+	Ti.API.info('[BEFORE] UseFBProfilePic flag=' + fbProfileFlag);
 	switchBtn0 = Titanium.UI.createSwitch({
-		value: useFbFlag,
-		top: 195,
+		value: fbProfileFlag,
+		top: 160,
 		left: 10,
 		enabled: fbFlag
 	});
-	switchBtn0.value = useFbFlag;
 	switchBtn0.addEventListener('change', function(e) {
 		if (!initFlag) {
-			Ti.API.info('Use FB Profile Pic? ' + e.value);
-			var client = new RestClient();
-			var user = model.getCurrentUser();
-			Ti.API.info('Current FBprofileURL --> ' + model.getFBProfileUrl());
-			if (model.getFBProfileUrl() != null) {
-				if (e.value) {
-					client.updateProfileUrl(user.id, model.getFBProfileUrl());
+			Ti.API.info('Use FB Profile Pic? ' + e.value + ' [current] UseFBProfilePic flag=' + fbProfileFlag);
+			if (e.value) {
+				if (!fbProfileFlag) {
+					var fbClient = new FacebookClient();
+					var token = model.getFbAccessToken();
+					fbClient.setAccessToken(token);
+					fbClient.getUserProfile('profileUrl');
 				}
-				else {
-					client.updateProfileUrl(user.id, 'NULL');
-				}
-				tempFlag = e.value;
 			}
 			else {
-				Tools.reportMsg(Msgs.APP_NAME, 'Please login into Facebook to synchronize your profile');	
+				if (fbProfileFlag) {
+					Ti.API.info('Setting Use FB profile pic to false !@#!@#!@#!@#!@#!@#');
+					fbProfileFlag = false;
+					var client = new RestClient();
+					var user = model.getCurrentUser();
+					client.updateProfileUrl(user.id, 'NULL');
+				}
 			}
 		}
 	});
@@ -222,9 +272,9 @@ function buildForm() {
 	
 	var lbl1 = Titanium.UI.createLabel({
 		color: CSSMgr.color0,
-		text: 'Sync Docked Buzz to Facebook: ',
+		text: 'Post your Docked Buzz to facebook: ',
 		font: { fontFamily: model.myFont, fontSize: 15, fontWeight:'bold' },
-		top: 240,
+		top: 200,
 		left: 10,
 		width: 280,
 		textAlign: 'left',
@@ -233,19 +283,17 @@ function buildForm() {
 	panel.add(lbl1);
 	
 	var sync2Fb = model.getSync2Fb(); 
-	Ti.API.info('sync2Fb = ' + useFbFlag);
+	Ti.API.info('sync2Fb = ' + sync2Fb);
 	switchBtn1 = Titanium.UI.createSwitch({
 		value:sync2Fb,
-		top: 265,
+		top: 225,
 		left: 10,
 		enabled: fbFlag
 	});
 	switchBtn1.addEventListener('change', function(e) {
-		if (!initFlag) {
-			Ti.API.info('Sync Docked Buzz to FB? ' + e.value);
-			model.setSync2Fb(e.value);
-			dbUpdateSync2Fb(e.value);
-		}
+		Ti.API.info('Sync Docked Buzz to FB? ' + e.value);
+		model.setSync2Fb(e.value);
+		dbUpdateSync2Fb(e.value);
 	});
 	panel.add(switchBtn1);
 	

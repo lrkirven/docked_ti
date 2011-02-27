@@ -1,3 +1,4 @@
+
 function RestClient() {
 	
 	var secureBaseUrl = 'https://www.zarcode4fishin.appspot.com';
@@ -455,7 +456,14 @@ function RestClient() {
 					var jsonNodeData = JSON.parse(this.responseText);
 					if (jsonNodeData != null && jsonNodeData.result > 0) {
 						Titanium.API.info('updateProfileUrl: onload: SUCCESS');
-						Ti.App.fireEvent('UPDATED_PROFILE_URL', { status:0, profileUrl:jsonNodeData.value });
+						if (jsonNodeData.value == 'NULL') {
+							Ti.App.fireEvent('UPDATED_PROFILE_URL', { status:0, profileUrl:null });
+						}
+						else {
+							var url = Titanium.Network.decodeURIComponent(jsonNodeData.value);
+							Ti.App.fireEvent('UPDATED_PROFILE_URL', { status:0, profileUrl:url });
+							// Ti.App.fireEvent('UPDATED_PROFILE_URL', { status:0, profileUrl:profileUrl });
+						}
 					}
 					else {
 						Ti.App.fireEvent('UPDATED_PROFILE_URL', { status:99,
@@ -885,7 +893,7 @@ function RestClient() {
 					}
 					Titanium.API.info('getReportByReportId: onload: Entered - [' + this.responseText + ']');
 					if (this.responseText == 'null' || this.responseText == undefined) {
-						Titanium.API.info('getShortReportsByState: onload: Returning empty set');
+						Titanium.API.info('getReportByReportId: onload: Returning empty set');
 						Ti.App.fireEvent('ONE_REPORT_RECD', { result:[], status:0 });
 						return;
 					}

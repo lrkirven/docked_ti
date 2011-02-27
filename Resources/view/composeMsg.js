@@ -7,6 +7,7 @@ Ti.include('../props/cssMgr.js');
 Ti.include('../model/modelLocator.js');
 Ti.include('../client/picasaClient.js');
 Ti.include('../client/restClient.js');
+Ti.include('../client/fbClient.js');
 
 Ti.include('baseViewer.js');
 
@@ -22,39 +23,50 @@ b.addEventListener('click', function() {
 });
 win.leftNavButton = b;
 
+Titanium.App.addEventListener('FB_PUBLISH_STREAM_RESP', function(e) {
+	if (e.status == 0) {
+		Tools.reportMsg(Msgs.APP_NAME, Msgs.MSG_POSTED);	
+		performExit();
+		win.close();
+	}
+	else {
+		Ti.API.warn('**** Unable to post to Facebook ***');
+	}
+});
+
+/**
+ * Post message to your facebook wall.
+ * 
+ * @param {Object} m
+ */
 function postMessage2FB(m) {
-	if (Titanium.Facebook.isLoggedIn()) {
+	var token = model.getFbAccessToken();
+	if (token != null) {
 		var fbRec = null;
 		if (m.photoUrl != null) {
 			fbRec = {
-				name: m.displayName + " via " + Msgs.APP_NAME,
-				href:"http://www.docked.co",
-				caption:m.messageData,
-				description:"Message from " + m.displayName + " on " + m.location ,
-				media:[{ type:"image", src:m.photoUrl, href:"http://www.docked.co" }],
-				properties:{}
+				name: 'Docked on ' + m.location,
+				link:"http://www.docked.co",
+				caption:"docked.co",
+				message:m.messageData,
+				picture:m.photoUrl,
+				access_token:token
 			};
 		}
 		else {
 			fbRec = {
-				name: m.displayName + " via " + Msgs.APP_NAME,
-				href:"http://www.docked.co",
-				caption:m.messageData,
-				description:"Message from " + m.displayName + " on " + m.location ,
-				properties:{}
+				name: 'Docked on ' + m.location,
+				link:"http://www.docked.co",
+				caption:"docked.co",
+				message:m.messageData,
+				access_token:token
 			};
 		}
-	
-		Titanium.Facebook.publishStream(m.messageData, fbRec, null, function(r) {
-			if (r.success) {
-				Tools.reportMsg(Msgs.APP_NAME, Msgs.MSG_POSTED);	
-				performExit();
-				win.close();
-			}
-			else {
-				Ti.API.info('Failed to post my message to FB ....');
-			}
-		});
+		
+		var fbClient = new FacebookClient();
+		var token = model.getFbAccessToken();
+		fbClient.setAccessToken(token);
+		fbClient.publishStream(fbRec);
 	}
 	else {
 		Ti.API.warn('**** User is not logged into Facebook -- Cannot post message to FB');
@@ -63,6 +75,8 @@ function postMessage2FB(m) {
 		win.close();
 	}
 };
+
+
 
 /**
  * This method lays out the UI format and sets up the event listeners to 
@@ -101,6 +115,8 @@ function buildForm() {
 	panel.add(msgLbl);
 	
 	if (model.getUseFBProfilePic() && model.getFBProfileUrl() != null) {
+		var myProfileUrl = model.getFBProfileUrl();
+		Ti.API.info('myProfileUrl :: ' + myProfileUrl);
 		var userProfilePhoto = Ti.UI.createImageView({
 			image: model.getFBProfileUrl(),
 			backgroundColor: CSSMgr.color0,
@@ -242,35 +258,6 @@ function buildForm() {
 	});
 	panel.add(switchBtn);
 
-	/*	
-	if (Titanium.Facebook.isLoggedIn()) {
-		var prompt3 = "Facebook?";
-		var msgLbl3 = Titanium.UI.createLabel({
-			color: '#fff',
-			text: prompt3,
-			font: {
-				fontFamily: model.myFont,
-				fontWeight: 'bold'
-			},
-			top: 255,
-			left: 130,
-			width: 300,
-			height: 'auto'
-		});
-		win.add(msgLbl3);
-		var switchBtn = Titanium.UI.createSwitch({
-			value: false,
-			top: 255,
-			right: 10
-		});
-		switchBtn.addEventListener('change', function(e){
-			post2FB = e.value;
-			Ti.API.info('-------------------> Posting to Facebook? ' + post2FB);
-		});
-		win.add(switchBtn);
-	}
-	*/
-	
 	/*
 	 * submit button
 	 */

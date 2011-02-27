@@ -25,8 +25,10 @@ function ModelLocator() {
 	var useFbProfilePic = false;
 	var fbAPIKey = '8851fedb7bd7eef10c642cdaffa7faa9';
 	var fbSecret = '4a4cbd0adac0c8ead93f848f93083ad6';
-	var picasaUser = 'lazylaker71@gmail.com';
-	var picasaPassword = '19lazylaker';
+	var fbAccessToken = null;
+	var fbAccessTokenTM = 0;
+	var picasaUser = null;
+	var picasaPassword = null;
 	var logoutUrl = null;
 	var pw1 = "the harder you work; the luckier you get";
 	var pw2 = null;
@@ -63,6 +65,31 @@ function ModelLocator() {
 			},
 			getSync2Fb : function() {
 				return sync2Fb;
+			},
+			isFbAccessTokenValid : function() {
+				if (fbAccessToken == null) {
+					return false;
+				}	
+				else {
+					var now = new Date();
+					var diff = now.getTime() - fbAccessTokenTM;
+					diff = (((diff/1000)/60)/60);
+					// over 2 hours
+					if (diff >= 2) {
+						return false;
+					}
+					else {
+						return true;
+					}
+				}
+			},
+			setFbAccessToken : function (token) {
+				fbAccessToken = token;	
+				var now = new Date();
+				fbAccessTokenTM = now.getTime();
+			},
+			getFbAccessToken : function() {
+				return fbAccessToken;
 			},
 			setReportTable : function (t) {
 				reportTable = t;	
