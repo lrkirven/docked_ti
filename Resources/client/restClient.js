@@ -54,9 +54,13 @@ function RestClient() {
 	// create singleton instance to communicate with remote REST web service
 	//
     var myClient = {
-			/*	
+			/**
 			 * This method posts a message by the user to a specific lake resource (or region)
-			 */	
+			 *  
+			 * @param {Object} llId
+			 * @param {Object} msg
+			 * @param {Object} addToMyHotSpots
+			 */
 			postMessage : function(llId, msg, addToMyHotSpots) {
                	Titanium.API.info("postMessage: Entered");
 				
@@ -129,9 +133,12 @@ function RestClient() {
                 Titanium.API.info('postMessage: Posting JSON msg (msgEvent) to server ... ' + str);
                 xhr.send(str);	
 			},
-			//
-			// This method adds a comment to an original user post.
-			//
+			/**
+			 * This method posts a comment on an existing buzz message.
+			 * 
+			 * @param {Object} from
+			 * @param {Object} comment
+			 */
 			postComment : function(from, comment) {
                	Titanium.API.info("postComment: Entered");
 				
@@ -197,6 +204,13 @@ function RestClient() {
                 Titanium.API.info('postComment: Posting JSON msg (comment) to server ... ' + str);
                 xhr.send(str);	
 			},
+			/**
+			 * This method add or updates user-defined hotspot on the server.
+			 * 
+			 * @param {Object} userToken
+			 * @param {Object} hotSpot
+			 * @param {Object} newFlag
+			 */
 			addOrUpdateHotSpot : function(userToken, hotSpot, newFlag) {
                	Titanium.API.info("addOrUpdateHotSpot: Entered");
 				
@@ -267,8 +281,12 @@ function RestClient() {
                 Titanium.API.info('addOrUpdateHotSpot: Posting JSON msg (hotSpot) to server ... ' + str);
                 xhr.send(str);	
 			},
-			/*
-			 * Register user with an user account
+			/**
+			 * This method registers the user with an Docked account.
+			 * 
+			 * @param {Object} emailAddr
+			 * @param {Object} displayName
+			 * @param {Object} registerSecret
 			 */
 			registerUser : function(emailAddr, displayName, registerSecret) {
                	Titanium.API.info("registerUser: Entered");
@@ -344,9 +362,12 @@ function RestClient() {
 				var str = JSON.stringify(registerToken);
                 xhr.send(str);	
 			},
-			//
-			// This method updates display name
-			//
+			/**
+			 * This method updates the user's display name.
+			 * 
+			 * @param {Object} from
+			 * @param {Object} displayName
+			 */
 			updateDisplayName : function(from, displayName) {
                	Titanium.API.info("updateDisplayName: Entered");
 				
@@ -414,9 +435,12 @@ function RestClient() {
 				var str = JSON.stringify(updateAction);
                 xhr.send(str);	
 			},
-			//
-			// This method updates display name
-			//
+			/**
+			 * This method updates the user profile URL.
+			 * 
+			 * @param {Object} from
+			 * @param {Object} profileUrl
+			 */
 			updateProfileUrl : function(from, profileUrl) {
                	Titanium.API.info("updateProfileUrl: Entered");
 				
@@ -489,9 +513,84 @@ function RestClient() {
 				var str = JSON.stringify(updateTask);
                 xhr.send(str);	
 			},
-			//
-			// This method retrieves top 50 messages posted to the requested lake polygon resource
-			//
+			/**
+			 * This method provides feedback from the user.
+			 * 
+			 * @param {Object} from
+			 * @param {Object} feedback
+			 */
+			addFeedback : function(from, feedback) {
+               	Titanium.API.info("addFeedback: Entered");
+				
+				if (!Titanium.Network.online) {
+					Ti.App.fireEvent('ADD_FEEDBACK_RESP', { status:69,
+						errorMsg: Msgs.NO_DATA_SERVICE
+					});
+				}
+				
+				var xhr = Ti.Network.createHTTPClient();
+                xhr.setTimeout(90000);
+				
+                // 
+                // error
+                //
+                xhr.onerror = function(e) {
+                	Titanium.API.info("some error");
+					Ti.App.fireEvent('ADD_FEEDBACK_RESP', { status:69,
+						errorMsg: 'Unable to connect to remote services -- Please check your network connection'	
+					});
+                }; 
+            
+                // 
+                // success    
+                //
+                xhr.onload = function() {
+					if (this.status >= httpCodes.BAD_REQUEST) {
+						handleErrorResp(this.status, 'ADD_FEEDBACK_RESP');	
+						return;
+					}
+					if (Tools.test4NotFound(this.responseText)) {
+						Ti.App.fireEvent('ADD_FEEDBACK_RESP', { status:89,
+							errorMsg: 'Unable complete request at this time -- Apologize for the service failure.'	
+						});
+						return;
+					}
+					Titanium.API.info('addFeedback: onload: Entered - ' + this.responseText);
+					var jsonNodeData = JSON.parse(this.responseText);
+					if (jsonNodeData != null && jsonNodeData.result > 0) {
+						Titanium.API.info('addFeedback: onload: SUCCESS');
+						Ti.App.fireEvent('ADD_FEEDBACK_RESP', { displayName:jsonNodeData.value, status:0 });
+					}
+					else {
+						Ti.App.fireEvent('ADD_FEEDBACK_RESP', { status:99,
+							errorMsg: 'Unable to complete request at this time'	
+						});
+					}
+                };
+
+                //
+                // create connection
+                //
+				var targetURL = myUserRestURLSecure + 'feedback';
+				Titanium.API.info('addFeedback: REST URL: ' + targetURL);
+                xhr.open('POST', targetURL);
+				xhr.setRequestHeader('Content-Type', 'application/json');
+				xhr.setRequestHeader('Accept', 'application/json');
+                //
+                // send HTTP request
+                //
+                Titanium.API.info('addFeedback: Posting to server ... ' + displayName);
+				var modId = Titanium.Network.encodeURIComponent(from);
+				var modName = Titanium.Network.encodeURIComponent(displayName);
+				var feedbackAction = { llId:modId, value: feedback };
+				var str = JSON.stringify(feedbackAction);
+                xhr.send(str);	
+			},
+			/**
+			 * This method retrieves top 50 messages posted to the requested lake polygon resource.
+			 * 
+			 * @param {Object} resourceId
+			 */
 			getLocalMsgEvents : function(resourceId) {
                	Titanium.API.info("getLocalMsgEvents: Entered");
 				
@@ -565,6 +664,11 @@ function RestClient() {
                 Titanium.API.info('getLocalMsgEvents: Trying to get msgs from server ... ');
                 xhr.send();	
 			},
+			/**
+			 * This method gets buzz messages from a visiting location.
+			 * 
+			 * @param {Object} resourceId
+			 */
 			getRemoteMsgEvents : function(resourceId) {
                	Titanium.API.info("getRemoteMsgEvents: Entered");
 				
@@ -638,9 +742,11 @@ function RestClient() {
                 Titanium.API.info('getRemoteMsgEvents: Trying to get msgs from server ... ');
                 xhr.send();	
 			},
-			//
-			// This method retrieves top 50 messages posted to the requested lake polygon resource
-			//
+			/**
+			 * This method searches for a water resource based upon the user provided text.
+			 * 
+			 * @param {Object} keyword
+			 */
 			searchLakesByKeyword : function(keyword) {
                	Titanium.API.info("searchLakesByKeyword: Entered");
 				
@@ -714,8 +820,10 @@ function RestClient() {
                 Titanium.API.info('searchLakesByKeyword: Trying to get msgs from server ... ');
                 xhr.send();	
 			},
-			/*
+			/**
 			 * This method returns the reports that we have for a requested state
+			 * 
+			 * @param {Object} state
 			 */
 			getReportsByState : function(state) {
                	Titanium.API.info("getReportsByState: Entered");
@@ -783,6 +891,11 @@ function RestClient() {
                 Titanium.API.info('getReportsByState: Trying to get msgs from server ... ');
                 xhr.send();	
 			},
+			/**
+			 * This method returns a list of available water resources from the provided state.
+			 * 
+			 * @param {Object} state
+			 */
 			getShortReportsByState : function(state) {
                	Titanium.API.info("getShortReportsByState: Entered");
 				
@@ -856,6 +969,11 @@ function RestClient() {
                 Titanium.API.info('getShortReportsByState: Trying to get msgs from server ... ');
                 xhr.send();	
 			},
+			/**
+			 * This method gets specific report based upon reportId.
+			 * 
+			 * @param {Object} reportId
+			 */
 			getReportByReportId : function(reportId) {
                	Titanium.API.info("getReportByReportId: Entered");
 				
@@ -929,6 +1047,11 @@ function RestClient() {
                 Titanium.API.info('getReportByReportId: Trying to get msgs from server ... ');
                 xhr.send();	
 			},
+			/**
+			 * This method returns all of the PUBLIC hotpsots for a specific water resource.
+			 * 
+			 * @param {Object} resourceId
+			 */
 			getHotSpotsByLake : function(resourceId) {
                	Titanium.API.info("getHotSpotsByLake: Entered");
 				
@@ -1002,6 +1125,11 @@ function RestClient() {
                 Titanium.API.info('getHotSpotsByLake: Trying to get msgs from server ... ');
                 xhr.send();	
 			},
+			/**
+			 * This method returns ALL of the hotspots owned by current user.
+			 * 
+			 * @param {Object} userToken
+			 */
 			getHotSpotsByUserToken : function(userToken) {
                	Titanium.API.info("getHotSpotsByUserToken: Entered");
 				
@@ -1075,9 +1203,14 @@ function RestClient() {
                 Titanium.API.info('getHotSpotsByUserToken: Trying to get msgs from server ... ');
                 xhr.send();	
 			},
-			//
-			// This method determines if the user's location is inside a pre-defined lake polygon	
-			//
+			/**
+			 * This method updates the server of the location of the current user and returns polygon information
+			 * based upon on the updated location.
+			 * 
+			 * @param {Object} llId
+			 * @param {Object} lat
+			 * @param {Object} lng
+			 */
 			ping : function(llId, lat, lng) {
                	Titanium.API.info("ping: Entered");
 				

@@ -163,9 +163,9 @@ function buildForm() {
 	});
 	msgText.addEventListener('change', function(e){
 		var str = msgText.value;
-		if (str != null && str.length > 140) {
+		if (str != null && str.length > Common.MAX_MSG_LENG) {
 			composeMsgWinSubmitBtn.enabled = false;
-			var modStr = str.substr(0, 140);
+			var modStr = str.substr(0, Common.MAX_MSG_LENG);
 			msgText.value = modStr;
 			Tools.reportMsg(Msgs.APP_NAME, 'Your message is too long!');	
 			return;

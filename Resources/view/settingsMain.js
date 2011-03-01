@@ -24,7 +24,7 @@ function init() {
 			title: 'Provide Feedback',
 			hasChild: true,
 			leftImage: '../images/Gears.png',
-			ptr: 'feedback.js'
+			ptr: 'promptUser4Feedback.js'
 		}]; 
 	}
 	else {
@@ -45,7 +45,7 @@ function init() {
 			title: 'Provide Feedback',
 			hasChild: true,
 			leftImage: '../images/Gears.png',
-			ptr: 'feedback.js'
+			ptr: 'promptUser4Feedback.js'
 		}];
 	}
 	
