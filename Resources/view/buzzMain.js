@@ -36,32 +36,10 @@ function check4NewMsgEvents() {
 };
 
 /**
- * This method goes to Facebook to get your profile pic and other facebook information of 
- * logged in user.
+ * Handles PING response from service.
+ * 
+ * @param {Object} e
  */
-function getMyFacebookInfo() {
-	var query = "SELECT uid, name, pic_square, status FROM user where uid = " + Titanium.Facebook.getUserId() ;
-	Ti.API.info('user id ' + Titanium.Facebook.getUserId());
-	Titanium.Facebook.query(query, function(r) {
-		var data = [];
-		if (r.data.length > 0) {
-			var info = r.data[0];	
-			if (info.pic_square != null) {
-				Ti.API.info('fb profile url ---> ' + info.pic_square);
-				model.setFBProfileUrl(info.pic_square);
-			}
-			if (info.status != null && info.status.message != null) {
-				Ti.API.info('fb status ---> ' + info.status.message);
-				model.setFBStatus(info.status.message);
-			}
-			else {
-				Ti.API.info('fb status ---> EMPTY');
-				model.setFBStatus(null);
-			}
-		}
-	});	
-};
-
 Titanium.App.addEventListener('PING_RESPONSE_DATA', function(e) { 
 	if (e.status > 0) {
 		mainInd.hide();
@@ -218,10 +196,6 @@ function init() {
 	 * iAd integration
 	 */
 	Base.attachiAd(win);
-	
-	if (Titanium.Facebook.loggedIn) {
-		getMyFacebookInfo();
-	}
 	
 	mainInd = Base.showPreloader(win, 'Initializing ...', false);
 	
