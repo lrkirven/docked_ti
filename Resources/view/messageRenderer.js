@@ -5,6 +5,8 @@ Ti.include('../util/tools.js');
 Ti.include('../model/modelLocator.js');
 Ti.include('../client/restClient.js');
 
+Ti.include('baseViewer.js');
+
 /**
  * local variables
  */
@@ -62,7 +64,8 @@ function createNewCommentsSection(m) {
 		top:20,
 		left:0,
 		// opacity:0.4,
-		backgroundColor:'transparent',
+		// backgroundColor:'transparent',
+		backgroundColor:CSSMgr.color2,
 		height:100,
 		width:300,
 		clickName:'commentBody'
@@ -105,8 +108,8 @@ function createNewCommentsSection(m) {
 	
 	var addCommentBtn = Titanium.UI.createButton({
    		title:'Add Comment',
-		color:CSSMgr.color2,
-		backgroundColor:CSSMgr.color0,
+		color:CSSMgr.color0,
+		backgroundColor:CSSMgr.color2,
   		font:{fontSize:15, fontFamily:model.myFont, fontWeight:'bold'},
 		style:Titanium.UI.iPhone.SystemButtonStyle.PLAIN,
   		width:150,

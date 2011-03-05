@@ -139,7 +139,7 @@ function RestClient() {
 			 * @param {Object} from
 			 * @param {Object} comment
 			 */
-			postComment : function(from, comment) {
+			postComment : function(llId, comment) {
                	Titanium.API.info("postComment: Entered");
 				
 				if (!Titanium.Network.online) {
@@ -192,14 +192,16 @@ function RestClient() {
                 // create connection
                 //
 				var appContent = 'comment';
-				var targetURL = myMsgRestURLSecure + comment.resourceId + '/' + appContent + '?id=' + from;
+				var targetURL = myMsgRestURLSecure + comment.resourceId + '/' + appContent;
 				Titanium.API.info('postComment: REST URL: ' + targetURL);
                 xhr.open('POST', targetURL);
 				xhr.setRequestHeader('Content-Type', 'application/json');
 				xhr.setRequestHeader('Accept', 'application/json');
                 //
                 // send HTTP request
-                //i
+                //
+				var modId = Titanium.Network.encodeURIComponent(llId);
+				comment.llId = modId;
 				var str = JSON.stringify(comment);
                 Titanium.API.info('postComment: Posting JSON msg (comment) to server ... ' + str);
                 xhr.send(str);	

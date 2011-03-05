@@ -68,7 +68,7 @@ function loadNativeMap() {
     	longitude:buzzMsg.lng,
     	title:(buzzMsg.username + ' @ ' + buzzMsg.location),
     	subtitle:buzzMsg.messageData,
-		image:'../images/Marker.png',
+		image:'../images/ChatBubble.png',
     	animate:true,
     	myid:1 // CUSTOM ATTRIBUTE THAT IS PASSED INTO EVENT OBJECTS
 	});
