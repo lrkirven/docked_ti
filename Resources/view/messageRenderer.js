@@ -66,7 +66,7 @@ function createNewCommentsSection(m) {
 		// opacity:0.4,
 		// backgroundColor:'transparent',
 		backgroundColor:CSSMgr.color2,
-		height:100,
+		height:'auto',
 		width:300,
 		clickName:'commentBody'
 	});
@@ -146,16 +146,11 @@ function createNewCommentsSection(m) {
  */
 function createExistingCommentRow(commentInst, index) {
 	var fontSize = 13;
-
-	//
-	// check if you has a profile Url
-	//	
-	if (commentInst.profileUrl != null) {
-		profileUrl = commentInst.profileUrl;
-	}
 	var size = 75;
+	
 	var c0 = Ti.UI.createTableViewRow({
-		backgroundColor:'transparent',
+		// backgroundColor:'transparent',
+		backgroundColor:CSSMgr.color0,
 		left:0,
 		height:'auto',
 		width:340,
@@ -165,11 +160,11 @@ function createExistingCommentRow(commentInst, index) {
 
 	var p = null;	
 	if (commentInst.profileUrl == null) {
-		p = Base.createProfilePic();
+		p = Base.createProfilePic(0, 0);
 	}
 	else {
 		p = Ti.UI.createImageView({
-			image: profileUrl,
+			image: commentInst.profileUrl,
 			backgroundColor: CSSMgr.color0,
 			borderColor: CSSMgr.color1,
 			top: 0,
@@ -188,7 +183,7 @@ function createExistingCommentRow(commentInst, index) {
 		top:0,
 		height:50,
 		layout:'vertical',
-		width:260,
+		width:270,
 		clickName:'oldCommentBody'
 	});
 	
@@ -198,7 +193,7 @@ function createExistingCommentRow(commentInst, index) {
 		left:10,
 		top:5,
 		height:'auto',
-		width:260,
+		width:320,
 		clickName:'comment',
 		text:commentInst.response
 	});
@@ -223,14 +218,15 @@ function createExistingCommentRow(commentInst, index) {
 
 function createMsgTopic(m) {
 	var fontSize = 13;
-	var size = 80;
+	var size = 75;
 	var msgBody = Ti.UI.createView({
 		backgroundColor:CSSMgr.color0,
+		borderColor: CSSMgr.color2,
 		left:50,
 		top:0,
 		layout:'vertical',
 		height:'auto',
-		width:300,
+		width:270,
 		clickName:'msgBody'
 	});
 	var comment = Ti.UI.createLabel({
@@ -265,7 +261,7 @@ function createMsgTopic(m) {
 function createMsgTopicWithPhoto(m) {
 	var fontSize = 13;
 	var size = 230;
-	var myWidth = 260;
+	var myWidth = 270;
 	
 	var msgBody = Ti.UI.createView({
 		backgroundColor:CSSMgr.color0,
@@ -354,6 +350,7 @@ function updateDisplayList() {
 		commentList.push(last);
 	}
 	
+	/*
 	var tblHeader = Ti.UI.createView({
 		height: 30,
 		width: 320
@@ -366,19 +363,40 @@ function updateDisplayList() {
 		color: CSSMgr.color2
 	});
 	tblHeader.add(label);
+	*/
 	commentVBox = Titanium.UI.createTableView({
-		headerView: tblHeader,
+		// headerView: tblHeader,
 		scrollable:false,
 		moving:false,
 		data:commentList,
 		separatorColor:CSSMgr.color0,
-		style:Titanium.UI.iPhone.TableViewStyle.GROUPED,
+		// style:Titanium.UI.iPhone.TableViewStyle.GROUPED,
 		top:topStart,
+		left:0,
 		filterAttribute:'filter'
 	});
 	commentVBox.backgroundImage = '../images/Background.png';
 	win.add(commentVBox);
 };
+
+Ti.App.addEventListener('NEW_COMMENT_ADDED', function(e) {
+	if (e.status == 0) {
+		// bump counter
+		msgEvent.commentCounter++;
+		// adding recently added comment to list
+		if (msgEvent.comments == null) {
+			msgEvent.comments = [];
+		}
+		// add comment to list
+		msgEvent.comments.push(e.newComment);
+		// refresh display
+		updateDisplayList();
+		check4MsgEvents();
+	}
+	else {
+		Tools.reportMsg(Msgs.APP_NAME, e.errorMsg);	
+	}
+});
 
 
 /**
@@ -392,29 +410,6 @@ function init() {
 	else {
 		Ti.API.info('messageRenderer.init(): Anonymous User');
 	}
-	
-	Ti.App.addEventListener('NEW_COMMENT_ADDED', function(e) {
-		
-		if (e.status == 0) {
-			// bump counter
-			msgEvent.commentCounter++;
-			
-			// adding recently added comment to list
-			if (msgEvent.comments == null) {
-				msgEvent.comments = [];
-			}
-			// add comment to list
-			msgEvent.comments.push(e.newComment);
-			
-			// refresh display
-			updateDisplayList();
-			
-			check4MsgEvents();
-		}
-		else {
-			Tools.reportMsg(Msgs.APP_NAME, e.errorMsg);	
-		}
-	});
 	
 	appendProfilePhoto(msgEvent);
 	if (msgEvent.photoUrl == null) {
