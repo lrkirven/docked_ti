@@ -9,6 +9,8 @@ Ti.include('baseViewer.js');
 
 var win = Ti.UI.currentWindow;
 var model = win.model;
+var localFlag = win.localFlag;
+var buzzMsg = win.buzzMsg;
 var nativeMap = null;
 var googleMap = null;
 
@@ -61,13 +63,23 @@ function loadNativeMap() {
 	var myLat = model.getUserLat();	
 	var myLng = model.getUserLng();
 	
+	var img = Titanium.Map.createAnnotation({
+    	latitude:buzzMsg.lat,
+    	longitude:buzzMsg.lng,
+    	title:(buzzMsg.username + ' @ ' + buzzMsg.location),
+    	subtitle:buzzMsg.messageData,
+		image:'../images/Marker.png',
+    	animate:true,
+    	myid:1 // CUSTOM ATTRIBUTE THAT IS PASSED INTO EVENT OBJECTS
+	});
+	
 	var mapview = Titanium.Map.createView({
    		mapType: Titanium.Map.STANDARD_TYPE,
    		region: {latitude:myLat, longitude:myLng, latitudeDelta:0.01, longitudeDelta:0.01},
    		animate:true,
    		regionFit:true,
    		userLocation:true,
-   		annotations:[]
+   		annotations:[ img ]
 	});
 
 	return mapview;
@@ -90,21 +102,24 @@ function loadGoogleMap(url) {
  */
 function init() {
 	Base.attachMyBACKButton(win);
-	var myLat = model.getUserLat();	
-	var myLng = model.getUserLng();
-	var targetUrl = model.getBaseUrl() + '/buzzmap?lat=' + myLat + '&lng=' + myLng + '&version=' + Common.VERSION;
-	googleMap = loadGoogleMap(targetUrl);
-	googleMap.addEventListener('error', function(e){
+	
+	if (localFlag) {
+		Ti.API.info('Specific buzzMsg --> #' + buzzMsg.location);
 		nativeMap = loadNativeMap();
 		win.add(nativeMap);
-		check4LocalMsgEvents();
-	});
-	win.add(googleMap);
-	
-	/*
-	nativeMap = loadNativeMap();
-	win.add(nativeMap);
-	*/
+	}
+	else {
+		var myLat = model.getUserLat();
+		var myLng = model.getUserLng();
+		var targetUrl = model.getBaseUrl() + '/buzzmap?lat=' + myLat + '&lng=' + myLng + '&version=' + Common.VERSION;
+		googleMap = loadGoogleMap(targetUrl);
+		googleMap.addEventListener('error', function(e){
+			nativeMap = loadNativeMap();
+			win.add(nativeMap);
+			check4LocalMsgEvents();
+		});
+		win.add(googleMap);
+	}
 };
 
 

@@ -17,9 +17,6 @@ var newCommentBody = null;
 var initStart = 0;
 var commentVBox = null;
 
-Ti.API.info('Entering messageRenderer --> msgEvent=' + this.msgEvent);
-Ti.API.info('Entering messageRenderer --> model=' + this.model);
-
 function check4MsgEvents() {
 	var client = new RestClient();
 	var activeLake = model.getCurrentLake();
@@ -423,6 +420,32 @@ function init() {
 	else {
 		initStart = createMsgTopicWithPhoto(msgEvent);
 	}
+	
+	var showOnMapBtn = Titanium.UI.createButton({
+   		title:'Map It!',
+		color:CSSMgr.color2,
+		backgroundColor:CSSMgr.color0,
+  		font:{fontSize:15, fontFamily:model.myFont, fontWeight:'bold'},
+		style:Titanium.UI.iPhone.SystemButtonStyle.PLAIN,
+  		width:150,
+  		height:30,
+	});
+	showOnMapBtn.addEventListener('click', function(e) {
+		Ti.API.info('PopupUp window');
+		var buzzOnMapWin = Titanium.UI.createWindow({
+			url:'buzzOnMapViewer.js',
+			barImage:'../images/Header.png',
+			localFlag:true,
+			buzzMsg:msgEvent,
+			backgroundColor:CSSMgr.color0,
+			barColor:CSSMgr.color0,
+			model:model
+		});
+		Titanium.UI.currentTab.open(buzzOnMapWin, {
+			animated: true
+		});
+	});
+	win.setRightNavButton(showOnMapBtn);
 };
 
 //

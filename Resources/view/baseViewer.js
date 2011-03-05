@@ -457,6 +457,12 @@
 		return myDataRowList;
 	};
 	
+	/**
+	 * This method builds the rows to display buzz rows.
+	 * 
+	 * @param {Object} msgEventList
+	 * @param {Object} rendererFile
+	 */
 	Base.buildBuzzRows = function(msgEventList, rendererFile) {
 		var i = 0;
 		var msgEvent = null;

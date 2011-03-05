@@ -163,6 +163,7 @@ function init() {
 		title: 'Map',
 		hasChild: true,
 		leftImage: '../images/ChatBubble2.png',
+		localFlag: false,
 		ptr: 'buzzOnMapViewer.js'
 	}, {
 		title: 'Visit other Lakers',
