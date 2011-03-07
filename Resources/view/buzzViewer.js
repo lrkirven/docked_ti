@@ -124,12 +124,12 @@ function buildSearchView(visible) {
 		backgroundColor: CSSMgr.color0
 	});
 	searchView.addEventListener('click', function(e) { 
-		Ti.API.info('User selected resource Id -- ' + e.rowData.lake.resourceId);
+		Ti.API.info('User selected resKey --> ' + e.rowData.lake.resKey);
 		searchPage.visible = false;
 		win.remove(searchPage);
 		remoteLake = e.rowData.lake;
 		var restClient = new RestClient();
-		restClient.getRemoteMsgEvents(e.rowData.lake.resourceId);
+		restClient.getRemoteMsgEvents(e.rowData.lake.resKey);
 	});
 	searchPage.add(searchView);
 	win.add(searchPage);
@@ -362,8 +362,8 @@ function check4LocalMsgEvents() {
 	var client = new RestClient();
 	var activeLake = model.getCurrentLake();
 	if (activeLake != null) {
-		Ti.API.info('check4MsgEvent(): resourceId ---> ' + activeLake.id);
-		client.getLocalMsgEvents(activeLake.id);
+		Ti.API.info('check4MsgEvent(): resKey ---> ' + activeLake.resKey);
+		client.getLocalMsgEvents(activeLake.resKey);
 	}
 	else {
 		Ti.API.info('check4MsgEvent(): Not in a region to view messages!!!!');
@@ -374,8 +374,8 @@ function check4LocalMsgEvents() {
 function check4RemoteMsgEvents() {
 	var client = new RestClient();
 	if (remoteLake != null) {
-		Ti.API.info('check4RemoteMsgEvents(): resourceId ---> ' + remoteLake.id);
-		client.getLocalMsgEvents(remoteLake.id);
+		Ti.API.info('check4RemoteMsgEvents(): resKey ---> ' + remoteLake.resKey);
+		client.getLocalMsgEvents(remoteLake.resKey);
 	}
 	else {
 		Ti.API.info('check4RemoteMsgEvents(): Not in a region to view messages!!!!');

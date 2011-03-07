@@ -47,8 +47,8 @@ function check4LocalMsgEvents() {
 	var client = new RestClient();
 	var activeLake = model.getCurrentLake();
 	if (activeLake != null) {
-		Ti.API.info('check4MsgEvent(): resourceId ---> ' + activeLake.id);
-		client.getLocalMsgEvents(activeLake.id);
+		Ti.API.info('check4MsgEvent(): resKey ---> ' + activeLake.resKey);
+		client.getLocalMsgEvents(activeLake.resKey);
 	}
 	else {
 		Ti.API.info('check4MsgEvent(): Not in a region to view messages!!!!');

@@ -23,8 +23,8 @@ function check4MsgEvents() {
 	var client = new RestClient();
 	var activeLake = model.getCurrentLake();
 	if (activeLake != null) {
-		Ti.API.info('check4MsgEvent(): resourceId ---> ' + activeLake.id);
-		client.getLocalMsgEvents(activeLake.id);
+		Ti.API.info('check4MsgEvent(): resKey ---> ' + activeLake.resKey);
+		client.getLocalMsgEvents(activeLake.resKey);
 	}
 };
 
@@ -122,9 +122,13 @@ function createNewCommentsSection(m) {
 		var client = new RestClient();
 		var lat = model.getUserLat();
 		var lng = model.getUserLng();
-		var newComment = { resourceId:msgEvent.resourceId, username:currentUser.displayName,
-			response:msgText.value, msgId:msgEvent.msgId, 
-			lat:lat, lng:lng
+		var newComment = { 
+			resKey:msgEvent.resKey, 
+			username:currentUser.displayName,
+			response:msgText.value, 
+			msgId:msgEvent.msgId, 
+			lat:lat, 
+			lng:lng
 		};
 		if (currentUser.profileUrl != null) {
 			newComment.profileUrl = currentUser.profileUrl;
@@ -370,7 +374,6 @@ function updateDisplayList() {
 		moving:false,
 		data:commentList,
 		separatorColor:CSSMgr.color0,
-		// style:Titanium.UI.iPhone.TableViewStyle.GROUPED,
 		top:topStart,
 		left:0,
 		filterAttribute:'filter'
@@ -379,6 +382,11 @@ function updateDisplayList() {
 	win.add(commentVBox);
 };
 
+/**
+ * This method to handle response to the creation of new comment.
+ * 
+ * @param {Object} e
+ */
 Ti.App.addEventListener('NEW_COMMENT_ADDED', function(e) {
 	if (e.status == 0) {
 		// bump counter

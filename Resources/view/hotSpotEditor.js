@@ -280,7 +280,7 @@ function buildForm() {
 				hotSpot = {
 					category: categoryBtn.index,
 					username: user.displayName,
-					resourceId: myLocation.id,
+					resKey: myLocation.resKey,
 					location: myLocation.name,
 					llId: user.id,
 					publicFlag: publicBtn.value,

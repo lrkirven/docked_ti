@@ -316,12 +316,12 @@ function buildSearchView(visible) {
 		backgroundColor: CSSMgr.color0
 	});
 	searchView.addEventListener('click', function(e) { 
-		Ti.API.info('User selected resource Id -- ' + e.rowData.lake.resourceId);
+		Ti.API.info('User selected resKey -- ' + e.rowData.lake.resKey);
 		searchPage.visible = false;
 		msgPage.visible = true;
 		selectedLake.text = e.rowData.lake.name;
 		var restClient = new RestClient();
-		restClient.getRemoteMsgEvents(e.rowData.lake.resourceId);
+		restClient.getRemoteMsgEvents(e.rowData.lake.resKey);
 	});
 	searchPage.add(searchView);
 	win.add(searchPage);
@@ -394,17 +394,14 @@ function buildSearchResultsRowCollection(lakeList) {
 			//	
 			var userCountLbl = Ti.UI.createLabel({
 				color: CSSMgr.color3,
-				font: {
-					fontSize: '10',
-					fontWeight: 'bold',
-					fontFamily: model.myFont
-				},
+				font: { fontSize: '10', fontWeight: 'bold', fontFamily: model.myFont },
 				left: 25,
 				top: 15,
 				height: 20,
 				width: 120,
 				clickName: 'userCount',
 				text: 'Active Users: ' + lake.numActiveUsers
+				
 			});
 			row.add(userCountLbl);
 		
@@ -413,12 +410,9 @@ function buildSearchResultsRowCollection(lakeList) {
 			//	
 			var lastUpdateLbl = Ti.UI.createLabel({
 				color: CSSMgr.color3,
-				font: {
-					fontSize: '10',
-					fontWeight: 'bold',
-					fontFamily: model.myFont
-				},
-				left: 130,
+				font: { fontSize: '10', fontWeight: 'bold', fontFamily: model.myFont },
+				textAlign: 'right',
+				right: 10,
 				top: 15,
 				height: 20,
 				width: 150,

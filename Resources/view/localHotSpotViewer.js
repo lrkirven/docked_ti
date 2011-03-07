@@ -162,7 +162,7 @@ Ti.App.addEventListener('SEARCH_RESULTS_RECD', function(e) {
 function getHotSpots() {
 	var lake = model.getCurrentLake();
 	var client = new RestClient();
-	client.getHotSpotsByLake(lake.id);	
+	client.getHotSpotsByLake(lake.resKey);	
 };
 
 /**

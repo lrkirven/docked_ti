@@ -119,7 +119,7 @@ function RestClient() {
                 // create connection
                 //
 				var appContent = 'newMsg';
-				var targetURL = myMsgRestURLSecure + msg.resourceId + '/' + appContent + "?addToMyHotSpots=" + addToMyHotSpots ;
+				var targetURL = myMsgRestURLSecure + appContent + "?addToMyHotSpots=" + addToMyHotSpots ;
 				Titanium.API.info('postMessage: REST URL: ' + targetURL);
                 xhr.open('POST', targetURL);
 				xhr.setRequestHeader('Content-Type', 'application/json');
@@ -192,7 +192,7 @@ function RestClient() {
                 // create connection
                 //
 				var appContent = 'comment';
-				var targetURL = myMsgRestURLSecure + comment.resourceId + '/' + appContent;
+				var targetURL = myMsgRestURLSecure + appContent;
 				Titanium.API.info('postComment: REST URL: ' + targetURL);
                 xhr.open('POST', targetURL);
 				xhr.setRequestHeader('Content-Type', 'application/json');
@@ -591,9 +591,9 @@ function RestClient() {
 			/**
 			 * This method retrieves top 50 messages posted to the requested lake polygon resource.
 			 * 
-			 * @param {Object} resourceId
+			 * @param {Object} resKey
 			 */
-			getLocalMsgEvents : function(resourceId) {
+			getLocalMsgEvents : function(resKey) {
                	Titanium.API.info("getLocalMsgEvents: Entered");
 				
 				if (!Titanium.Network.online) {
@@ -656,7 +656,7 @@ function RestClient() {
                 //
                 // create connection
                 //
-				var targetURL = myMsgRestURL + resourceId + '?lat=' + model.getUserLat() + '&lng=' + model.getUserLng();
+				var targetURL = myMsgRestURL + resKey + '?lat=' + model.getUserLat() + '&lng=' + model.getUserLng();
 				Titanium.API.info('getLocalMsgEvents: REST URL: ' + targetURL);
                 xhr.open('GET', targetURL);
 				xhr.setRequestHeader('Accept', 'application/json');
@@ -669,9 +669,9 @@ function RestClient() {
 			/**
 			 * This method gets buzz messages from a visiting location.
 			 * 
-			 * @param {Object} resourceId
+			 * @param {Object} resKey
 			 */
-			getRemoteMsgEvents : function(resourceId) {
+			getRemoteMsgEvents : function(resKey) {
                	Titanium.API.info("getRemoteMsgEvents: Entered");
 				
 				if (!Titanium.Network.online) {
@@ -734,7 +734,7 @@ function RestClient() {
                 //
                 // create connection
                 //
-				var targetURL = myMsgRestURL + resourceId + '?lat=' + model.getUserLat() + '&lng=' + model.getUserLng();
+				var targetURL = myMsgRestURL + resKey + '?lat=' + model.getUserLat() + '&lng=' + model.getUserLng();
 				Titanium.API.info('getRemoteMsgEvents: REST URL: ' + targetURL);
                 xhr.open('GET', targetURL);
 				xhr.setRequestHeader('Accept', 'application/json');
@@ -1052,9 +1052,9 @@ function RestClient() {
 			/**
 			 * This method returns all of the PUBLIC hotpsots for a specific water resource.
 			 * 
-			 * @param {Object} resourceId
+			 * @param {Object} resKey
 			 */
-			getHotSpotsByLake : function(resourceId) {
+			getHotSpotsByLake : function(resKey) {
                	Titanium.API.info("getHotSpotsByLake: Entered");
 				
 				if (!Titanium.Network.online) {
@@ -1117,7 +1117,7 @@ function RestClient() {
                 //
                 // create connection
                 //
-				var targetURL = myHotSpotRestURL + 'lakes/' + resourceId;
+				var targetURL = myHotSpotRestURL + 'lakes/' + resKey;
 				Titanium.API.info('getHotSpotsByLake: REST URL: ' + targetURL);
                 xhr.open('GET', targetURL);
 				xhr.setRequestHeader('Accept', 'application/json');

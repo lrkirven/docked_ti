@@ -17,7 +17,6 @@ function ModelLocator() {
 	var actualLat = 0;
 	var actualLng = 0;
 	var lastMove = 0;
-	var resourceId = 0;
 	var myFont = 'Verdana';	
 	var fbName = null;
 	var fbStatus = null;
