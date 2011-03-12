@@ -79,63 +79,68 @@
 		
 		
 		var distBearVal = Tools.calcDistBear(model.getUserLat(), model.getUserLng(), msgEvent.lat, msgEvent.lng);
+		var distVal = Tools.calcDist(model.getUserLat(), model.getUserLng(), msgEvent.lat, msgEvent.lng);
 		row.msgEvent.distBearVal = distBearVal;
+		row.height = 85;
 		
 		if (msgEvent.messageData != null && msgEvent.messageData.length > 35) {
 			
-			row.height = 100;
+			Ti.API.info('appendMsgBody(): LONG MSG');
 			
 			msgBody = Ti.UI.createView({
 				backgroundColor:CSSMgr.color0,
 				left:60,
 				top:0,
-				height:130,
+				height:65,
 				width:230,
 				clickName:'msgBody'
 			});
 			
 			userMsg = Ti.UI.createLabel({
-				color: '#fff',
+				color: CSSMgr.color2,
 				font: { fontSize: fontSize, fontWeight: 'normal', fontFamily: model.myFont },
-				left: 5,
-				top: 0,
-				height: 50,
+				left: 0,
+				top: 5,
+				height: 55,
 				width: 220,
 				clickName: 'userMsg',
 				text: msgEvent.messageData
 			});
-			
 			msgBody.add(userMsg);
+			row.add(msgBody);	
 			
 			userLocale = Ti.UI.createLabel({
-				color:CSSMgr.color2,
+				color:CSSMgr.color0,
 				font:{fontSize:11, fontWeight:'normal', fontFamily:model.myFont},
-				left:5,
-				top:35,
-				height:50,
-				textAlign:'left',
-				width:220,
+				left:0,
+				bottom:0,
+				height:20,
+				textAlign:'center',
+				width:320,
+				backgroundColor:CSSMgr.color2,
 				clickName:'userLocale',
-				// text:(msgEvent.username + ' @ ' + msgEvent.location + ', ' + msgEvent.timeDisplay)
-				text:(msgEvent.username + ', ' + msgEvent.timeDisplay)
+				text:(msgEvent.username + ', ' + msgEvent.timeDisplay + ', ' + distVal)
 			});
-			msgBody.add(userLocale);
+			row.add(userLocale);
 			
+			/*
 			distBearLbl = userLocale = Ti.UI.createLabel({
 				color:CSSMgr.color2,
 				font:{fontSize:11, fontWeight:'normal', fontFamily:model.myFont},
 				left:5,
-				top:55,
+				bottom:10,
 				height:40,
 				textAlign:'left',
-				width:220,
+				width:300,
 				clickName:'distBear',
 				text:distBearVal
 			});
-			msgBody.add(distBearLbl);
+			row.add(distBearLbl);
+			*/
 		}
 		else {
-			row.height = 75;
+			
+			Ti.API.info('appendMsgBody(): SHORT MSG');
 			
 			msgBody = Ti.UI.createView({
 				backgroundColor:CSSMgr.color0,
@@ -149,44 +154,45 @@
 			userMsg = Ti.UI.createLabel({
 				color: '#fff',
 				font: { fontSize: fontSize, fontWeight: 'normal', fontFamily: model.myFont },
-				left: 5,
-				top: 0,
+				left: 0,
+				top: 5,
 				height: 25,
 				width: 220,
 				clickName: 'userMsg',
 				text: msgEvent.messageData
 			});
-			
 			msgBody.add(userMsg);
+			row.add(msgBody);	
 			
 			userLocale = Ti.UI.createLabel({
-				color:CSSMgr.color2,
+				color:CSSMgr.color0,
 				font:{fontSize:11, fontWeight:'normal', fontFamily:model.myFont},
-				left:5,
-				top:15,
-				height:40,
-				textAlign:'left',
-				width:220,
+				left:0,
+				bottom:0,
+				height:20,
+				textAlign:'center',
+				width:320,
 				clickName:'userLocale',
-				// text:(msgEvent.username + ' on ' + msgEvent.location + ', ' + msgEvent.timeDisplay)
-				text:(msgEvent.username + ', ' + msgEvent.timeDisplay)
+				backgroundColor:CSSMgr.color2,
+				text:(msgEvent.username + ', ' + msgEvent.timeDisplay + ', ' + distVal)
 			});
-			msgBody.add(userLocale);
+			row.add(userLocale);
 			
+			/*
 			distBearLbl = Ti.UI.createLabel({
 				color:CSSMgr.color2,
 				font:{fontSize:11, fontWeight:'normal', fontFamily:model.myFont},
 				left:5,
-				top:25,
+				bottom:10,
 				height:50,
 				textAlign:'left',
-				width:220,
+				width:300,
 				clickName:'distBear',
 				text:distBearVal
 			});
-			msgBody.add(distBearLbl);
+			row.add(distBearLbl);
+			*/
 		}
-		row.add(msgBody);	
 		
 	}; 
 	
@@ -204,6 +210,7 @@
 		
 		if (msgEvent.messageData != null && msgEvent.messageData.length > 20) {
 			
+			Ti.API.info('appendMsgBodyWithPhoto(): LONG MSG');
 			row.height = 90;
 			
 			msgBody = Ti.UI.createView({
@@ -230,7 +237,7 @@
 				color: '#fff',
 				font: { fontSize: fontSize, fontWeight: 'normal', fontFamily: model.myFont },
 				left: 60,
-				top: 0,
+				top: 5,
 				height: 50,
 				width: 160,
 				clickName: 'comment',
@@ -284,7 +291,7 @@
 				color: '#fff',
 				font: { fontSize: fontSize, fontWeight: 'normal', fontFamily: model.myFont },
 				left: 60,
-				top: 0,
+				top: 5,
 				height: 25,
 				width: 160,
 				clickName: 'userMsg',
@@ -322,7 +329,7 @@
 		var msgEvent = row.msgEvent;
 		if (msgEvent.profileUrl == undefined) {
 			var defaultIDImage = null;
-			defaultIDImage = Base.createProfilePic(0, 0);
+			defaultIDImage = Base.createProfilePic(5, 5);
 			row.add(defaultIDImage);
 		}
 		else {
@@ -473,6 +480,8 @@
 		var location = null;
 		var msgTitle = null;
 		
+		var MAX_ROW_WIDTH = 320;
+		
 		if (msgEventList != null) {
 			Ti.API.info('buildBuzzRows: size: ' + msgEventList.length);
 			for (i=0; i<msgEventList.length; i++) {
@@ -500,8 +509,7 @@
 					selectedBackgroundColor:CSSMgr.color2,
 					backgroundColor:CSSMgr.color0,
 					height:0,
-					// width:'auto',
-					width:300,
+					width:MAX_ROW_WIDTH,
 					borderColor:CSSMgr.color2,
 					borderRadius: 20,
 					className:'MsgEventRow' + i,

@@ -16,6 +16,7 @@ var model = win.model;
 var composeMsgWinPhotoIndBtn = null;
 var post2FB = false;
 var addToMyHotSpots = false;
+var msgLimit = null;
 
 var b = Titanium.UI.createButton({title:'BACK'});
 b.addEventListener('click', function() {
@@ -159,7 +160,7 @@ function buildForm() {
 		keyboardType:Titanium.UI.KEYBOARD_NUMBERS_PUNCTUATION,
 		borderWidth:2,
 		borderColor:CSSMgr.color0,
-		borderRadius:5
+		borderRadius:0
 	});
 	msgText.addEventListener('change', function(e){
 		var str = msgText.value;
@@ -167,9 +168,12 @@ function buildForm() {
 			composeMsgWinSubmitBtn.enabled = false;
 			var modStr = str.substr(0, Common.MAX_MSG_LENG);
 			msgText.value = modStr;
+			msgLimit.color = CSSMgr.color5;
 			Tools.reportMsg(Msgs.APP_NAME, 'Your message is too long!');	
 			return;
 		}
+		msgLimit.color = CSSMgr.color0;
+		msgLimit.text = Common.MAX_MSG_LENG - str.length;
 		if ((msgText.value == '' || msgText == null) && model.getPendingRawImage() == null) {
 			composeMsgWinSubmitBtn.enabled = false;
 		}
@@ -179,14 +183,27 @@ function buildForm() {
 	});
 	panel.add(msgText);
 	
+	msgLimit = Ti.UI.createLabel({
+		color:CSSMgr.color0,
+		font:{fontSize:13, fontWeight:'bold', fontFamily:model.myFont},
+		top:154,
+		left:240,
+		height:'auto',
+		textAlign:'center',
+		width:30,
+		clickName:'msgLimit',
+		borderColor:CSSMgr.color0,
+		text:Common.MAX_MSG_LENG
+	});
+	panel.add(msgLimit);
+	
 	//
 	// icon to indicate if the photo is loaded
 	//
 	var photoIndBtn = Ti.UI.createImageView({
-		image: '../commentButton.png',
 		backgroundColor: CSSMgr.color2,
-		borderColor: CSSMgr.color2,
-		top: 175,
+		borderColor: CSSMgr.color0,
+		top: 185,
 		left: 10,
 		width: 75,
 		height: 75,
@@ -199,18 +216,18 @@ function buildForm() {
 	// photo menu
 	//
 	var photoMenuList = [
-		{ title: Msgs.TAKE_PIC, color: CSSMgr.color0, url: 'takePhoto.js' }, 
-		{ title: Msgs.SELECT_FROM_GALLERY, color: CSSMgr.color0, url: 'browseGallery.js' }
+		{ title: Msgs.TAKE_PIC, color: CSSMgr.color0, align:'right', url: 'takePhoto.js' }, 
+		{ title: Msgs.SELECT_FROM_GALLERY, color: CSSMgr.color0, align:'right', url: 'browseGallery.js' }
 	];
 	var photoMenu = Titanium.UI.createTableView({
 		data: photoMenuList,
 		scrollable: false,
 		separatorColor: CSSMgr.color0,
 		style: Titanium.UI.iPhone.TableViewStyle.PLAIN,
-		top: 165,
+		top: 170,
 		right: 10,
 		height: 100,
-		width: 200,
+		width: 180,
 		color: CSSMgr.color0,
 		font: { fontFamily: model.myFont, fontWeight: 'normal' },
 		backgroundColor: CSSMgr.color2

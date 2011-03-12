@@ -74,7 +74,7 @@ function createNewCommentsSection(m) {
 	var p = null;
 	var u = model.getCurrentUser();
 	if (u == null || !model.getUseFBProfilePic()) {
-		p = Base.createProfilePic();
+		p = Base.createProfilePic(0, 0);
 	}
 	else {
 		p = Ti.UI.createImageView({
@@ -222,39 +222,46 @@ function createExistingCommentRow(commentInst, index) {
 
 function createMsgTopic(m) {
 	var fontSize = 13;
-	var size = 75;
+	var size = 90;
 	var msgBody = Ti.UI.createView({
 		backgroundColor:CSSMgr.color0,
 		borderColor: CSSMgr.color2,
 		left:50,
 		top:0,
 		layout:'vertical',
-		height:'auto',
+		height:size,
 		width:270,
 		clickName:'msgBody'
 	});
+	var mainMsg = m.messageData;
+	/*
+	 * add padding if necessary
+	 */
+	Ti.API.info('createMsgTopic(): message leng ---> ' + m.messageData.length);
 	var comment = Ti.UI.createLabel({
-		color:'#fff',
+		color:CSSMgr.color2,
 		font:{fontSize:fontSize, fontWeight:'normal', fontFamily:model.myFont},
-		left:10,
-		top:0,
-		height:50,
-		width:220,
+		left:5,
+		top:5,
+		height:'auto',
+		width:265,
 		clickName:'comment',
-		text:m.messageData
+		backgroundColor:CSSMgr.color0,
+		text:mainMsg
 	});
 	msgBody.add(comment);
 	
+	var distVal = Tools.calcDist(model.getUserLat(), model.getUserLng(), m.lat, m.lng);
 	var userLocale = Ti.UI.createLabel({
-		color:CSSMgr.color2,
+		color:CSSMgr.color4,
 		font:{fontSize:11, fontWeight:'normal', fontFamily:model.myFont},
-		left:10,
-		bottom:5,
-		height:20,
+		height:'auto',
+		left:5,
+		top:3,
 		textAlign:'left',
-		width:220,
+		width:msgBody.width,
 		clickName:'userLocale',
-		text:(m.username + ', ' + m.timeDisplay)
+		text:(m.username + ', ' + m.timeDisplay + ', ' + distVal)
 	});
 	msgBody.add(userLocale);
 	win.add(msgBody);

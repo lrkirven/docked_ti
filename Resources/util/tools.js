@@ -1,15 +1,30 @@
 
 	var Tools = {}; // Tools namespace
 	
+	/**
+	 * Trims a string.
+	 * 
+	 * @param {Object} stringToTrim
+	 */
 	Tools.trim = function(stringToTrim) {
 		return stringToTrim.replace(/^\s+|\s+$/g,"");
 	};
 	
+	/**
+	 * Converts to radian.
+	 * 
+	 * @param {Object} val
+	 */
 	Tools.toRad = function(val) {
 		var res = val * Math.PI / 180;	
 		return res;
 	};
 	
+	/**
+	 * Converts to degrees.
+	 * 
+	 * @param {Object} val
+	 */
 	Tools.toDeg = function(val) {
 		var res = val * 180 / Math.PI;	
 		return res;
@@ -58,7 +73,15 @@
 		}
 	    return sign + n;
   	};
-	
+
+	/**
+	 * Calculate the distance between 2 points.
+	 * 
+	 * @param {Object} lat1
+	 * @param {Object} lng1
+	 * @param {Object} lat2
+	 * @param {Object} lng2
+	 */	
 	Tools.distanceFromAB = function(lat1, lng1, lat2, lng2) {
 		var precision = 4;
 		var R = 6371; // km
@@ -68,9 +91,22 @@
 		var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
 		var d = R * c;
 		var dInMiles = (d * 0.621371192);
-		return Tools.toPrecisionFixed(dInMiles, 4);
+		/*
+		 * rounding distance to 2 decimals
+		 */
+		var dec = 2;
+		var dInMiles = Math.round(dInMiles*Math.pow(10,dec))/Math.pow(10,dec);
+		return dInMiles;
 	};
 	
+	/**
+	 * Calculates the bearing.
+	 * 
+	 * @param {Object} lat1
+	 * @param {Object} lng1
+	 * @param {Object} lat2
+	 * @param {Object} lng2
+	 */
 	Tools.calcBearing = function(lat1, lng1, lat2, lng2){
 		var lat1Rad = Tools.toRad(lat1);
 		var lat2Rad = Tools.toRad(lat2);
@@ -83,6 +119,14 @@
 		return Tools.toPrecisionFixed(res, 4);
 	};
 	
+	/**
+	 * Calcuate the distance and bearing.
+	 * 
+	 * @param {Object} lat1
+	 * @param {Object} lng1
+	 * @param {Object} lat2
+	 * @param {Object} lng2
+	 */
 	Tools.calcDistBear = function(lat1, lng1, lat2, lng2) {
 		var dist = Tools.distanceFromAB(lat1, lng1, lat2, lng2);
 		var brng = Tools.calcBearing(lat1, lng1, lat2, lng2);
@@ -90,12 +134,40 @@
 		return distBearVal;	
 	};
 	
+	/**
+	 * Returns a formatted string to display distance between 2 points.
+	 * 
+	 * @param {Object} lat1
+	 * @param {Object} lng1
+	 * @param {Object} lat2
+	 * @param {Object} lng2
+	 */
+	Tools.calcDist = function(lat1, lng1, lat2, lng2) {
+		var dist = Tools.distanceFromAB(lat1, lng1, lat2, lng2);
+		var distVal = dist + ' mi away';
+		return distVal;	
+	};
+	
+	/**
+	 * Returns distance and bearing between 2 point in an object.
+	 * 
+	 * @param {Object} lat1
+	 * @param {Object} lng1
+	 * @param {Object} lat2
+	 * @param {Object} lng2
+	 */
 	Tools.calcDistBearObject = function(lat1, lng1, lat2, lng2) {
 		var dist = Tools.distanceFromAB(lat1, lng1, lat2, lng2);
 		var brng = Tools.calcBearing(lat1, lng1, lat2, lng2);
 		return { distance:dist, bearing:brng };
 	};
 	
+	/**
+	 * Popups generic error message to user.
+	 * 
+	 * @param {Object} title
+	 * @param {Object} msg
+	 */
 	Tools.reportMsg = function(title, msg) {
 		var alertDialog = Titanium.UI.createAlertDialog({
 			message: msg,

@@ -7,7 +7,7 @@
 	Msgs.HOTSPOT_OPTIONS = 'HotSpot Options';
 	Msgs.OUT_OF_ZONE = '[OUTSIDE LAKE ZONE]';
 	Msgs.USERS = ' USER(S)';
-	Msgs.TAKE_PIC = 'Take a picture';
+	Msgs.TAKE_PIC = 'Take photo';
 	Msgs.SELECT_FROM_GALLERY = 'From gallery';
 	Msgs.MSG_POSTED = 'Message posted to Docked!';
 	Msgs.MY_LOCATION = 'My Location: ';
