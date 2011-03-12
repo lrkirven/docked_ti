@@ -279,50 +279,83 @@ function createMsgTopicWithPhoto(m) {
 		left:50,
 		top:0,
 		layout:'vertical',
-		height:'auto',
+		height:size,
 		width:myWidth,
 		clickName:'msgBody'
 	});
 	var msgPhoto = Ti.UI.createImageView({
-		image:m.photoUrl,
-		backgroundColor:CSSMgr.color0,
-		borderColor:CSSMgr.color0,
-		top:10,
-		left:10,
+		// image:m.photoUrl,
+		backgroundImage:m.photoUrl,
+		// backgroundColor:CSSMgr.color0,
+		// borderColor:CSSMgr.color0,
+		top:0,
+		left:0,
 		// width:'auto',
-		width:size,
+		width:150,
 		height:150,
 		clickName:'msgPhoto'
 	});
+	msgPhoto.addEventListener('load', function(e){
+		Ti.API.info('image loaded --> width=' + msgPhoto.width + ' height=' + msgPhoto.height);
+		/*
+		if (msgPhoto.width > msgPhoto.height) {
+			var rot = Titanium.UI.create2DMatrix().rotate(-90);
+			msgPhoto.transform = rot;
+		}
+		*/
+	});
 	msgBody.add(msgPhoto);
 	
+
+	
 	var comment = Ti.UI.createLabel({
-		color:'#fff',
+		color:CSSMgr.color2,
 		font:{fontSize:'12', fontWeight:'normal', fontFamily:model.myFont},
-		left:10,
-		top:10,
-		height:20,
-		width:size,
+		left:0,
+		top:0,
+		height:'auto',
+		width:265,
 		clickName:'comment',
 		text:m.messageData
 	});
 	msgBody.add(comment);
 	
+	var distVal = Tools.calcDist(model.getUserLat(), model.getUserLng(), m.lat, m.lng);
 	var userLocale = Ti.UI.createLabel({
-		color:CSSMgr.color2,
+		color:CSSMgr.color4,
 		font:{fontSize:11, fontWeight:'normal', fontFamily:model.myFont},
-		left:10,
-		top:5,
-		bottom:2,
-		height:20,
+		height:'auto',
+		left:0,
+		top:2,
 		textAlign:'left',
-		width:300,
+		width:msgBody.width,
 		clickName:'userLocale',
-		text:(m.username + ', ' + m.timeDisplay)
+		text:(m.username + ', ' + m.timeDisplay + ', ' + distVal)
 	});
 	msgBody.add(userLocale);
 	Ti.API.info('userLocale x --> ' + userLocale.height);
 	win.add(msgBody);
+	
+	var rotateBtn = Titanium.UI.createButton({
+   		title:'Rotate It!',
+		color:CSSMgr.color2,
+		backgroundColor:CSSMgr.color0,
+  		font:{fontSize:13, fontFamily:model.myFont, fontWeight:'bold'},
+		style:Titanium.UI.iPhone.SystemButtonStyle.PLAIN,
+		right:0,
+		top:0,
+  		width:100,
+  		height:30,
+	});
+	rotateBtn.addEventListener('click', function(e){
+		var t = Ti.UI.create2DMatrix();
+		var spin = Titanium.UI.createAnimation();
+		t = t.rotate(-90);
+		spin.transform = t;
+		spin.duration = 10;
+		msgPhoto.animate(spin);
+	});
+	win.add(rotateBtn);
 	
 	return size;
 	
@@ -361,20 +394,6 @@ function updateDisplayList() {
 		commentList.push(last);
 	}
 	
-	/*
-	var tblHeader = Ti.UI.createView({
-		height: 30,
-		width: 320
-	});
-	var label = Ti.UI.createLabel({
-		top: 5,
-		left: 10,
-		text: 'Comments',
-		font: { fontFamily: model.myFont, fontSize: 20, fontWeight: 'bold' },
-		color: CSSMgr.color2
-	});
-	tblHeader.add(label);
-	*/
 	commentVBox = Titanium.UI.createTableView({
 		// headerView: tblHeader,
 		scrollable:false,

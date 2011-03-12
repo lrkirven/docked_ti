@@ -1,4 +1,5 @@
 Ti.include('../util/msgs.js');
+Ti.include('../util/tools.js');
 Ti.include('../props/cssMgr.js');
 Ti.include('../model/modelLocator.js');
 
@@ -12,9 +13,14 @@ Ti.API.info('Entering browseExisting - ' + win);
 Titanium.Media.openPhotoGallery({
 
 	success:function(event) {
-		var cropRect = event.cropRect;
-		var imgData = event.media;
-		model.setPendingRawImage(imgData);
+		if (event.mediaType == Ti.Media.MEDIA_TYPE_PHOTO) {
+			var cropRect = event.cropRect;
+			var imgData = event.media;
+			model.setPendingRawImage(imgData);
+		}
+		else {
+			Tools.reportMsg(Msgs.APP_NAME, 'Docked currently only supports uploading photos');
+		}
 		win.close();
 	},
 	cancel:function() {

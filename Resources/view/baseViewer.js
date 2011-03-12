@@ -122,21 +122,6 @@
 				text:(msgEvent.username + ', ' + msgEvent.timeDisplay + ', ' + distVal)
 			});
 			row.add(userLocale);
-			
-			/*
-			distBearLbl = userLocale = Ti.UI.createLabel({
-				color:CSSMgr.color2,
-				font:{fontSize:11, fontWeight:'normal', fontFamily:model.myFont},
-				left:5,
-				bottom:10,
-				height:40,
-				textAlign:'left',
-				width:300,
-				clickName:'distBear',
-				text:distBearVal
-			});
-			row.add(distBearLbl);
-			*/
 		}
 		else {
 			
@@ -152,7 +137,7 @@
 			});
 			
 			userMsg = Ti.UI.createLabel({
-				color: '#fff',
+				color: CSSMgr.color2,
 				font: { fontSize: fontSize, fontWeight: 'normal', fontFamily: model.myFont },
 				left: 0,
 				top: 5,
@@ -177,21 +162,6 @@
 				text:(msgEvent.username + ', ' + msgEvent.timeDisplay + ', ' + distVal)
 			});
 			row.add(userLocale);
-			
-			/*
-			distBearLbl = Ti.UI.createLabel({
-				color:CSSMgr.color2,
-				font:{fontSize:11, fontWeight:'normal', fontFamily:model.myFont},
-				left:5,
-				bottom:10,
-				height:50,
-				textAlign:'left',
-				width:300,
-				clickName:'distBear',
-				text:distBearVal
-			});
-			row.add(distBearLbl);
-			*/
 		}
 		
 	}; 
@@ -208,10 +178,14 @@
 		var userLocale = null;
 		var msgEvent = row.msgEvent;
 		
-		if (msgEvent.messageData != null && msgEvent.messageData.length > 20) {
+		var distBearVal = Tools.calcDistBear(model.getUserLat(), model.getUserLng(), msgEvent.lat, msgEvent.lng);
+		var distVal = Tools.calcDist(model.getUserLat(), model.getUserLng(), msgEvent.lat, msgEvent.lng);
+		row.msgEvent.distBearVal = distBearVal;
+		row.height = 85;
+		
+		if (msgEvent.messageData != null && msgEvent.messageData.length > 25) {
 			
 			Ti.API.info('appendMsgBodyWithPhoto(): LONG MSG');
-			row.height = 90;
 			
 			msgBody = Ti.UI.createView({
 				backgroundColor: CSSMgr.color0,
@@ -224,8 +198,8 @@
 			msgPhoto = Ti.UI.createImageView({
 				image: msgEvent.photoUrl,
 				backgroundColor: CSSMgr.color0,
-				borderColor: CSSMgr.color1,
-				top: 12,
+				borderColor: CSSMgr.color2,
+				top: 5,
 				left: 0,
 				width: 50,
 				height: 50,
@@ -234,7 +208,7 @@
 			msgBody.add(msgPhoto);
 			
 			userMsg = Ti.UI.createLabel({
-				color: '#fff',
+				color: CSSMgr.color2,
 				font: { fontSize: fontSize, fontWeight: 'normal', fontFamily: model.myFont },
 				left: 60,
 				top: 5,
@@ -244,28 +218,25 @@
 				text: msgEvent.messageData
 			});
 			msgBody.add(userMsg);
+			row.add(msgBody);	
 			
-			var desc1 = msgEvent.username + ' on ' + msgEvent.location + ', ' + msgEvent.timeDisplay;
-			if (desc1.length > 45) {
-				desc1 = desc1.substr(0, 40);
-				desc1 += "...";
-			}
 			userLocale = Ti.UI.createLabel({
-				color: CSSMgr.color2,
-				font: { fontSize: 11, fontWeight: 'normal', fontFamily: model.myFont },
-				left: 60,
-				top: 35,
-				height: 50,
-				textAlign: 'left',
-				width: 160,
-				clickName: 'userLocale',
-				text:desc1
+				color:CSSMgr.color0,
+				font:{fontSize:11, fontWeight:'normal', fontFamily:model.myFont},
+				left:0,
+				bottom:0,
+				height:20,
+				textAlign:'center',
+				width:320,
+				backgroundColor:CSSMgr.color2,
+				clickName:'userLocale',
+				text:(msgEvent.username + ', ' + msgEvent.timeDisplay + ', ' + distVal)
 			});
-			msgBody.add(userLocale);
+			row.add(userLocale);
 		}
 		else {
 			
-			row.height = 75;
+			Ti.API.info('appendMsgBodyWithPhoto(): SHORT MSG');
 			
 			msgBody = Ti.UI.createView({
 				backgroundColor: CSSMgr.color0,
@@ -278,8 +249,8 @@
 			msgPhoto = Ti.UI.createImageView({
 				image: msgEvent.photoUrl,
 				backgroundColor: CSSMgr.color0,
-				borderColor: CSSMgr.color1,
-				top: 12,
+				borderColor: CSSMgr.color2,
+				top: 5,
 				left: 0,
 				width: 50,
 				height: 50,
@@ -298,26 +269,22 @@
 				text: msgEvent.messageData
 			});
 			msgBody.add(userMsg);
+			row.add(msgBody);	
 			
-			var desc2 = msgEvent.username + ' on ' + msgEvent.location + ', ' + msgEvent.timeDisplay;
-			if (desc2.length > 45) {
-				desc2 = desc2.substr(0, 40);
-				desc2 += "...";
-			}
 			userLocale = Ti.UI.createLabel({
-				color: CSSMgr.color2,
-				font: { fontSize: 11, fontWeight: 'normal', fontFamily: model.myFont },
-				left: 60,
-				top: 15,
-				height: 50,
-				textAlign: 'left',
-				width: 160,
-				clickName: 'userLocale',
-				text: desc2
+				color:CSSMgr.color0,
+				font:{fontSize:11, fontWeight:'normal', fontFamily:model.myFont},
+				left:0,
+				bottom:0,
+				height:20,
+				textAlign:'center',
+				width:320,
+				backgroundColor:CSSMgr.color2,
+				clickName:'userLocale',
+				text:(msgEvent.username + ', ' + msgEvent.timeDisplay + ', ' + distVal)
 			});
-			msgBody.add(userLocale);
+			row.add(userLocale);
 		}
-		row.add(msgBody);	
 	}; 
 	
 	/**

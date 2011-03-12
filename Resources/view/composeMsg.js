@@ -201,13 +201,13 @@ function buildForm() {
 	// icon to indicate if the photo is loaded
 	//
 	var photoIndBtn = Ti.UI.createImageView({
-		backgroundColor: CSSMgr.color2,
-		borderColor: CSSMgr.color0,
-		top: 185,
-		left: 10,
-		width: 75,
-		height: 75,
-		clickName: 'addPhotoBtn'
+		backgroundColor:CSSMgr.color2,
+		borderColor:CSSMgr.color0,
+		top:185,
+		left:10,
+		width:75,
+		height:75,
+		clickName:'photoIndBtn'
 	});
 	panel.add(photoIndBtn);
 	composeMsgWinPhotoIndBtn = photoIndBtn;
@@ -254,10 +254,7 @@ function buildForm() {
 	var msgLbl3 = Titanium.UI.createLabel({
 		color: CSSMgr.color0,
 		text: 'Add location to My HotSpots',
-		font: {
-			fontFamily: model.myFont,
-			fontWeight: 'bold'
-		},
+		font: { fontFamily: model.myFont, fontWeight: 'bold' },
 		textAlign: 'right',
 		top: 275,
 		right: 10,
@@ -342,6 +339,7 @@ function buildForm() {
 			Ti.API.info('Using Picasa password: ' + pPassword);
 			client.setPicasaUser(pUser);
 			client.setPicasaPassword(pPassword);
+			// client.upload2(photoIndBtn.toImage());
 			client.upload2(rawImage);
 		}
 		//
