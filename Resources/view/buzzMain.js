@@ -132,23 +132,23 @@ function init() {
 	inPolygonMM = [{
 		title: 'Browse',
 		hasChild: true,
-		leftImage: '../images/ChatBubble2.png',
+		leftImage: '../images/ChatBubble.png',
 		localFlag: true,
 		ptr: 'buzzViewer.js'
 	}, {
 		title: 'Map',
 		hasChild: true,
-		leftImage: '../images/ChatBubble2.png',
+		leftImage: '../images/ChatBubble.png',
 		ptr: 'buzzOnMapViewer.js'
 	}, {
 		title: 'Post',
 		hasChild: true,
-		leftImage: '../images/ChatBubble2.png',
+		leftImage: '../images/ChatBubble.png',
 		ptr: 'composeMsg.js'
 	}, {
 		title: 'Visit other Lakers',
 		hasChild: true,
-		leftImage: '../images/ChatBubble2.png',
+		leftImage: '../images/ChatBubble.png',
 		localFlag: false,
 		ptr: 'buzzViewer.js'
 	}];
@@ -156,20 +156,20 @@ function init() {
 	inPolygonAnonymousMM = [{
 		title: 'Browse',
 		hasChild: true,
-		leftImage: '../images/ChatBubble2.png',
+		leftImage: '../images/ChatBubble.png',
 		localFlag: true,
 		ptr: 'buzzViewer.js'
 	}, {
 		title: 'Map',
 		hasChild: true,
-		leftImage: '../images/ChatBubble2.png',
+		leftImage: '../images/ChatBubble.png',
 		localFlag: false,
 		ptr: 'buzzOnMapViewer.js'
 	}, {
 		title: 'Visit other Lakers',
 		hasChild: true,
 		localFlag: false,
-		leftImage: '../images/ChatBubble2.png',
+		leftImage: '../images/ChatBubble.png',
 		ptr: 'buzzViewer.js'
 	}];
 	
@@ -177,7 +177,7 @@ function init() {
 		title: 'Visit other lakes',
 		hasChild: true,
 		localFlag: false,
-		leftImage: '../images/ChatBubble2.png',
+		leftImage: '../images/ChatBubble.png',
 		ptr: 'buzzViewer.js'
 	}];
 	
