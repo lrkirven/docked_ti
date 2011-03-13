@@ -1,5 +1,6 @@
 Ti.include('../util/common.js');
 Ti.include('../util/msgs.js');
+Ti.include('../util/tools.js');
 Ti.include('../util/tea.js');
 Ti.include('../props/cssMgr.js');
 Ti.include('../model/modelLocator.js');
@@ -74,13 +75,14 @@ function buildForm() {
 		borderRadius:5
 	});
 	feedbackText.addEventListener('change', function() {
-		var comment = this.value;
-		if (comment != null && name.length > 0) {
-			submitBtn.enabled = true;	
+		var comment = feedbackText.value;
+		if (comment != null && comment.length > 0) {
 			if (comment.length > Common.MAX_MSG_LENG) {
 				comment = comment.substr(0, Common.MAX_MSG_LENG);
-				this.value = comment;
+				feedbackText.value = comment;
+				return;
 			}
+			submitBtn.enabled = true;	
 		}
 		else {
 			submitBtn.enabled = false;
@@ -105,11 +107,9 @@ function buildForm() {
 	});
 	submitBtn.addEventListener('click', function() {
 		var str = feedbackText.value;	
-		if (str != model.getCurrentUser().displayName) {
-			var client = new RestClient();
-			var user = model.getCurrentUser();
-			client.addFeedback(user.id, str);	
-		}
+		var client = new RestClient();
+		var user = model.getCurrentUser();
+		client.addFeedback(user.id, str);	
 	});
 	
 	submitBtn.enabled = false;	
