@@ -213,7 +213,7 @@ function buildSearchResultsRowCollection(lakeList) {
 				height: 20,
 				width: 120,
 				clickName: 'userCount',
-				text: 'Active Users: ' + lake.numActiveUsers
+				text: 'Active Users: ' + lake.activeUsers
 			});
 			row.add(userCountLbl);
 		
