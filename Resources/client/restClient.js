@@ -581,10 +581,9 @@ function RestClient() {
                 //
                 // send HTTP request
                 //
-                Titanium.API.info('addFeedback: Posting to server ... ' + displayName);
+                Titanium.API.info('addFeedback: Posting to server ... ' + from);
 				var modId = Titanium.Network.encodeURIComponent(from);
-				var modName = Titanium.Network.encodeURIComponent(displayName);
-				var feedbackAction = { llId:modId, value: feedback };
+				var feedbackAction = { llId:modId, value:feedback };
 				var str = JSON.stringify(feedbackAction);
                 xhr.send(str);	
 			},

@@ -14,6 +14,11 @@ var db = win.db;
 var submitBtn = null;
 var feedbackText = null;
 
+Titanium.App.addEventListener('ADD_FEEDBACK_RESP', function(e) {
+	Tools.reportMsg(Msgs.APP_NAME, Msgs.APPRECIATE);	
+	win.close();
+});
+
 /**
  * This method lays out the UI format and sets up the event listeners to 
  * handle user interaction.
