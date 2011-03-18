@@ -1,9 +1,9 @@
 function ModelLocator() {
 	var secureBaseUrl = 'https://zarcode4fishin.appspot.com';
-	var baseUrl = 'http://mobile.lazylaker.net';
+	var baseUrl = 'http://zarcode4fishin.appspot.com';
+	// var baseUrl = 'http://mobile.lazylaker.net';
 	var myRestURL = baseUrl + '/resources/events/add/123';
 	var currentLake = null;
-	// var currentUser = { displayName:'John Boyd', id:'1515151514141163228', emailAddr:'john@yahoo.com' };
 	var currentUser = null;
     var responseMap = {};
 	var reportTable = {};
@@ -22,8 +22,10 @@ function ModelLocator() {
 	var fbStatus = null;
 	var fbProfileUrl = null;
 	var useFbProfilePic = false;
-	var fbAPIKey = '8851fedb7bd7eef10c642cdaffa7faa9';
-	var fbSecret = '4a4cbd0adac0c8ead93f848f93083ad6';
+	// var fbAPIKey = '8851fedb7bd7eef10c642cdaffa7faa9';
+	var fbAPIKey = null;
+	// var fbSecret = '4a4cbd0adac0c8ead93f848f93083ad6';
+	var fbSecret = null;
 	var fbAccessToken = null;
 	var fbAccessTokenTM = 0;
 	var picasaUser = null;

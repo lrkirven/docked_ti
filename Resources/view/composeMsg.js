@@ -17,6 +17,7 @@ var composeMsgWinPhotoIndBtn = null;
 var post2FB = false;
 var addToMyHotSpots = false;
 var msgLimit = null;
+var currentBucket = null;
 
 var b = Titanium.UI.createButton({title:'BACK'});
 b.addEventListener('click', function() {
@@ -34,6 +35,25 @@ Titanium.App.addEventListener('FB_PUBLISH_STREAM_RESP', function(e) {
 		Ti.API.warn('**** Unable to post to Facebook ***');
 	}
 });
+
+Titanium.App.addEventListener('ACTIVE_BUCKET', function(e) {
+	if (e.status == 0) {
+		Ti.API.info('Got ACTIVE_BUCKET event -- last bucket ---> ' + e.result.albumId);
+		currentBucket = e.result;
+		if (composeMsgWinSubmitBtn != null) {
+			Ti.API.info('Enabling submitBtn ...');
+			composeMsgWinSubmitBtn.enabled = true;
+		}
+		else {
+			Ti.API.info('Disabling submitBtn ...');
+			compWinSubmitBtn.enabled = false;
+		}
+	}
+	else {
+		Ti.API.warn('Unable to get active bucket ...');
+	}
+});
+
 
 /**
  * Post message to your facebook wall.
@@ -339,7 +359,7 @@ function buildForm() {
 			Ti.API.info('Using Picasa password: ' + pPassword);
 			client.setPicasaUser(pUser);
 			client.setPicasaPassword(pPassword);
-			// client.upload2(photoIndBtn.toImage());
+			client.setLastBucket(currentBucket);
 			client.upload2(rawImage);
 		}
 		//
@@ -422,7 +442,6 @@ function handleUploadedPic(e) {
 		model.setPendingMsgEvent(msgEvent);
 		var restClient = new RestClient();
 		restClient.postMessage(currentUser.id, msgEvent);
-		
 	}
 	else {
 		Tools.reportMsg(Msgs.APP_NAME, 'Unable to complete request at this time');
@@ -432,6 +451,21 @@ function handleUploadedPic(e) {
 	}
 };
 
+/*
+Titanium.App.addEventListener('FOUND_LAST_BUCKET', function(e) {
+	Ti.API.info('Got event FOUND_LAST_BUCKET .. lastBucket=' + e.lastBucket);
+	model.setLastBucket(e.lastBucket);
+	if (composeMsgWinSubmitBtn != null) {
+		Ti.API.info('Enabling submitBtn ...');
+		composeMsgWinSubmitBtn.enabled = true;
+	}
+	else {
+		Ti.API.info('Disabling submitBtn ...');
+		compWinSubmitBtn.enabled = false;
+	}
+});
+*/
+
 
 /**
  * Initialize the form
@@ -439,28 +473,23 @@ function handleUploadedPic(e) {
 function init() {
 	
 	post2FB = model.getSync2Fb();
-	
-	Titanium.App.addEventListener('PHOTO_UPLOADED', handleUploadedPic);
 
-	Titanium.App.addEventListener('FOUND_LAST_BUCKET', function(e) {
-		Ti.API.info('Got event FOUND_LAST_BUCKET .. lastBucket=' + e.lastBucket);
-		model.setLastBucket(e.lastBucket);
-		if (composeMsgWinSubmitBtn != null) {
-			Ti.API.info('Enabling submitBtn ...');
-			composeMsgWinSubmitBtn.enabled = true;
-		}
-		else {
-			Ti.API.info('Disabling submitBtn ...');
-			compWinSubmitBtn.enabled = false;
-		}
-	});
-	
-	Ti.App.addEventListener('NEW_MSG_EVENT_ADDED', handleNewMsgPosted);
+	/*
+	 * listeners
+	 */	
+	Titanium.App.addEventListener('PHOTO_UPLOADED', handleUploadedPic);
+	Titanium.App.addEventListener('NEW_MSG_EVENT_ADDED', handleNewMsgPosted);
+	/*
+	 * UI
+	 */
 	buildForm();
 	postingInd = Base.showPreloader(win, null, true);
 	postingInd.hide();
 	win.backgroundImage = '../images/Background.png';
 	win.open();	
+	
+	var client = new RestClient();
+	client.getActiveBucket();
 };
 
 //

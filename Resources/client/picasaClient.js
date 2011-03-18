@@ -15,6 +15,12 @@ function PicasaClient() {
 	var picasaPassword = null;
 	
 	var myClient = {
+		setLastBucket : function (b) {
+				lastBucket = b;	
+		},
+		getLastBucket : function() {
+			return lastBucket;
+		},
 		setPicasaUser : function (u) {
 				picasaUser = u;	
 		},

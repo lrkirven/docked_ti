@@ -1,8 +1,10 @@
 
 function RestClient() {
 	
-	var secureBaseUrl = 'https://www.zarcode4fishin.appspot.com';
-	var baseUrl = 'http://mobile.lazylaker.net';
+	// var secureBaseUrl = 'https://www.zarcode4fishin.appspot.com';
+	// var baseUrl = 'http://mobile.lazylaker.net';
+	var secureBaseUrl = 'https://dockedmobile.appspot.com';
+	var baseUrl = 'http://dockedmobile.appspot.com';
 	var version = Common.VERSION; 
 	var myMsgRestURL = baseUrl + '/resources/' + version + '/buzz/';
 	var myMsgRestURLSecure = secureBaseUrl + '/resources/' + version + '/buzz/';
@@ -14,6 +16,8 @@ function RestClient() {
 	var myReportRestURLSecure = secureBaseUrl + '/resources/' + version + '/reports/';
 	var myHotSpotRestURL = baseUrl + '/resources/' + version + '/hotspots/';
 	var myHotSpotRestURLSecure = baseUrl + '/resources/' + version + '/hotspots/';
+	var myPhotoRestURL = baseUrl + '/resources/' + version + '/photos/';
+	var myPhotoRestURLSecure = baseUrl + '/resources/' + version + '/photos/';
 	
 	var httpCodes = { // Http namespace
 		OK:200,
@@ -205,6 +209,82 @@ function RestClient() {
 				var str = JSON.stringify(comment);
                 Titanium.API.info('postComment: Posting JSON msg (comment) to server ... ' + str);
                 xhr.send(str);	
+			},
+			/**
+			 * This method returns the currently active bucket.
+			 */
+			getActiveBucket : function() {
+               	Titanium.API.info("getActiveBucket: Entered");
+				
+				if (!Titanium.Network.online) {
+					Ti.App.fireEvent('ACTIVE_BUCKET', { status:69,
+						errorMsg: Msgs.NO_DATA_SERVICE
+					});
+				}
+				
+				var xhr = Ti.Network.createHTTPClient();
+                xhr.setTimeout(90000);
+				
+                // 
+                // error
+                //
+                xhr.onerror = function(e) {
+					Ti.App.fireEvent('ACTIVE_BUCKET', { status:69,
+						errorMsg: 'Unable to connect to remote services -- Please check your network connection'	
+					});
+                }; 
+            
+                // 
+                // success    
+                //
+                xhr.onload = function() {
+					if (this.status >= httpCodes.BAD_REQUEST) {
+						handleErrorResp(this.status, 'ACTIVE_BUCKET');	
+						return;
+					}
+					if (Tools.test4NotFound(this.responseText)) {
+						Ti.App.fireEvent('ACTIVE_BUCKET', { status:89,
+							errorMsg: 'Unable complete request at this time -- Apologize for the service failure.'	
+						});
+						return;
+					}
+					Titanium.API.info('getActiveBucket: onload: Entered - [' + this.responseText + ']');
+					if (this.responseText == 'null' || this.responseText == undefined) {
+						Titanium.API.info('getActiveBucket: onload: Returning empty set');
+						Ti.App.fireEvent('ACTIVE_BUCKET', { result:[], status:0 });
+						return;
+					}
+					if (this.responseText != null) {
+						var jsonNodeData = JSON.parse(this.responseText);
+						if (jsonNodeData != null) {
+							Titanium.API.info('getActiveBucket: onload: SUCCESS');
+							Ti.App.fireEvent('ACTIVE_BUCKET', { result:jsonNodeData, status:0 });
+						}
+						else {
+							Ti.App.fireEvent('ACTIVE_BUCKET', { status:99,
+								errorMsg: 'Unable to complete request at this time'	
+							});
+						}
+					}
+					else {
+						Ti.App.fireEvent('ACTIVE_BUCKET', { status:99,
+							errorMsg: 'Unable to complete request at this time'	
+						});
+					}
+                };
+
+                //
+                // create connection
+                //
+				var targetURL = myPhotoRestURL + 'activeBucket'; 
+				Titanium.API.info('getActiveBucket: REST URL: ' + targetURL);
+                xhr.open('GET', targetURL);
+				xhr.setRequestHeader('Accept', 'application/json');
+                //
+                // send HTTP request
+                //
+                Titanium.API.info('getActiveBucket: ... ');
+                xhr.send();	
 			},
 			/**
 			 * This method add or updates user-defined hotspot on the server.
