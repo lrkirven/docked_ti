@@ -891,7 +891,8 @@ function RestClient() {
                 //
                 // create connection
                 //
-				var targetURL = myLakeRestURL + 'search?keyword=' + keyword;
+				var k = Titanium.Network.encodeURIComponent(keyword);
+				var targetURL = myLakeRestURL + 'search/' + keyword + '?lat=' + model.getActualLat() + '&lng=' + model.getActualLng();
 				Titanium.API.info('searchLakesByKeyword: REST URL: ' + targetURL);
                 xhr.open('GET', targetURL);
 				xhr.setRequestHeader('Accept', 'application/json');

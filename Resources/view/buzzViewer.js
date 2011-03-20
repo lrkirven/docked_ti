@@ -445,7 +445,7 @@ Titanium.App.addEventListener('FOUND_LAST_BUCKET', function(e) {
 Titanium.App.addEventListener('SEARCH_RESULTS_RECD', function(e) {
 	if (e.status == 0) {
 		Ti.API.info('Handling event -- SEARCH_RESULTS_RECD --> ' + e.result);
-		updateSearchTableViewDisplay(e.result, false);
+		updateSearchTableViewDisplay(e.result, true);
 	}
 	else {
 		Tools.reportMsg(Msgs.APP_NAME, e.errorMsg);
