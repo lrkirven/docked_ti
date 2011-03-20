@@ -146,11 +146,11 @@ function init() {
 		leftImage: '../images/ChatBubble.png',
 		ptr: 'composeMsg.js'
 	}, {
-		title: 'Visit other Lakers',
+		title: 'Visit',
 		hasChild: true,
 		leftImage: '../images/ChatBubble.png',
 		localFlag: false,
-		ptr: 'buzzViewer.js'
+		ptr: 'visitBuzzMain.js'
 	}];
 	
 	inPolygonAnonymousMM = [{
@@ -166,7 +166,7 @@ function init() {
 		localFlag: false,
 		ptr: 'buzzOnMapViewer.js'
 	}, {
-		title: 'Visit other Lakers',
+		title: 'Visit',
 		hasChild: true,
 		localFlag: false,
 		leftImage: '../images/ChatBubble.png',
@@ -174,11 +174,11 @@ function init() {
 	}];
 	
 	outPolygonMM = [{
-		title: 'Visit other lakes',
+		title: 'Visit',
 		hasChild: true,
 		localFlag: false,
 		leftImage: '../images/ChatBubble.png',
-		ptr: 'buzzViewer.js'
+		ptr: 'visitBuzzMain.js'
 	}];
 	
 	Ti.API.info('buzzMain.init(): Entered ');

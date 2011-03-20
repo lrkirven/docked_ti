@@ -832,7 +832,7 @@ function RestClient() {
                	Titanium.API.info("searchLakesByKeyword: Entered");
 				
 				if (!Titanium.Network.online) {
-					Ti.App.fireEvent('REMOTE_MSG_EVENTS_RECD', { status:69,
+					Ti.App.fireEvent('SEARCH_RESULTS_RECD', { status:69,
 						errorMsg: Msgs.NO_DATA_SERVICE
 					});
 				}
@@ -901,13 +901,86 @@ function RestClient() {
                 Titanium.API.info('searchLakesByKeyword: Trying to get msgs from server ... ');
                 xhr.send();	
 			},
+			getClosestResources : function(lat, lng) {
+               	Titanium.API.info('getClosestResources: Entered');
+				
+				if (!Titanium.Network.online) {
+					Ti.App.fireEvent('CLOSEST_RES_RECD', { status:69,
+						errorMsg: Msgs.NO_DATA_SERVICE
+					});
+				}
+				
+				var xhr = Ti.Network.createHTTPClient();
+                xhr.setTimeout(90000);
+				
+                // 
+                // error
+                //
+                xhr.onerror = function(e) {
+					Ti.App.fireEvent('CLOSEST_RES_RECD', { status:69,
+						errorMsg: 'Unable to connect to remote services -- Please check your network connection'	
+					});
+                }; 
+            
+                // 
+                // success    
+                //
+                xhr.onload = function() {
+					if (this.status >= httpCodes.BAD_REQUEST) {
+						handleErrorResp(this.status, 'CLOSEST_RES_RECD');	
+						return;
+					}
+					if (Tools.test4NotFound(this.responseText)) {
+						Ti.App.fireEvent('CLOSEST_RES_RECD', { status:89,
+							errorMsg: 'Unable complete request at this time -- Apologize for the service failure.'	
+						});
+						return;
+					}
+					Titanium.API.info('getClosestResources: onload: Entered - [' + this.responseText + ']');
+					if (this.responseText == 'null' || this.responseText == undefined) {
+						Titanium.API.info('getClosestResources: onload: Returning empty set');
+						Ti.App.fireEvent('CLOSEST_RES_RECD', { result:[], status:0 });
+						return;
+					}
+					if (this.responseText != null) {
+						var jsonNodeData = JSON.parse(this.responseText);
+						if (jsonNodeData != null) {
+							Titanium.API.info('getClosestResources: onload: SUCCESS');
+							Ti.App.fireEvent('CLOSEST_RES_RECD', { result:jsonNodeData, status:0 });
+						}
+						else {
+							Ti.App.fireEvent('CLOSEST_RES_RECD', { status:99,
+								errorMsg: 'Unable to complete request at this time'	
+							});
+						}
+					}
+					else {
+						Ti.App.fireEvent('CLOSEST_RES_RECD', { status:99,
+							errorMsg: 'Unable to complete request at this time'	
+						});
+					}
+                };
+
+                //
+                // create connection
+                //
+				var targetURL = myLakeRestURL + 'closest?lat=' + lat + '&lng=' + lng;
+				Titanium.API.info('getClosestResources: REST URL: ' + targetURL);
+                xhr.open('GET', targetURL);
+				xhr.setRequestHeader('Accept', 'application/json');
+                //
+                // send HTTP request
+                //
+                Titanium.API.info('getClosestResources: Invoking... ');
+                xhr.send();	
+			},
 			/**
 			 * This method returns the reports that we have for a requested state
 			 * 
 			 * @param {Object} state
 			 */
 			getReportsByState : function(state) {
-               	Titanium.API.info("getReportsByState: Entered");
+               	Titanium.API.info('getReportsByState: Entered');
 				var xhr = Ti.Network.createHTTPClient();
                 xhr.setTimeout(90000);
 				

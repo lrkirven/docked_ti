@@ -14,6 +14,7 @@ var win = Ti.UI.currentWindow;
 var model = win.model;
 var picasa = win.picasa;
 var localFlag = win.localFlag;
+var remoteOption = win.remoteOption;
 
 /*
  * members of this window instance
@@ -35,6 +36,12 @@ var searchView = null;
 var searchPage = null;
 var selectedLake = null;
 var remoteLake = null;
+
+function round(num) {
+	var dec = 2;
+	var val = Math.round(num*Math.pow(10,dec))/Math.pow(10,dec);
+	return val;
+}
 
 /**
  * Handle event if the user location has changed.
@@ -62,77 +69,121 @@ Ti.App.addEventListener('LOCATION_CHANGED', function(e) {
  * 
  * @param {Object} visible
  */
-function buildSearchView(visible) {
-	searchPage = Ti.UI.createView({
-		backgroundColor: CSSMgr.color0,
-		left: 0,
-		top: 0,
-		visible:visible,
-		height: 'auto',
-		width: 'auto',
-		clickName: 'searchPage'
-	});
-	var searchLbl = Ti.UI.createLabel({
-		color: CSSMgr.color2,
-		font: { fontFamily: model.myFont, fontWeight: 'normal' },
-		left: 25,
-		top: 5,
-		height: 20,
-		width: 'auto',
-		text: 'Search and select lake to visit: '
-	});
-	searchPage.add(searchLbl);
+function buildSearchView(visible, basic) {
 	
-	//
-	// Test box for user to enter search criteria
-	//
-	searchText = Titanium.UI.createTextField({
-		hintText: 'Enter full-text words to find a lake',
-		height: 40,
-		width: 280,
-		left: 20,
-		top: 30,
-		font: { fontFamily: model.myFont, fontWeight: 'normal' },
-		textAlign: 'left',
-		keyboardType: Titanium.UI.KEYBOARD_NUMBERS_PUNCTUATION,
-		borderStyle: Titanium.UI.INPUT_BORDERSTYLE_ROUNDED,
-		borderWidth: 2,
-		borderRadius: 5
-	});
-	searchText.addEventListener('return', function(){
-		Ti.API.info('Got return event ...');
-		searchText.blur();
-		var keyword = searchText.value;
-		Ti.API.info('User entered the following: ' + keyword);
-		var restClient = new RestClient();
-		Ti.API.info('Starting lake search with keyword=' + keyword);
-		restClient.searchLakesByKeyword(keyword);
-	});
-	searchPage.add(searchText);
+	if (basic) {
+		searchPage = Ti.UI.createView({
+			backgroundColor: CSSMgr.color0,
+			left: 0,
+			top: 0,
+			width: 320,
+			visible: visible,
+			backgroundColor:'transparent',
+			height: 'auto',
+			width: 'auto',
+			clickName: 'searchPage'
+		});
 	
-	//
-	// table to display search results
-	//
-	searchView = Titanium.UI.createTableView({
-		separatorColor: CSSMgr.color0,
-		style: Titanium.UI.iPhone.TableViewStyle.PLAIN,
-		top: 75,
-		height:300,
-		visible:false,
-		filterAttribute: 'filter',
-		color: CSSMgr.color2,
-		backgroundColor: CSSMgr.color0
-	});
-	searchView.addEventListener('click', function(e) { 
-		Ti.API.info('User selected resKey --> ' + e.rowData.lake.resKey);
-		searchPage.visible = false;
-		win.remove(searchPage);
-		remoteLake = e.rowData.lake;
-		var restClient = new RestClient();
-		restClient.getRemoteMsgEvents(e.rowData.lake.resKey);
-	});
-	searchPage.add(searchView);
-	win.add(searchPage);
+		/*	
+		var searchLbl = Ti.UI.createLabel({
+			color: CSSMgr.color0,
+			font: { fontFamily: model.myFont, fontWeight: 'bold' },
+			left: 25,
+			top: 5,
+			height: 20,
+			width: 'auto',
+			text: 'Search and select lake to visit: '
+		});
+		searchPage.add(searchLbl);
+		*/
+		
+		//
+		// Test box for user to enter search criteria
+		//
+		searchText = Titanium.UI.createTextField({
+			hintText: 'Enter full-text words to find a lake',
+			height: 40,
+			width: 280,
+			left: 20,
+			top: 5,
+			font: { fontFamily: model.myFont, fontWeight: 'normal' },
+			textAlign: 'left',
+			keyboardType: Titanium.UI.KEYBOARD_NUMBERS_PUNCTUATION,
+			borderStyle: Titanium.UI.INPUT_BORDERSTYLE_ROUNDED,
+			borderWidth: 2,
+			borderRadius: 5
+		});
+		searchText.addEventListener('return', function(){
+			Ti.API.info('Got return event ...');
+			searchText.blur();
+			var keyword = searchText.value;
+			Ti.API.info('User entered the following: ' + keyword);
+			var restClient = new RestClient();
+			Ti.API.info('Starting lake search with keyword=' + keyword);
+			restClient.searchLakesByKeyword(keyword);
+		});
+		searchPage.add(searchText);
+		
+		//
+		// table to display search results
+		//
+		searchView = Titanium.UI.createTableView({
+			separatorColor: CSSMgr.color0,
+			style: Titanium.UI.iPhone.TableViewStyle.PLAIN,
+			top: 55,
+			width: 320,
+			height: 450,
+			visible: false,
+			filterAttribute: 'filter',
+			color: CSSMgr.color2,
+			backgroundColor: CSSMgr.color0
+		});
+		searchView.addEventListener('click', function(e){
+			Ti.API.info('User selected resKey --> ' + e.rowData.lake.resKey);
+			searchPage.visible = false;
+			win.remove(searchPage);
+			remoteLake = e.rowData.lake;
+			var restClient = new RestClient();
+			restClient.getRemoteMsgEvents(e.rowData.lake.resKey);
+		});
+		searchPage.backgroundImage = '../images/Background.png';
+		searchPage.add(searchView);
+		win.add(searchPage);
+	}
+	else {
+		searchPage = Ti.UI.createView({
+			left: 0,
+			top: 0,
+			visible: true,
+			width: 320,
+			clickName: 'searchPage'
+		});
+		
+		//
+		// table to display search results
+		//
+		searchView = Titanium.UI.createTableView({
+			separatorColor: CSSMgr.color0,
+			style: Titanium.UI.iPhone.TableViewStyle.PLAIN,
+			top: 0,
+			width: 320,
+			backgroundColor:'transparent',
+			visible: true,
+			selectionStyle:Ti.UI.iPhone.TableViewCellSelectionStyle.GRAY,
+			rowBackgroundColor:CSSMgr.color2
+		});
+		searchView.addEventListener('click', function(e){
+			Ti.API.info('User selected resKey --> ' + e.rowData.lake.resKey);
+			searchPage.visible = false;
+			win.remove(searchPage);
+			remoteLake = e.rowData.lake;
+			var restClient = new RestClient();
+			restClient.getRemoteMsgEvents(e.rowData.lake.resKey);
+		});
+		searchPage.backgroundImage = '../images/Background.png';
+		searchPage.add(searchView);
+		win.add(searchPage);	
+	}
 };
 
 /**
@@ -140,7 +191,7 @@ function buildSearchView(visible) {
  * 
  * @param {Object} lakeList
  */
-function buildSearchResultsRowCollection(lakeList) {
+function buildSearchResultsRowCollection(lakeList, showDistFlag) {
 	var i = 0;
 	var item = null;
 	var lake = null;
@@ -168,8 +219,8 @@ function buildSearchResultsRowCollection(lakeList) {
 			//
 			
 			var row = Ti.UI.createTableViewRow({
-				selectedBackgroundColor: '#fff',
-				backgroundColor: CSSMgr.color0,
+				color: CSSMgr.color0,
+				backgroundColor:CSSMgr.color2,
 				height:0,
 				width:'auto',
 				lake:lake,
@@ -183,12 +234,8 @@ function buildSearchResultsRowCollection(lakeList) {
 			// name of the lake
 			//	
 			var lakeNameLbl = Ti.UI.createLabel({
-				color: CSSMgr.color2,
-				font: {
-					fontSize: '12',
-					fontWeight: 'bold',
-					fontFamily: model.myFont
-				},
+				color: CSSMgr.color0,
+				font: { fontSize: '12', fontWeight: 'bold', fontFamily: model.myFont },
 				left: 15,
 				top: 0,
 				height: 20,
@@ -202,13 +249,9 @@ function buildSearchResultsRowCollection(lakeList) {
 			// number of active users
 			//	
 			var userCountLbl = Ti.UI.createLabel({
-				color: CSSMgr.color3,
-				font: {
-					fontSize: '10',
-					fontWeight: 'bold',
-					fontFamily: model.myFont
-				},
-				left: 25,
+				color: CSSMgr.color0,
+				font: { fontSize: '10', fontWeight: 'bold', fontFamily: model.myFont },
+				left: 15,
 				top: 15,
 				height: 20,
 				width: 120,
@@ -217,24 +260,37 @@ function buildSearchResultsRowCollection(lakeList) {
 			});
 			row.add(userCountLbl);
 		
-			//
-			// lasyUpdate timestamp
-			//	
-			var lastUpdateLbl = Ti.UI.createLabel({
-				color: CSSMgr.color3,
-				font: {
-					fontSize: '10',
-					fontWeight: 'bold',
-					fontFamily: model.myFont
-				},
-				left: 130,
-				top: 15,
-				height: 20,
-				width: 150,
-				clickName: 'lastUpdate',
-				text: 'Last Update: ' + lake.lastUpdateText
-			});
-			row.add(lastUpdateLbl);
+			
+			
+			if (showDistFlag) {
+				var distLbl = Ti.UI.createLabel({
+					color: CSSMgr.color0,
+					font: { fontSize: '10', fontWeight: 'bold', fontFamily: model.myFont },
+					left: 100,
+					top: 15,
+					height: 20,
+					width: 150,
+					clickName: 'distAway',
+					text: 'Miles away: ' + round(lake.distanceAway)
+				});
+				row.add(distLbl);
+			}
+			else {
+				//
+				// lastUpdate timestamp
+				//	
+				var lastUpdateLbl = Ti.UI.createLabel({
+					color: CSSMgr.color0,
+					font: { fontSize: '10', fontWeight: 'bold', fontFamily: model.myFont },
+					left: 100,
+					top: 15,
+					height: 20,
+					width: 150,
+					clickName: 'lastUpdate',
+					text: 'Last Update: ' + lake.lastUpdateText
+				});
+				row.add(lastUpdateLbl);
+			}
 			
 			Ti.API.info('buildSearchResultsRowCollection: Adding row=' + row);
 			myDataRowList.push(row);
@@ -264,10 +320,10 @@ function formatComments(str, len) {
  * 
  * @param {Object} list
  */
-function updateSearchTableViewDisplay(searchResults) {
+function updateSearchTableViewDisplay(searchResults, showDistFlag) {
 	Ti.API.info('updateSearchTableViewDisplay: # of lake matches ' + (searchResults != null ? searchResults.length : 0));
 	if (searchResults.length > 0) {
-		var dataRowList = buildSearchResultsRowCollection(searchResults);
+		var dataRowList = buildSearchResultsRowCollection(searchResults, showDistFlag);
 		Ti.API.info('updateSearchTableViewDisplay: # of results: ' + (dataRowList == null ? 0 : dataRowList.length));
 		Ti.API.info('updateSearchTableViewDisplay: searchView=' + searchView);
 		searchView.setData(dataRowList);
@@ -313,23 +369,7 @@ function updateTableViewDisplay(list) {
  * managing the user clicking a message.
  */
 function buildTableView() {
-	/*
-	var tblHeader = Ti.UI.createView({
-		height: 30,
-		width: 320
-	});
-	var label = Ti.UI.createLabel({
-		top: 5,
-		left: 10,
-		text: Msgs.BUZZ_TITLE,
-		font: { fontFamily: model.myFont, fontSize: 20, fontWeight: 'bold' },
-		color: CSSMgr.color2
-	});
-	tblHeader.add(label);
-	*/
 	var t = Titanium.UI.createTableView({
-		// headerView: tblHeader,
-		// style:Titanium.UI.iPhone.TableViewStyle.GROUPED,
 		style: Titanium.UI.iPhone.TableViewStyle.PLAIN,
 		top: 55,
 		separatorColor:CSSMgr.color2,
@@ -402,15 +442,26 @@ Titanium.App.addEventListener('FOUND_LAST_BUCKET', function(e) {
 	}
 });
 
-Ti.App.addEventListener('SEARCH_RESULTS_RECD', function(e) {
+Titanium.App.addEventListener('SEARCH_RESULTS_RECD', function(e) {
 	if (e.status == 0) {
 		Ti.API.info('Handling event -- SEARCH_RESULTS_RECD --> ' + e.result);
-		updateSearchTableViewDisplay(e.result);
+		updateSearchTableViewDisplay(e.result, false);
 	}
 	else {
 		Tools.reportMsg(Msgs.APP_NAME, e.errorMsg);
 	}
 });
+
+Titanium.App.addEventListener('CLOSEST_RES_RECD', function(e) {
+	if (e.status == 0) {
+		Ti.API.info('Handling event -- SEARCH_RESULTS_RECD --> ' + e.result);
+		updateSearchTableViewDisplay(e.result, true);
+	}
+	else {
+		Tools.reportMsg(Msgs.APP_NAME, e.errorMsg);
+	}
+});
+
 
 /**
  * This method handles event when we are receiving buzz messages from the server.
@@ -477,6 +528,7 @@ function init() {
 	initPreloader = Base.showPreloader(win, null, false);
 
 	if (localFlag) {
+		Ti.API.info('buzzViewer.init(): Local Mode');
 		//	
 		// start refresh timer
 		//
@@ -491,10 +543,22 @@ function init() {
 		// start refresh timer
 		//
 		setInterval(check4RemoteMsgEvents, 120000);
-		//
-		// display search form
-		//
-		buildSearchView(true);
+		if (remoteOption == 0) {
+			Ti.API.info('buzzViewer.init(): Remote -- Search Mode');
+			//
+			// display search form
+			//
+			buildSearchView(true, true);
+		}
+		else if (remoteOption == 1) {
+			Ti.API.info('buzzViewer.init(): Remote -- Closest Mode');
+			//
+			// display preset results
+			//
+			buildSearchView(true, false);
+			var c = new RestClient();
+			c.getClosestResources(model.getActualLat(), model.getActualLng());
+		}
 	}
 
 };

@@ -28,13 +28,13 @@ Titanium.App.addEventListener('RESET_MY_HOTSPOTS', function(e) {
 /**
  * This method build the table that contains all of the buzz messages.
  */
-function buildSelectedHotSpotTable() {
+function buildSearchOptionMenu() {
 	// table header
 	var tblHeader = Ti.UI.createView({ height:30, width:'auto' });
 	var label = Ti.UI.createLabel({ 
 		top:5,
 		left:10,
-   		text:Msgs.HOTSPOT_OPTIONS,
+   		text:Msgs.VISIT_OPTIONS,
 		font: { fontFamily:model.myFont, fontSize:20, fontWeight:'bold' },
 		color:CSSMgr.color2
 	});
@@ -59,8 +59,7 @@ function buildSelectedHotSpotTable() {
 				backgroundColor:CSSMgr.color0,
     			barColor:CSSMgr.color0,
 				barImage: '../images/Header.png',
-				hotSpot:hotSpot,
-				canEdit:canEdit,
+				remoteOption:e.rowData.remoteOption,
 				model:model
 			});
 			Titanium.UI.currentTab.open(currentWin, {animated:true});
@@ -81,21 +80,19 @@ function init() {
 	Base.attachMyBACKButton(win);
 	
 	menu0 = [{
-		title: 'Info',
+		title: 'Search...',
+		leftImage: '../images/ChatBubble.png',
 		hasChild: true,
-		leftImage: '../images/Hotspot.png',
-		localFlag: true,
-		ptr: 'hotSpotEditor.js'
+		localFlag: false,
+		leftImage: '../images/ChatBubble.png',
+		remoteOption: 0,
+		ptr: 'buzzViewer.js'
 	}, {
-		title: 'Map',
+		title: 'Show Closest',
 		hasChild: true,
-		leftImage: '../images/Hotspot.png',
-		ptr: 'hotSpotOnMapViewer.js'
-	}, {
-		title: 'Compass',
-		hasChild: true,
-		leftImage: '../images/Hotspot.png',
-		ptr: 'showCompass.js'
+		leftImage: '../images/ChatBubble.png',
+		remoteOption: 1,
+		ptr: 'buzzViewer.js'
 	}];
 	
 	Ti.API.info('hotSpotSelectedMain.init(): Entered ');
@@ -103,7 +100,7 @@ function init() {
 	/*
 	 * Buzz message table
 	 */
-	buildSelectedHotSpotTable();
+	buildSearchOptionMenu();
 	selectedMenu.data = menu0;
 	
 	/*
