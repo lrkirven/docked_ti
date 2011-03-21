@@ -109,9 +109,15 @@ function init() {
 		win.add(nativeMap);
 	}
 	else {
+		var activeLake = model.getCurrentLake();
+		var resKey = 'XXX';
+		if (activeLake != null) {
+			Ti.API.info('check4MsgEvent(): resKey ---> ' + activeLake.resKey);
+			resKey = activeLake.resKey;
+		}
 		var myLat = model.getUserLat();
 		var myLng = model.getUserLng();
-		var targetUrl = model.getBaseUrl() + '/buzzmap?lat=' + myLat + '&lng=' + myLng + '&version=' + Common.VERSION;
+		var targetUrl = model.getBaseUrl() + '/buzzmap?lat=' + myLat + '&lng=' + myLng + '&resKey=' + resKey + '&version=' + Common.VERSION;
 		googleMap = loadGoogleMap(targetUrl);
 		googleMap.addEventListener('error', function(e){
 			nativeMap = loadNativeMap();
