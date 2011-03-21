@@ -414,11 +414,24 @@
 					font: { fontSize:smallFontSize, fontFamily: model.myFont, fontWeight: 'bold' },
 					top: 15,
 					left: 10,
-					width: 300,
+					width: 150,
 					textAlign: 'left',
 					height:20 
 				});
 				latlngPanel.add(distBearText);
+				
+				var tmFormatted = new Date(hs.createDate);
+				var tmLabel = Titanium.UI.createLabel({
+					color: CSSMgr.color2,
+					text: tmFormatted.format('mmm dd yyyy HH:MM'),
+					font: { fontSize:smallFontSize, fontFamily: model.myFont, fontWeight: 'bold' },
+					top: 15,
+					right: 0,
+					width: 150,
+					textAlign: 'right',
+					height:20 
+				});
+				latlngPanel.add(tmLabel);
 		
 	
 				dataPanel.add(latlngPanel);
