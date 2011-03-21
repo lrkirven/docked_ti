@@ -2,6 +2,7 @@
 function FacebookClient() {
 	var fbBaseUrl = 'https://graph.facebook.com';
 	var fbWallUrl = 'https://graph.facebook.com/me/feed'
+	var fbDockedWallUrl = 'https://graph.facebook.com/195955030426577/feed'
 	var fbCurrentUserUrl = 'https://graph.facebook.com/me';
 	var lastBucket = null;
 	var picasaPassword = null;
@@ -96,9 +97,80 @@ function FacebookClient() {
             //
             // send HTTP request
             //
-            Titanium.API.info('publishStream: Trying to get msgs from server ... ');
+            Titanium.API.info('publishStream: publish msg to fb ... ');
             xhr.send(postData);
 			
+		},
+		publishStreamToDockedPage : function(postData) {
+			var uploadingPhoto = false;
+			var now = new Date();
+			
+			if (!Titanium.Network.online) {
+				Ti.App.fireEvent('DOCKED_FB_PUBLISH_STREAM_RESP', { status:69,
+					errorMsg: Msgs.NO_DATA_SERVICE
+				});
+			}
+			
+			var xhr = Ti.Network.createHTTPClient();
+            xhr.setTimeout(20000);
+			
+			//
+            // error
+            //
+            xhr.onerror = function(e) {
+				Ti.App.fireEvent('DOCKED_FB_PUBLISH_STREAM_RESP', { status:69,
+					errorMsg: 'Unable to connect to remote services -- Please check your network connection'	
+				});
+             }; 
+			 
+			 /*
+			  * Adding Faceboock Graph API here
+			  */
+			  xhr.onload = function() {
+				if (this.status >= httpCodes.BAD_REQUEST) {
+					handleErrorResp(this.status, 'DOCKED_FB_PUBLISH_STREAM_RESP');	
+					return;
+				}
+				if (Tools.test4NotFound(this.responseText)) {
+					Ti.App.fireEvent('DOCKED_FB_PUBLISH_STREAM_RESP', { status:89,
+						errorMsg: 'publishStreamToDockedPage: Unable complete request at this time -- Apologize for the service failure.'	
+					});
+					return;
+				}
+				Titanium.API.info('publishStreamToDockedPage: onload: Entered - [' + this.responseText + ']');
+				if (this.responseText == 'null' || this.responseText == undefined) {
+					Titanium.API.info('publishStreamToDockedPage: onload: Returning empty set');
+					Ti.App.fireEvent('DOCKED_FB_PUBLISH_STREAM_RESP', { result:[], status:0 });
+					return;
+				}
+				if (this.responseText != null) {
+					var jsonNodeData = JSON.parse(this.responseText);
+					if (jsonNodeData != null) {
+						Titanium.API.info('publishStreamToDockedPage: onload: SUCCESS');
+						Ti.App.fireEvent('DOCKED_FB_PUBLISH_STREAM_RESP', { result:jsonNodeData, status:0 });
+					}
+					else {
+						Ti.App.fireEvent('DOCKED_FB_PUBLISH_STREAM_RESP', { status:99,
+							errorMsg: 'Unable to complete request at this time'	
+						});
+					}
+				}
+				else {
+					Ti.App.fireEvent('DOCKED_FB_PUBLISH_STREAM_RESP', { status:99,
+						errorMsg: 'Unable to complete request at this time'	
+					});
+				}
+             };
+				
+			//
+            // create connection
+            //
+            xhr.open('POST', fbWallUrl);
+            //
+            // send HTTP request
+            //
+            Titanium.API.info('publishStreamToDockedPage: publish msg to Docked fb ... ');
+            xhr.send(postData);
 		},
 		getUserProfile : function(tag) {
 			
