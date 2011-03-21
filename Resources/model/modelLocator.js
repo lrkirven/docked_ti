@@ -1,6 +1,8 @@
 function ModelLocator() {
-	var secureBaseUrl = 'https://zarcode4fishin.appspot.com';
-	var baseUrl = 'http://zarcode4fishin.appspot.com';
+	var secureBaseUrl = 'https://dockedmobile.appspot.com';
+	var baseUrl = 'http://dockedmobile.appspot.com';
+	// var secureBaseUrl = 'https://zarcode4fishin.appspot.com';
+	// var baseUrl = 'http://zarcode4fishin.appspot.com';
 	// var baseUrl = 'http://mobile.lazylaker.net';
 	var myRestURL = baseUrl + '/resources/events/add/123';
 	var currentLake = null;
