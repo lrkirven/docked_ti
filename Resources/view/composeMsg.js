@@ -36,6 +36,18 @@ Titanium.App.addEventListener('FB_PUBLISH_STREAM_RESP', function(e) {
 	}
 });
 
+Titanium.App.addEventListener('DOCKED_FB_PUBLISH_STREAM_RESP', function(e) {
+	if (e.status == 0) {
+		Tools.reportMsg(Msgs.APP_NAME, Msgs.MSG_POSTED);	
+		performExit();
+		win.close();
+	}
+	else {
+		Ti.API.warn('**** Unable to post to Facebook ***');
+	}
+});
+
+
 Titanium.App.addEventListener('ACTIVE_BUCKET', function(e) {
 	if (e.status == 0) {
 		Ti.API.info('Got ACTIVE_BUCKET event -- last bucket ---> ' + e.result.albumId);
@@ -71,6 +83,7 @@ function postMessage2FB(m) {
 				caption:"docked.co",
 				message:m.messageData,
 				picture:m.photoUrl,
+				from:{ id:Common.DOCKED_FB_ID, name:Msgs.APP_NAME },
 				access_token:token
 			};
 		}
@@ -79,6 +92,7 @@ function postMessage2FB(m) {
 				name: 'Docked on ' + m.location,
 				link:"http://www.docked.co",
 				caption:"docked.co",
+				from:{ id:Common.DOCKED_FB_ID, name:Msgs.APP_NAME },
 				message:m.messageData,
 				access_token:token
 			};
@@ -87,7 +101,8 @@ function postMessage2FB(m) {
 		var fbClient = new FacebookClient();
 		var token = model.getFbAccessToken();
 		fbClient.setAccessToken(token);
-		fbClient.publishStream(fbRec);
+		// fbClient.publishStream(fbRec);
+		fbClient.publishStreamToDockedPage(fbRec);
 	}
 	else {
 		Ti.API.warn('**** User is not logged into Facebook -- Cannot post message to FB');
@@ -411,7 +426,7 @@ function handleNewMsgPosted(e) {
 		if (post2FB) {
 			postingInd.hide();
 			Ti.API.info('handleNewMsgPosted(): Going to facebook ---> ' + e.origMsgEvent);
-			postMessage2FB(e.origMsgEvent);
+			postMessage2FB(e.newMsgEvent);
 		}
 		else {
 			postingInd.hide();
