@@ -201,9 +201,12 @@ function buildSearchResultsRowCollection(lakeList, showDistFlag) {
 	var username = null;
 	var location = null;
 	var msgTitle = null;
-	var currentLake = model.getCurrentLake();
 	
-	Ti.API.info('buildSearchResultsRowCollection: SKIP :: currentLake=' + currentLake.resKey);
+	
+	var currentLake = model.getCurrentLake();
+	if (currentLake != null) {
+		Ti.API.info('buildSearchResultsRowCollection: SKIP :: currentLake=' + currentLake.resKey);
+	}
 	
 	if (lakeList != null) {
 		Ti.API.info('buildSearchResultsRowCollection: size: ' + lakeList.length);
