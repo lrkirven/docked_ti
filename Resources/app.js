@@ -391,8 +391,10 @@ function handleInitialUserPosition(e) {
 		// hardcoding Lake Ray Roberts
 		//
 		if (Common.DEBUG) {
-			lat = 32.859258;
-			lng = -96.520557;
+			// lat = 32.859258;
+			lat = 33.30424880981445;
+			// lng = -96.520557;
+			lng = -96.5897216796875
 		}
 		
 		model.setUserLng(lng);
@@ -427,6 +429,11 @@ function handleInitialUserPosition(e) {
 	}
 };
 
+Titanium.App.addEventListener('EXIT_APP', function(e) {
+	tabGroup.close();
+});
+	
+
 Titanium.App.addEventListener('LOCATION_CHANGED', function(e) {
 	var now = new Date();
 	var tm = now.getTime();
@@ -455,6 +462,7 @@ Titanium.App.addEventListener('UPDATED_DISPLAY_NAME', function(e) {
 			//
 			if (!posListenerSet) {
 				posListenerSet = true;
+				Titanium.Geolocation.accuracy = Titanium.Geolocation.ACCURACY_BEST;
 				Titanium.Geolocation.getCurrentPosition(handleInitialUserPosition);
 			}
 		}

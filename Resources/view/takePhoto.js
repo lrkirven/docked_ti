@@ -10,9 +10,11 @@ var parentWin = win.parentWin;
 
 Titanium.Media.showCamera({
 	success:function(event) {
+		var w = 720;
+		var h = 720;
 		var now = new Date();
 		var cropRect = event.cropRect;
-		var imgData = event.media;
+		var imgData = event.media.imageAsResized(w,h)
 		model.setPendingRawImage(imgData);
 		win.close();
 	},

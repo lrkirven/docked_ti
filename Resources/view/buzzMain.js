@@ -187,6 +187,23 @@ function init() {
 	 * header
 	 */	
 	headerView = Base.buildLocationHeader(win, true, '');
+	
+	/*
+	var exitBtn = Titanium.UI.createButton({
+		backgroundImage:'../images/Exit.png',
+		font: { fontFamily:model.myFont, fontSize:20, fontWeight:'bold' },
+		style: Titanium.UI.iPhone.SystemButtonStyle.PLAIN,
+		enabled: true,
+		bottom: 20,
+		right: 10,
+		height: 30,
+		width: 30
+	});
+	exitBtn.addEventListener('click', function(e) {
+		Ti.App.fireEvent('EXIT_APP', {});
+	});
+	win.setRightNavButton(exitBtn);
+	*/
 
 	/*
 	 * Buzz message table
@@ -203,6 +220,8 @@ function init() {
 	setTimeout(function () { 
 		Ti.App.fireEvent('LOCATION_CHANGED', {});	
     }, 25000);
+	
+	
 };
 
 init();

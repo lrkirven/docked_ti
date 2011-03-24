@@ -85,6 +85,23 @@ function init() {
 		}
 	});
 	win.add(settingsMenu);
+	
+	/*
+	var exitBtn = Titanium.UI.createButton({
+		backgroundImage:'../images/Chat.png',
+		font: { fontFamily:model.myFont, fontSize:20, fontWeight:'bold' },
+		style: Titanium.UI.iPhone.SystemButtonStyle.PLAIN,
+		enabled: true,
+		bottom: 20,
+		right: 10,
+		height: 30,
+		width: 30
+	});
+	exitBtn.addEventListener('click', function(e) {
+		Ti.App.fireEvent('EXIT_APP', {});
+	});
+	win.setRightNavButton(exitBtn);
+	*/
 
 	if (model.getCurrentUser() == null) {
 		var lbl0 = Titanium.UI.createLabel({

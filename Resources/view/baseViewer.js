@@ -167,7 +167,8 @@
 	}; 
 	
 	Base.convertImageForDisplay = function(url) {
-		Ti.API.info('imageHack(): url=' + url);
+		/*
+		Ti.API.info('convertImageForDisplay(): url=' + url);
 		var tempImg = Ti.UI.createImageView({
 			image: url 
 		});
@@ -176,6 +177,17 @@
 		// var t = Ti.UI.create2DMatrix().rotate(-90);
 		var photo = Ti.UI.createImageView({
   			image: blob
+		});
+		*/
+		var photo = Ti.UI.createImageView({
+			image: url,
+			backgroundColor: CSSMgr.color0,
+			borderColor: CSSMgr.color2,
+			top: 5,
+			left: 0,
+			width: 50,
+			height: 50,
+			clickName: 'msgPhoto'
 		});
 		return photo;
 	};
@@ -210,16 +222,8 @@
 				clickName: 'msgBody'
 			});
 			
-			var imageWrapper = Ti.UI.createView({
-				borderColor: CSSMgr.color2,
-				width: 50,
-				height: 50,
-				top: 5,
-				left: 0,
-			});
 			msgPhoto = Base.convertImageForDisplay(msgEvent.photoUrl);
-			imageWrapper.add(msgPhoto);
-			msgBody.add(imageWrapper);
+			msgBody.add(msgPhoto);
 			
 			userMsg = Ti.UI.createLabel({
 				color: CSSMgr.color2,
@@ -260,17 +264,9 @@
 				width: 230,
 				clickName: 'msgBody'
 			});
-			
-			var imageWrapper = Ti.UI.createView({
-				borderColor: CSSMgr.color2,
-				width: 50,
-				height: 50,
-				top: 5,
-				left: 0,
-			});
+		
 			msgPhoto = Base.convertImageForDisplay(msgEvent.photoUrl);
-			imageWrapper.add(msgPhoto);
-			msgBody.add(imageWrapper);
+			msgBody.add(msgPhoto);
 			
 			userMsg = Ti.UI.createLabel({
 				color: '#fff',
