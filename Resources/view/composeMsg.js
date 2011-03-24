@@ -79,7 +79,7 @@ function postMessage2FB(m) {
 		if (m.photoUrl != null) {
 			fbRec = {
 				name: 'Docked on ' + m.location,
-				link:"http://www.docked.co",
+				link:'http://www.docked.co/landing.php?m=' + m.msgId,
 				caption:"docked.co",
 				message:m.messageData,
 				picture:m.photoUrl,
@@ -90,7 +90,7 @@ function postMessage2FB(m) {
 		else {
 			fbRec = {
 				name: 'Docked on ' + m.location,
-				link:"http://www.docked.co",
+				link:'http://www.docked.co/landing.php?m=' + m.msgId,
 				caption:"docked.co",
 				from:{ id:Common.DOCKED_FB_ID, name:Msgs.APP_NAME },
 				message:m.messageData,
@@ -259,6 +259,7 @@ function buildForm() {
 		scrollable: false,
 		separatorColor: CSSMgr.color0,
 		style: Titanium.UI.iPhone.TableViewStyle.PLAIN,
+		selectionStyle:Ti.UI.iPhone.TableViewCellSelectionStyle.GRAY,
 		top: 170,
 		right: 10,
 		height: 100,

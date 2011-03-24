@@ -97,7 +97,7 @@
 			});
 			
 			userMsg = Ti.UI.createLabel({
-				color: CSSMgr.color2,
+				color: '#fff',
 				font: { fontSize: fontSize, fontWeight: 'normal', fontFamily: model.myFont },
 				left: 0,
 				top: 5,
@@ -137,7 +137,7 @@
 			});
 			
 			userMsg = Ti.UI.createLabel({
-				color: CSSMgr.color2,
+				color: '#fff',
 				font: { fontSize: fontSize, fontWeight: 'normal', fontFamily: model.myFont },
 				left: 0,
 				top: 5,
@@ -165,6 +165,21 @@
 		}
 		
 	}; 
+	
+	Base.convertImageForDisplay = function(url) {
+		Ti.API.info('imageHack(): url=' + url);
+		var tempImg = Ti.UI.createImageView({
+			image: url 
+		});
+		var blob = tempImg.toImage();
+		blob = blob.imageAsThumbnail(50);
+		var t = Ti.UI.create2DMatrix().rotate(-90);
+		var photo = Ti.UI.createImageView({
+  			image: blob,
+			transform: t
+		});
+		return photo;
+	};
 	
 	/**
 	 * This method builds a message view with photo to be added to a row inside of a table.
@@ -195,17 +210,17 @@
 				width: 230,
 				clickName: 'msgBody'
 			});
-			msgPhoto = Ti.UI.createImageView({
-				image: msgEvent.photoUrl,
-				backgroundColor: CSSMgr.color0,
+			
+			var imageWrapper = Ti.UI.createView({
 				borderColor: CSSMgr.color2,
-				top: 5,
-				left: 0,
 				width: 50,
 				height: 50,
-				clickName: 'msgPhoto'
+				top: 5,
+				left: 0,
 			});
-			msgBody.add(msgPhoto);
+			msgPhoto = Base.convertImageForDisplay(msgEvent.photoUrl);
+			imageWrapper.add(msgPhoto);
+			msgBody.add(imageWrapper);
 			
 			userMsg = Ti.UI.createLabel({
 				color: CSSMgr.color2,
@@ -236,7 +251,7 @@
 		}
 		else {
 			
-			Ti.API.info('appendMsgBodyWithPhoto(): SHORT MSG');
+			Ti.API.info('appendMsgBodyWithPhoto(): SHORT MSG url=' + msgEvent.photoUrl);
 			
 			msgBody = Ti.UI.createView({
 				backgroundColor: CSSMgr.color0,
@@ -246,17 +261,17 @@
 				width: 230,
 				clickName: 'msgBody'
 			});
-			msgPhoto = Ti.UI.createImageView({
-				image: msgEvent.photoUrl,
-				backgroundColor: CSSMgr.color0,
+			
+			var imageWrapper = Ti.UI.createView({
 				borderColor: CSSMgr.color2,
-				top: 5,
-				left: 0,
 				width: 50,
 				height: 50,
-				clickName: 'msgPhoto'
+				top: 5,
+				left: 0,
 			});
-			msgBody.add(msgPhoto);
+			msgPhoto = Base.convertImageForDisplay(msgEvent.photoUrl);
+			imageWrapper.add(msgPhoto);
+			msgBody.add(imageWrapper);
 			
 			userMsg = Ti.UI.createLabel({
 				color: '#fff',
@@ -304,8 +319,8 @@
 				image: msgEvent.profileUrl,
 				backgroundColor: CSSMgr.color0,
 				borderColor: CSSMgr.color1,
-				top:0,
-				left:0,
+				top:5,
+				left:5,
 				width:50,
 				height:50,
 				clickName:'photo'

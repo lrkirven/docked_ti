@@ -283,6 +283,7 @@ function createMsgTopicWithPhoto(m) {
 		width:myWidth,
 		clickName:'msgBody'
 	});
+	var t = Ti.UI.create2DMatrix().rotate(-90);
 	var msgPhoto = Ti.UI.createImageView({
 		// image:m.photoUrl,
 		backgroundImage:m.photoUrl,
@@ -293,6 +294,7 @@ function createMsgTopicWithPhoto(m) {
 		// width:'auto',
 		width:150,
 		height:150,
+		transform: t,
 		clickName:'msgPhoto'
 	});
 	msgPhoto.addEventListener('load', function(e){
@@ -336,6 +338,7 @@ function createMsgTopicWithPhoto(m) {
 	Ti.API.info('userLocale x --> ' + userLocale.height);
 	win.add(msgBody);
 	
+	/*
 	var rotateBtn = Titanium.UI.createButton({
    		title:'Rotate It!',
 		color:CSSMgr.color2,
@@ -356,6 +359,7 @@ function createMsgTopicWithPhoto(m) {
 		msgPhoto.animate(spin);
 	});
 	win.add(rotateBtn);
+	*/
 	
 	return size;
 	

@@ -9,8 +9,6 @@ Ti.include('client/picasaClient.js');
 Ti.include('client/restClient.js');
 
 
-// Titanium.UI.setBackgroundColor('#000');
-
 //////////////////////////////////////////////////////////////////////////////////
 // Globals
 //////////////////////////////////////////////////////////////////////////////////
@@ -21,8 +19,10 @@ Ti.Geolocation.purpose = "Recieve User Location";
 
 var myFont = 'Verdana';
 var db = Titanium.Database.open('db.docked.co');
-// db.execute('DROP TABLE IF EXISTS AppParams');
-// db.execute("DELETE FROM AppParams WHERE name = 'FB_ACCESS_TOKEN'");	
+if (Common.RESET_APP) {
+	db.execute('DROP TABLE IF EXISTS AppParams');
+	db.execute("DELETE FROM AppParams WHERE name = 'FB_ACCESS_TOKEN'");	
+}
 db.execute('CREATE TABLE IF NOT EXISTS AppParams (id INTEGER PRIMARY KEY, name VARCHAR(30), valueStr TEXT, valueInt INTEGER)');
 var tabGroup = null;
 var buzzTab = null;
@@ -390,8 +390,10 @@ function handleInitialUserPosition(e) {
 		//
 		// hardcoding Lake Ray Roberts
 		//
-		lat = 32.859258;
-		lng = -96.520557;
+		if (Common.DEBUG) {
+			lat = 32.859258;
+			lng = -96.520557;
+		}
 		
 		model.setUserLng(lng);
 		model.setUserLat(lat);

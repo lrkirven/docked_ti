@@ -201,8 +201,9 @@ function buildSearchResultsRowCollection(lakeList, showDistFlag) {
 	var username = null;
 	var location = null;
 	var msgTitle = null;
+	var currentLake = model.getCurrentLake();
 	
-	Ti.API.info('buildSearchResultsRowCollection: Entered');
+	Ti.API.info('buildSearchResultsRowCollection: SKIP :: currentLake=' + currentLake.resKey);
 	
 	if (lakeList != null) {
 		Ti.API.info('buildSearchResultsRowCollection: size: ' + lakeList.length);
@@ -212,7 +213,12 @@ function buildSearchResultsRowCollection(lakeList, showDistFlag) {
 			//
 			lake = lakeList[i];
 		
-			Ti.API.info('buildSearchResultsRowCollection: name=' + lake.name);	
+			if (currentLake != null && lake.resKey == currentLake.resKey) {
+				continue;
+			}
+		
+			Ti.API.info('buildSearchResultsRowCollection: name=' + lake.name + 
+				' resourceId=' + lake.resKey);	
 			
 			//
 			// create table row
