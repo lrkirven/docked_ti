@@ -173,10 +173,9 @@
 		});
 		var blob = tempImg.toImage();
 		blob = blob.imageAsThumbnail(50);
-		var t = Ti.UI.create2DMatrix().rotate(-90);
+		// var t = Ti.UI.create2DMatrix().rotate(-90);
 		var photo = Ti.UI.createImageView({
-  			image: blob,
-			transform: t
+  			image: blob
 		});
 		return photo;
 	};
