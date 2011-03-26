@@ -366,7 +366,7 @@ function handleInitialUserPosition(e) {
 			lastPing = model.getLastPing();
 			diffInMsecs = tm - lastPing;
 			diffInMins = ((diffInMsecs / 1000) / 60);
-			if (diffInMins > 20) {
+			if (diffInMins > 15) {
 				bUpdateServer = true;
 			}
 			else {
