@@ -73,6 +73,11 @@
 		}
 	    return sign + n;
   	};
+	
+	Tools.round = function(num, dec) {
+		var val = Math.round(num*Math.pow(10,dec))/Math.pow(10,dec);
+		return val;
+	};
 
 	/**
 	 * Calculate the distance between 2 points.

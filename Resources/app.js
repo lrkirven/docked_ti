@@ -345,11 +345,15 @@ function handleInitialUserPosition(e) {
 		var oldLat = 0;
 		var oldLng = 0;
 		var diff = 0;
+		
+		/*
+		 * if inside of the polygon, then update server every 15
+		 */
 		if (lakePoly != null) {
 			var lastPing = model.getLastPing();
 			diffInMsecs = tm - lastPing;
 			diffInMins = ((diffInMsecs / 1000) / 60);
-			if (diffInMins > 10) {
+			if (diffInMins > 15) {
 				bUpdateServer = true;
 			}
 			else {
@@ -362,11 +366,14 @@ function handleInitialUserPosition(e) {
 				}
 			}
 		}
+		/*
+		 * if outside of polygon, check more often
+		 */
 		else {
 			lastPing = model.getLastPing();
 			diffInMsecs = tm - lastPing;
 			diffInMins = ((diffInMsecs / 1000) / 60);
-			if (diffInMins > 15) {
+			if (diffInMins > 5) {
 				bUpdateServer = true;
 			}
 			else {
@@ -374,7 +381,7 @@ function handleInitialUserPosition(e) {
 				oldLng = model.getUserLng();
 				Ti.API.info('Calc dist: oldLat=' +  oldLat + ' oldLng=' + oldLng + ' lat=' + lat + ' lng=' + lng);
 				diff = Tools.distanceFromAB(oldLat, oldLng, lat, lng);
-				if (diff > 2) {
+				if (diff > .75) {
 					bUpdateServer = true;
 				}
 			}

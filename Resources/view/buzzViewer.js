@@ -37,12 +37,6 @@ var searchPage = null;
 var selectedLake = null;
 var remoteLake = null;
 
-function round(num) {
-	var dec = 2;
-	var val = Math.round(num*Math.pow(10,dec))/Math.pow(10,dec);
-	return val;
-}
-
 /**
  * Handle event if the user location has changed.
  * @param {Object} e
@@ -148,6 +142,17 @@ function buildSearchView(visible, basic) {
 		});
 		searchPage.backgroundImage = '../images/Background.png';
 		searchPage.add(searchView);
+	
+		var helpBtn = Titanium.UI.createButton({title:'Tips'});	
+		helpBtn.addEventListener('click', function() {
+			var w = Titanium.UI.createWindow({
+				title: Msgs.APP_NAME,
+				model:model,
+				url:'showSearchHelp.js'
+			});
+			w.open();		
+		});
+		win.setRightNavButton(helpBtn);
 		win.add(searchPage);
 	}
 	else {
@@ -280,7 +285,7 @@ function buildSearchResultsRowCollection(lakeList, showDistFlag) {
 					height: 20,
 					width: 150,
 					clickName: 'distAway',
-					text: 'Miles away: ' + round(lake.distanceAway)
+					text: 'Miles away: ' + Tools.round(lake.distanceAway, 2)
 				});
 				row.add(distLbl);
 			}
@@ -519,6 +524,7 @@ Titanium.App.addEventListener('REMOTE_MSG_EVENTS_RECD', function(e) {
 		tableView = buildTableView();
 		win.add(tableView);
 		updateTableViewDisplay(e.result);
+		setInterval(check4RemoteMsgEvents, 120000);
 	}
 	else {
 		Tools.reportMsg(Msgs.APP_NAME, e.errorMsg);			
@@ -551,7 +557,7 @@ function init() {
 		//	
 		// start refresh timer
 		//
-		setInterval(check4RemoteMsgEvents, 120000);
+		
 		if (remoteOption == 0) {
 			Ti.API.info('buzzViewer.init(): Remote -- Search Mode');
 			//
