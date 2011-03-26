@@ -20,6 +20,11 @@ b.addEventListener('click', function() {
 win.leftNavButton = b;
 
 
+/**
+ * Converts supported resources into a table (or menu) for user selection.
+ * 
+ * @param {Object} list
+ */
 function convertRawData2TableItems(list) {
 	var dp = [];	
 	var i = 0;
@@ -40,6 +45,11 @@ function convertRawData2TableItems(list) {
 	return dp;
 };
 
+/**
+ * This method handles the event that returns a requested report details for display.
+ * 
+ * @param {Object} e
+ */
 Titanium.App.addEventListener('ONE_REPORT_RECD', function(e) { 
 	var w = Titanium.UI.createWindow({
 		url: 'reportDetails.js',
@@ -157,4 +167,7 @@ function init() {
 	}
 };
 
+/**
+ * Initial entry
+ */
 init();
