@@ -133,6 +133,7 @@ function init() {
 	}
 	settingsMenu.backgroundImage = '../images/Background.png';
 	
+	/*
 	var aboutBtn = Titanium.UI.createButton({
 		title: 'About Docked',
 		enabled: true,
@@ -144,6 +145,18 @@ function init() {
 		right: 20,
 		height: 30,
 		width: 150
+	});
+	*/
+	var aboutBtn = Ti.UI.createImageView({
+		image: '../images/DockedIcon.png',
+		backgroundColor: CSSMgr.color0,
+		borderColor: CSSMgr.color0,
+		bottom: 55,
+		right: 5,
+		width: 50,
+		height: 50,
+		borderRadius:10,
+		clickName: 'icon'
 	});
 	aboutBtn.addEventListener('click', function() {
 		var w = Titanium.UI.createWindow({

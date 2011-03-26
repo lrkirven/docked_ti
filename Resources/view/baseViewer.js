@@ -67,7 +67,7 @@
 		var icon = Ti.UI.createImageView({
 			image: '../images/DockedIcon.png',
 			backgroundColor: CSSMgr.color0,
-			borderColor: CSSMgr.color2,
+			borderColor: CSSMgr.color0,
 			top: top,
 			left: left,
 			width: 50,
