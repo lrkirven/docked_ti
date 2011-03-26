@@ -46,7 +46,8 @@ Titanium.App.addEventListener('ONE_REPORT_RECD', function(e) {
 		backgroundColor:CSSMgr.color0,
 		barColor:CSSMgr.color0,
 		barImage: '../images/Header.png',
-		report:{ title:e.result.keyword, timeDisplay:e.result.timeDisplay, reportBody:e.result.reportBody }
+		report:{ title:e.result.keyword, timeDisplay:e.result.timeDisplay, reportDate:e.result.reportDate,
+				reportBody:e.result.reportBody, reportedBy:e.result.reportedBy }
 	});
 	w.model = model;
 	Titanium.UI.currentTab.open(w, { animated:true });

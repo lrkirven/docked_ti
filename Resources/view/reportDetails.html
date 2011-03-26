@@ -33,6 +33,7 @@
 				document.getElementById('reportLake').innerText = e.title;
 				document.getElementById('reportTimeStamp').innerText = e.timeDisplay;
 				document.getElementById('reportBody').innerHTML = e.reportBody;
+				document.getElementById('reportedBy').innerHTML = '<a href=\"http://' + e.reportedBy + '\">' + e.reportedBy + '</a>';
 				Titanium.App.fireEvent("LOAD_REPORT_COMPLETE", {}); 
 		});
 	
@@ -42,20 +43,21 @@
 		<table width="100%" bgcolor="#FFFFFF"><tr><td>
 		
 		<p class="reportlbl" width="100%">
-			<b>Lake:</b>&nbsp;<b><div id="reportLake" class="reportData" style="width:100%; height:100%"></div></b>
+			<b>Resource:</b>&nbsp;<b><div id="reportLake" class="reportData" style="width:100%; height:100%"></div></b>
 		</p>
 		
 		<p class="reportlbl" width="100%">
-			<b>Timestamp:</b>&nbsp;<b><div class="reportData" id="reportTimeStamp" style="width:100%; height:100%"></div></b>
+			<b>Last Update:</b>&nbsp;<b><div class="reportData" id="reportTimeStamp" style="width:100%; height:100%"></div></b>
 		</p>
 		
 		<p class="reportlbl" width="300px">
-			<b>Report:</b><br>
+			<b>Fishing Report:</b><br>
 			<div class="actualReportData" id="reportBody" style="width:90%; height:100%"></div>
 		</p>
 		<p class="reportlbl" width="100%">
-			<b>Reported by:</b>&nbsp;<div id="reportBy" class="reportData" style="width:100%; height:100%"></div>
+			<b>Reported by:</b>&nbsp;<b><div id="reportedBy" class="reportData" style="width:100%; height:100%"></div></b>
 		</p>
+		<br>
 		</td>
 		</tr>
 		</table>

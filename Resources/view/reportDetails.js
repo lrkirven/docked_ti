@@ -43,8 +43,9 @@ function init() {
 	win.add(webview);
 	Ti.API.info('reportDetails: report : ' + report);
 	Ti.API.info('reportDetails: title : ' + report.title);
+	Ti.API.info('reportDetails: reportedBy : ' + report.reportedBy);
 	setTimeout(function(e) {
-		Ti.App.fireEvent("LOAD_REPORT", { title:report.title, timeDisplay:report.timeDisplay, reportBody:report.reportBody });
+		Ti.App.fireEvent('LOAD_REPORT', { title:report.title, timeDisplay:report.timeDisplay, reportBody:report.reportBody, reportedBy:report.reportedBy });
 	}, 3000);
 	mainInd.show(); 
 };
