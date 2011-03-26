@@ -101,7 +101,7 @@ function buildSearchView(visible, basic) {
 		// Test box for user to enter search criteria
 		//
 		searchText = Titanium.UI.createTextField({
-			hintText: 'Enter full-text words to find a lake',
+			hintText: 'Enter text to find a water community',
 			height: 40,
 			width: 280,
 			left: 20,

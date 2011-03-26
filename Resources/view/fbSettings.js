@@ -180,8 +180,8 @@ function buildForm() {
 		clickName: 'bg'
 	});
 	
-	var defaultIDImage = Base.createProfilePic(10, 10);
-	panel.add(defaultIDImage);
+	var icon = Base.createIcon(15, 15);
+	panel.add(icon);
 	
 	var fbLbl = Titanium.UI.createLabel({
 		color: CSSMgr.color0,

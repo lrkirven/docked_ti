@@ -27,8 +27,8 @@ function buildForm() {
 		clickName:'bg'
 	});
 
-	var defaultIDImage = Base.createProfilePic(10, 20);
-	panel.add(defaultIDImage);
+	var icon = Base.createIcon(15, 15);
+	panel.add(icon);
 	
 	var appName = Titanium.UI.createLabel({
 		color: CSSMgr.color0,

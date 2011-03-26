@@ -29,11 +29,6 @@ function buildForm() {
 		clickName:'bg'
 	});
 
-	/*
-	var defaultIDImage = Base.createProfilePic(10, 20);
-	panel.add(defaultIDImage);
-	*/
-	
 	var titlePic = Ti.UI.createImageView({
 		image: '../images/Header.png',
 		borderColor:CSSMgr.color2,

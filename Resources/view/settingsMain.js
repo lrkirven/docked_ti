@@ -55,7 +55,6 @@ function init() {
 		left:10,
    		text:'Settings', 
 		font: { fontFamily:model.myFont, fontSize:20, fontWeight:'bold' },
-   		// color:'#ffffff'
 		color:CSSMgr.color2
 	});
 	tblHeader.add(label);
@@ -133,6 +132,28 @@ function init() {
 		win.add(button0);
 	}
 	settingsMenu.backgroundImage = '../images/Background.png';
+	
+	var aboutBtn = Titanium.UI.createButton({
+		title: 'About Docked',
+		enabled: true,
+		color: CSSMgr.color0,
+		systemButton: Titanium.UI.iPhone.SystemButton.FLEXIBLE_SPACE,
+		selectedColor:CSSMgr.color2,
+		bottom: 60,
+		borderRadius: 0,
+		right: 20,
+		height: 30,
+		width: 150
+	});
+	aboutBtn.addEventListener('click', function() {
+		var w = Titanium.UI.createWindow({
+			title: Msgs.APP_NAME,
+			model:model,
+			url:'showAbout.js'
+		});
+		w.open();
+	});
+	win.add(aboutBtn);
 	
 	/*
 	 * iAd 

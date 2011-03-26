@@ -63,6 +63,21 @@
 		return defaultProfilePic;
 	};
 	
+	Base.createIcon = function(top, left) {
+		var icon = Ti.UI.createImageView({
+			image: '../images/DockedIcon.png',
+			backgroundColor: CSSMgr.color0,
+			borderColor: CSSMgr.color2,
+			top: top,
+			left: left,
+			width: 50,
+			height: 50,
+			borderRadius:10,
+			clickName: 'icon'
+		});
+		return icon;
+	};
+	
 	/**
 	 * This method builds a message view without an attached photo to be added to an individual 
 	 * row inside of the table.
