@@ -170,21 +170,6 @@ function buildForm() {
 		panel.add(defaultIDImage);
 	}
 	
-	/*	
-	var msgText = Titanium.UI.createTextField({
-		hintText: hint,
-		height: 50,
-		width: 280,
-		left: 10,
-		top: 75,
-		font: { fontFamily: model.myFont, fontWeight: 'normal' },
-		textAlign: 'left',
-		keyboardType: Titanium.UI.KEYBOARD_NUMBERS_PUNCTUATION,
-		borderStyle: Titanium.UI.INPUT_BORDERSTYLE_ROUNDED,
-		borderWidth: 2,
-		borderRadius: 5
-	});
-	*/
 	var msgText = Titanium.UI.createTextArea({
 		height:80,
 		width:260,

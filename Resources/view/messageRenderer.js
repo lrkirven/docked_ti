@@ -99,7 +99,7 @@ function createNewCommentsSection(m) {
     	top:0,
     	font:{ fontFamily:model.myFont, fontWeight:'normal' },
     	textAlign:'left',
-    	keyboardType:Titanium.UI.KEYBOARD_NUMBERS_PUNCTUATION,
+    	keyboardType:Titanium.UI.KEYBOARD_EMAIL,
 		borderStyle:Titanium.UI.INPUT_BORDERSTYLE_ROUNDED,
     	borderWidth:1,
     	borderRadius:5

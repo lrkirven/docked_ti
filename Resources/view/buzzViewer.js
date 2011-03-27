@@ -102,7 +102,7 @@ function buildSearchView(visible, basic) {
 			top: 5,
 			font: { fontFamily: model.myFont, fontWeight: 'normal' },
 			textAlign: 'left',
-			keyboardType: Titanium.UI.KEYBOARD_NUMBERS_PUNCTUATION,
+			keyboardType: Titanium.UI.KEYBOARD_DEFAULT,
 			borderStyle: Titanium.UI.INPUT_BORDERSTYLE_ROUNDED,
 			borderWidth: 2,
 			borderRadius: 5
