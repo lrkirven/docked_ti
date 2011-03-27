@@ -21,15 +21,15 @@ function randomMove() {
 	compass.transform = t;
 };
 
-function adjustCompass() {
+function adjustCompass(newHeading) {
 	var t = Ti.UI.create2DMatrix();
-    t = t.rotate(360-e.heading.magneticHeading);
+    t = t.rotate(360-newHeading);
 	compass.transform = t;
 };
 
 Titanium.App.addEventListener('REAL_POSITION_CHANGED', function(e) {
 	var distBearObj = Tools.calcDistBearObject(model.getActualLat(), model.getActualLng(), hs.lat, hs.lng);
-	distVal.text = distBearObj.distance + ' miles';
+	distVal.text = distBearObj.distance + ' mi';
 	bearingVal.text = distBearObj.bearing + '\u00B0';
 });
 
@@ -119,16 +119,17 @@ function init() {
             var trueHeading = e.heading.trueHeading;
             var timestamp = e.heading.timestamp;
             Titanium.API.info('geo - current heading: ' + trueHeading);
-			adjustCompass();
+			/*
+			 * adjust compass
+			 */
+			adjustCompass(magneticHeading);
         });
  
         Titanium.Geolocation.addEventListener('heading',function(e) {
-			
             if (e.error) {
                 Titanium.API.info("error: " + e.error);
                 return;
             }
- 
             var x = e.heading.x;
             var y = e.heading.y;
             var z = e.heading.z;
@@ -137,13 +138,15 @@ function init() {
             var trueHeading = e.heading.trueHeading;
             var timestamp = e.heading.timestamp;
             Titanium.API.info('geo - heading updated: ' + trueHeading);
-			adjustCompass();
+			/*
+			 * adjust compass
+			 */
+			adjustCompass(magneticHeading);
         });
     }
     else {
 		Tools.reportMsg(Msgs.APP_NAME, 'Your device does not have a compass');	
     }
-	// setInterval(randomMove, 12000);
 };
 
 
