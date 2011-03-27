@@ -78,7 +78,7 @@ function buildForm() {
 		top: 80,
 		font: { fontFamily: model.myFont, fontSize:15, fontWeight: 'normal' },
 		textAlign: 'left',
-		text: '1.0.1'
+		text: Common.CLIENT_VERSION 
 	});	
 	panel.add(version);
 
@@ -103,7 +103,7 @@ function buildForm() {
 		top: 105,
 		font: { fontFamily: model.myFont, fontSize:15, fontWeight: 'normal' },
 		textAlign: 'left',
-		text: 'Mar 25, 2011'
+		text: Common.CLIENT_REL_DATE
 	});	
 	panel.add(relDate);
 	

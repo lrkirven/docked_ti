@@ -74,7 +74,7 @@ function buildForm() {
 		top:125,
 		font:{ fontSize:15, fontFamily: model.myFont, fontWeight: 'normal' },
 		appearance:Titanium.UI.KEYBOARD_APPEARANCE_ALERT,	
-		keyboardType:Titanium.UI.KEYBOARD_NUMBERS_PUNCTUATION,
+		keyboardType:Titanium.UI.KEYBOARD_EMAIL,
 		borderWidth:2,
 		borderColor:CSSMgr.color0,
 		borderRadius:5
