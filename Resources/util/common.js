@@ -2,8 +2,8 @@
 	var Common = {}; // App namespace
 
 	Common.VERSION = 'v1';	
-	Common.CLIENT_VERSION = '1.0.2';	
-	Common.CLIENT_REL_DATE = '03/31/2011';
+	Common.CLIENT_VERSION = '1.0.3';	
+	Common.CLIENT_REL_DATE = '04/08/2011';
 	Common.DEBUG = false;	
 	Common.RESET_APP = false;	
 	Common.MAX_DISPLAY_NAME_LENGTH = 15;
