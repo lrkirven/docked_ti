@@ -1,4 +1,6 @@
 Ti.include('../util/msgs.js');
+Ti.include('../util/common.js');
+Ti.include('../util/date.format.js');
 Ti.include('../props/cssMgr.js');
 Ti.include('../model/modelLocator.js');
 
@@ -45,6 +47,56 @@ var stateDP =  [
 	{ title:'Wyoming Fishing', hasChild:true, leftImage:'../images/Fish.png', state:'WY'}
 ];
 
+function buildReportTableRows(dp) {
+	var i = 0;
+	var item = null;
+	var MAX_ROW_WIDTH = 320;
+	var list = [];
+	
+	for (i = 0; i < dp.length; i++) {
+		item = dp[i];
+		var row = Ti.UI.createTableViewRow({
+			height:0,
+			leftImage:'../images/Fish.png',
+			width:MAX_ROW_WIDTH,
+			className:'ReportRow' + i,
+			clickName:'row',
+			state:item.state,
+			stateTitle:item.title,
+			hasChild:true,
+		});
+		
+		var title = Ti.UI.createLabel({
+			color: CSSMgr.color0,
+			font: { fontSize: 14, fontWeight: 'bold', fontFamily: model.myFont },
+			left: 45,
+			top: 0,
+			height: 25,
+			width: 320,
+			clickName: 'menuItemLabel',
+			text: item.title
+		});
+		row.add(title);	
+		
+		var reportDate = new Date();
+		var dateStr = reportDate.format('mmm dd, yyyy');
+		var lastUpdate = Ti.UI.createLabel({
+			color: CSSMgr.color0,
+			font: { fontSize: 11, fontWeight: 'normal', fontFamily: model.myFont },
+			right: 10,
+			bottom: 0,
+			height: 25,
+			textAlign: 'right',
+			width: 300,
+			clickName: 'lastUpdate',
+			text: dateStr 
+		});
+		row.add(lastUpdate);	
+		list.push(row);
+	}
+	return list;
+};
+
 function init() {
 	
 	var tblHeader = Ti.UI.createView({ height:30, width:320 });
@@ -58,8 +110,9 @@ function init() {
 	tblHeader.add(label);
 	
 	// create table view
+	var rows = buildReportTableRows(stateDP);
 	var reportTbl = Titanium.UI.createTableView({
-		data:stateDP, 
+		data:rows, 
 		headerView:tblHeader,
 		top:0,
 		style:Titanium.UI.iPhone.TableViewStyle.GROUPED,
@@ -75,7 +128,7 @@ function init() {
 			backgroundColor:CSSMgr.color0,
    			barColor:CSSMgr.color0,
 			state:e.rowData.state,
-			stateTitle:e.rowData.title,
+			stateTitle:e.rowData.stateTitle,
 			barImage: '../images/Header.png'
 		});
 		w.model = model;

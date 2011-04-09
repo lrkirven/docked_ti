@@ -84,7 +84,6 @@ function init() {
 		leftImage: '../images/ChatBubble.png',
 		hasChild: true,
 		localFlag: false,
-		leftImage: '../images/ChatBubble.png',
 		remoteOption: 0,
 		ptr: 'buzzViewer.js'
 	}, {

@@ -2,8 +2,8 @@ Ti.include('../util/common.js');
 Ti.include('../util/msgs.js');
 Ti.include('../util/tools.js');
 Ti.include('../util/geo.js');
-Ti.include('../util/hotspot.js');
 Ti.include('../props/cssMgr.js');
+Ti.include('../util/hotspot.js');
 Ti.include('../model/modelLocator.js');
 Ti.include('../props/cssMgr.js');
 Ti.include('../client/restClient.js');
@@ -22,7 +22,10 @@ var descText = null;
 var publicFlag = true;
 var categoryBtn = null;
 var publicBtn = null;
-
+var selectedCategory = 0;
+if (hotSpot != null) {
+	selectedCategory = hotSpot.category;
+}
 
 
 /**
@@ -193,6 +196,7 @@ function buildForm() {
 	panel.add(catLbl);
 	*/
 	
+	/*
 	categoryBtn = Titanium.UI.createTabbedBar({
     	labels:HotSpot.categoryLabels,
     	backgroundColor:CSSMgr.color4,
@@ -208,24 +212,62 @@ function buildForm() {
 		Ti.API.info('User selected index -- ' + e.index);
 		checkFormData();
 	});
-	if (hotSpot != null) {
-		Ti.API.info('Setting category ---> ' + hotSpot.category);
-		categoryBtn.index = hotSpot.category;
-	}
-	else {
-		categoryBtn.index = 0;
-	}
+	*/
+	
+	var selectedCat = Titanium.UI.createLabel({
+		color: CSSMgr.color0,
+		borderColor:CSSMgr.color0,
+		text: 'GENERAL',
+		font: { fontFamily: model.myFont, fontSize:13, fontWeight: 'bold' },
+		top: 240,
+		left: 10,
+		width: 200,
+		textAlign: 'center',
+		height: 25 
+	});
+	panel.add(selectedCat);
+	
+	categoryBtn = Titanium.UI.createButton({
+    	title:'Category',
+		font: { fontFamily: model.myFont, fontSize:13, fontWeight: 'bold' },
+		color:CSSMgr.color2,
+		backgroundColor:CSSMgr.color0,
+		style: Titanium.UI.iPhone.SystemButtonStyle.PLAIN,
+    	top:240,
+		right:10,
+    	height:25,
+    	width:80
+	});
+	categoryBtn.addEventListener('click', function(e) {
+		var w = Titanium.UI.createWindow({
+			url:'hotSpotCategoryList.js',
+			backgroundColor:CSSMgr.color0,
+   			barColor:CSSMgr.color0,
+			barImage: '../images/Header.png',
+		});
+		w.addEventListener('close', function(e) {
+			selectedCategory = w.selectedCategory.category;
+			selectedCat.text = w.selectedCategory.title;
+			Ti.API.info('Window closed --- Assigning category ---> ' + selectedCategory);
+		});
+		if (hotSpot != null) {
+			Ti.API.info('Setting category ---> ' + hotSpot.category);
+			w.category = hotSpot.category;
+			w.selectedCategory = null;
+		}
+		else {
+			w.category = 0;
+			w.selectedCategory = null;
+		}
+		Titanium.UI.currentTab.open(w, {animated:true});
+	});
+	
 	panel.add(categoryBtn);
 	
 	var publicLbl = Titanium.UI.createLabel({
 		color: CSSMgr.color0,
 		text: 'PUBLIC: ',
-		font: {
-			fontSize:17,
-			fontFamily: 
-			model.myFont,
-			fontWeight: 'bold'
-		},
+		font: { fontSize:17, fontFamily:  model.myFont, fontWeight: 'bold' },
 		textAlign: 'right',
 		top: 287,
 		left: 0,
@@ -278,7 +320,7 @@ function buildForm() {
 			 */
 			if (hotSpot == null) {
 				hotSpot = {
-					category: categoryBtn.index,
+					category: selectedCategory,
 					username: user.displayName,
 					resKey: myLocation.resKey,
 					location: myLocation.name,
@@ -297,7 +339,7 @@ function buildForm() {
 			else {
 				hotSpot.desc = descText.value;
 				hotSpot.notes = notesText.value;
-				hotSpot.category = categoryBtn.index; 
+				hotSpot.category = selectedCategory; 
 				hotSpot.publicFlag = publicBtn.value;
 				hotSpot.createDate = null;
 			}

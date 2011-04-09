@@ -464,7 +464,7 @@ function init() {
   		font:{fontSize:15, fontFamily:model.myFont, fontWeight:'bold'},
 		style:Titanium.UI.iPhone.SystemButtonStyle.PLAIN,
   		width:150,
-  		height:30,
+  		height:30
 	});
 	showOnMapBtn.addEventListener('click', function(e) {
 		Ti.API.info('PopupUp window');

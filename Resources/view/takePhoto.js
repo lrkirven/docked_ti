@@ -14,7 +14,7 @@ Titanium.Media.showCamera({
 		var h = 720;
 		var now = new Date();
 		var cropRect = event.cropRect;
-		var imgData = event.media.imageAsResized(w,h)
+		var imgData = event.media.imageAsResized(w,h);
 		model.setPendingRawImage(imgData);
 		win.close();
 	},
