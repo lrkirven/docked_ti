@@ -24,5 +24,6 @@
 	Msgs.SIGN_UP = 'Sign Up';
 	Msgs.PREFS_UPDATED = 'User preferences updated!';
 	Msgs.APPRECIATE = 'We appreciate the feedback. Thanks!';
+	Msgs.REPORT_THANKS = 'We appreciate your help improving \'Docked\'. Thanks!';
 	Msgs.NO_DATA_SERVICE = 'Data service is not available at this time.';
 	
