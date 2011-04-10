@@ -124,19 +124,26 @@
 			msgBody.add(userMsg);
 			row.add(msgBody);	
 			
-			userLocale = Ti.UI.createLabel({
-				color:CSSMgr.color0,
-				font:{fontSize:11, fontWeight:'normal', fontFamily:model.myFont},
+			var lblBox = Ti.UI.createView({
+				backgroundColor:CSSMgr.color2,
 				left:0,
 				bottom:0,
 				height:20,
-				textAlign:'center',
+				width:320,
+			});
+			userLocale = Ti.UI.createLabel({
+				color:CSSMgr.color0,
+				font:{fontSize:11, fontWeight:'normal', fontFamily:model.myFont},
+				left:5,
+				height:20,
+				textAlign:'left',
 				width:320,
 				backgroundColor:CSSMgr.color2,
 				clickName:'userLocale',
 				text:(msgEvent.username + ', ' + msgEvent.timeDisplay + ', ' + distVal)
 			});
-			row.add(userLocale);
+			lblBox.add(userLocale);
+			row.add(lblBox);
 		}
 		else {
 			
@@ -164,19 +171,27 @@
 			msgBody.add(userMsg);
 			row.add(msgBody);	
 			
-			userLocale = Ti.UI.createLabel({
-				color:CSSMgr.color0,
-				font:{fontSize:11, fontWeight:'normal', fontFamily:model.myFont},
+			var lblBox = Ti.UI.createView({
+				backgroundColor:CSSMgr.color2,
 				left:0,
 				bottom:0,
 				height:20,
-				textAlign:'center',
+				width:320,
+			});
+			userLocale = Ti.UI.createLabel({
+				color:CSSMgr.color0,
+				font:{fontSize:11, fontWeight:'normal', fontFamily:model.myFont},
+				left:5,
+				bottom:0,
+				height:20,
+				textAlign:'left',
 				width:320,
 				clickName:'userLocale',
 				backgroundColor:CSSMgr.color2,
 				text:(msgEvent.username + ', ' + msgEvent.timeDisplay + ', ' + distVal)
 			});
-			row.add(userLocale);
+			lblBox.add(userLocale);
+			row.add(lblBox);
 		}
 		
 	}; 

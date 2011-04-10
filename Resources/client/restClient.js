@@ -667,6 +667,72 @@ function RestClient() {
 				var str = JSON.stringify(feedbackAction);
                 xhr.send(str);	
 			},
+			reportAbuse : function(from, abuseInfo) {
+               	Titanium.API.info("reportAbuse: Entered");
+				
+				if (!Titanium.Network.online) {
+					Ti.App.fireEvent('REPORT_ABUSE_RESP', { status:69,
+						errorMsg: Msgs.NO_DATA_SERVICE
+					});
+				}
+				
+				var xhr = Ti.Network.createHTTPClient();
+                xhr.setTimeout(90000);
+				
+                // 
+                // error
+                //
+                xhr.onerror = function(e) {
+                	Titanium.API.info("some error");
+					Ti.App.fireEvent('REPORT_ABUSE_RESP', { status:69,
+						errorMsg: 'Unable to connect to remote services -- Please check your network connection'	
+					});
+                }; 
+            
+                // 
+                // success    
+                //
+                xhr.onload = function() {
+					if (this.status >= httpCodes.BAD_REQUEST) {
+						handleErrorResp(this.status, 'REPORT_ABUSE_RESP');	
+						return;
+					}
+					if (Tools.test4NotFound(this.responseText)) {
+						Ti.App.fireEvent('REPORT_ABUSE_RESP', { status:89,
+							errorMsg: 'Unable complete request at this time -- Apologize for the service failure.'	
+						});
+						return;
+					}
+					Titanium.API.info('reportAbuse: onload: Entered - ' + this.responseText);
+					var jsonNodeData = JSON.parse(this.responseText);
+					if (jsonNodeData != null && jsonNodeData.result > 0) {
+						Titanium.API.info('reportAbuse: onload: SUCCESS');
+						Ti.App.fireEvent('REPORT_ABUSE_RESP', { displayName:jsonNodeData.value, status:0 });
+					}
+					else {
+						Ti.App.fireEvent('REPORT_ABUSE_RESP', { status:99,
+							errorMsg: 'Unable to complete request at this time'	
+						});
+					}
+                };
+
+                //
+                // create connection
+                //
+				var targetURL = myUserRestURLSecure + 'reportAbuse';
+				Titanium.API.info('reportAbuse: REST URL: ' + targetURL);
+                xhr.open('POST', targetURL);
+				xhr.setRequestHeader('Content-Type', 'application/json');
+				xhr.setRequestHeader('Accept', 'application/json');
+                //
+                // send HTTP request
+                //
+                Titanium.API.info('reportAbuse: Posting to server ... ' + from);
+				var modId = Titanium.Network.encodeURIComponent(from);
+				var abuseReport = { llId:modId, value:abuseInfo };
+				var str = JSON.stringify(abuseReport);
+                xhr.send(str);	
+			},
 			/**
 			 * This method retrieves top 50 messages posted to the requested lake polygon resource.
 			 * 

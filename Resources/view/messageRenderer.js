@@ -239,7 +239,7 @@ function createMsgTopic(m) {
 	 */
 	Ti.API.info('createMsgTopic(): message leng ---> ' + m.messageData.length);
 	var comment = Ti.UI.createLabel({
-		color:CSSMgr.color2,
+		color: '#fff',
 		font:{fontSize:fontSize, fontWeight:'normal', fontFamily:model.myFont},
 		left:5,
 		top:5,
@@ -253,7 +253,7 @@ function createMsgTopic(m) {
 	
 	var distVal = Tools.calcDist(model.getUserLat(), model.getUserLng(), m.lat, m.lng);
 	var userLocale = Ti.UI.createLabel({
-		color:CSSMgr.color4,
+		color:CSSMgr.color2,
 		font:{fontSize:11, fontWeight:'normal', fontFamily:model.myFont},
 		height:'auto',
 		left:5,
@@ -311,7 +311,7 @@ function createMsgTopicWithPhoto(m) {
 
 	
 	var comment = Ti.UI.createLabel({
-		color:CSSMgr.color2,
+		color: '#fff',
 		font:{fontSize:'12', fontWeight:'normal', fontFamily:model.myFont},
 		left:0,
 		top:0,
@@ -324,7 +324,7 @@ function createMsgTopicWithPhoto(m) {
 	
 	var distVal = Tools.calcDist(model.getUserLat(), model.getUserLng(), m.lat, m.lng);
 	var userLocale = Ti.UI.createLabel({
-		color:CSSMgr.color4,
+		color:CSSMgr.color2,
 		font:{fontSize:11, fontWeight:'normal', fontFamily:model.myFont},
 		height:'auto',
 		left:0,
@@ -399,17 +399,42 @@ function updateDisplayList() {
 	}
 	
 	commentVBox = Titanium.UI.createTableView({
-		// headerView: tblHeader,
-		scrollable:false,
+		scrollable:true,
 		moving:false,
+		selectionStyle:Ti.UI.iPhone.TableViewCellSelectionStyle.GRAY,
 		data:commentList,
 		separatorColor:CSSMgr.color0,
 		top:topStart,
 		left:0,
+		height:240,
 		filterAttribute:'filter'
 	});
 	commentVBox.backgroundImage = '../images/Background.png';
 	win.add(commentVBox);
+	
+	var reportAbuseBtn = Titanium.UI.createButton({
+   		title:'Report Abuse',
+		color:CSSMgr.color2,
+		backgroundColor:CSSMgr.color0,
+  		font:{fontSize:12, fontFamily:model.myFont, fontWeight:'bold'},
+		style:Titanium.UI.iPhone.SystemButtonStyle.PLAIN,
+		width:100,
+  		height:30,
+		bottom:0,
+		right:0
+	});
+	reportAbuseBtn.addEventListener('click', function(e) {
+		var w = Titanium.UI.createWindow({
+			url:'reportAbuseList.js',
+			model:win.model,
+			msgEvent:msgEvent,
+			backgroundColor:CSSMgr.color0,
+   			barColor:CSSMgr.color0,
+			barImage: '../images/Header.png'
+		});
+		Titanium.UI.currentTab.open(w, {animated:true});
+	});
+	win.add(reportAbuseBtn);
 };
 
 /**
@@ -458,7 +483,7 @@ function init() {
 	}
 	
 	var showOnMapBtn = Titanium.UI.createButton({
-   		title:'Map It!',
+   		title:'Map It',
 		color:CSSMgr.color2,
 		backgroundColor:CSSMgr.color0,
   		font:{fontSize:15, fontFamily:model.myFont, fontWeight:'bold'},
@@ -482,6 +507,8 @@ function init() {
 		});
 	});
 	win.setRightNavButton(showOnMapBtn);
+	
+	
 };
 
 //

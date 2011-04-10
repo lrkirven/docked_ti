@@ -5,7 +5,6 @@ Ti.include('../util/geo.js');
 Ti.include('../props/cssMgr.js');
 Ti.include('../util/hotspot.js');
 Ti.include('../model/modelLocator.js');
-Ti.include('../props/cssMgr.js');
 
 var win = Ti.UI.currentWindow;
 var category = win.category;

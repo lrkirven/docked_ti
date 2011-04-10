@@ -78,19 +78,6 @@ function buildSearchView(visible, basic) {
 			clickName: 'searchPage'
 		});
 	
-		/*	
-		var searchLbl = Ti.UI.createLabel({
-			color: CSSMgr.color0,
-			font: { fontFamily: model.myFont, fontWeight: 'bold' },
-			left: 25,
-			top: 5,
-			height: 20,
-			width: 'auto',
-			text: 'Search and select lake to visit: '
-		});
-		searchPage.add(searchLbl);
-		*/
-		
 		//
 		// Test box for user to enter search criteria
 		//

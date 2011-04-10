@@ -157,8 +157,8 @@ function init() {
 		ptr:'markHotSpot.js'
 	}];
 	
-	/*
-	var exitBtn = Titanium.UI.createButton({
+	
+	var exitBtn = Titanium.UI.createButto({
 		backgroundImage:'../images/Chat.png',
 		font: { fontFamily:model.myFont, fontSize:20, fontWeight:'bold' },
 		style: Titanium.UI.iPhone.SystemButtonStyle.PLAIN,

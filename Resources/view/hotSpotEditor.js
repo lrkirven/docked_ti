@@ -178,42 +178,6 @@ function buildForm() {
 	});
 	panel.add(notesText);
 	
-	/*
-	var catLbl = Titanium.UI.createLabel({
-		color: CSSMgr.color0,
-		text: 'Category',
-		font: {
-			fontFamily: 
-			model.myFont,
-			fontWeight: 'bold'
-		},
-		textAlign: 'left',
-		top: 235,
-		left: 10,
-		width: 100,
-		height: 'auto'
-	});
-	panel.add(catLbl);
-	*/
-	
-	/*
-	categoryBtn = Titanium.UI.createTabbedBar({
-    	labels:HotSpot.categoryLabels,
-    	backgroundColor:CSSMgr.color4,
-    	top:235,
-		left:10,
-    	style:Titanium.UI.iPhone.SystemButtonStyle.BAR,
-    	height:25,
-		touchEnabled:canEdit,
-    	width:280
-	});
-	categoryBtn.addEventListener('click', function(e) {
-		categoryBtn.index = e.index;
-		Ti.API.info('User selected index -- ' + e.index);
-		checkFormData();
-	});
-	*/
-	
 	var selectedCat = Titanium.UI.createLabel({
 		color: CSSMgr.color0,
 		borderColor:CSSMgr.color0,
@@ -243,7 +207,7 @@ function buildForm() {
 			url:'hotSpotCategoryList.js',
 			backgroundColor:CSSMgr.color0,
    			barColor:CSSMgr.color0,
-			barImage: '../images/Header.png',
+			barImage: '../images/Header.png'
 		});
 		w.addEventListener('close', function(e) {
 			selectedCategory = w.selectedCategory.category;
