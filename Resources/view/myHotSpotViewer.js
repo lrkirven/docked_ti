@@ -3,7 +3,7 @@ Ti.include('../util/msgs.js');
 Ti.include('../util/geo.js');
 Ti.include('../util/date.format.js');
 Ti.include('../util/tools.js');
-Ti.include('../props/cssMgr.js');
+i.include('../props/cssMgr.js');
 Ti.include('../util/hotspot.js');
 Ti.include('../model/modelLocator.js');
 Ti.include('../client/restClient.js');

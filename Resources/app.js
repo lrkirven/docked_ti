@@ -297,6 +297,17 @@ Titanium.App.addEventListener('PING_RESPONSE_DATA', function(e) {
 					result: [],
 					status: 0
 				});
+				
+				var w = Titanium.UI.createWindow({
+					title: Msgs.APP_NAME,
+					color: CSSMgr.color2,
+					font: { fontSize: 20, fontFamily: myFont },
+					backgroundColor: CSSMgr.color0,
+					barColor: CSSMgr.color0,
+					url: 'view/outOfZoneAlertMsg.js'
+				});
+				w.model = model;
+				w.open();
 			}
 		}
 		else {
@@ -598,7 +609,7 @@ Titanium.App.addEventListener('PROMPT_USER_TO_REGISTER_COMPLETE', function(e) {
 });
 
 Ti.App.addEventListener('GOTO_TAB', function(e) {
-	Ti.API.info('Got gotoTab event -->' + e.nextTab);
+	Ti.API.info('app: Got gotoTab event -->' + e.nextTab);
 	tabGroup.setActiveTab(e.nextTab);
 });
 
@@ -654,7 +665,7 @@ function buildAppTabs() {
 		url: 'view/buzzMain.js'
 	});
 	buzzWin.addEventListener('focus', function(e){
-		Ti.API.info('Buzz Window has focus -- ' + (e.source).url);
+		Ti.API.info('app: Buzz Window has focus -- ' + (e.source).url);
 	});
 	buzzWin.model = model;
 	buzzWin.db = db;
@@ -679,7 +690,7 @@ function buildAppTabs() {
 		url: 'view/hotSpotMain.js'
 	});
 	hsWin.addEventListener('focus', function(e){
-		Ti.API.info('HotSpot Window has focus -- ' + (e.source).url);
+		Ti.API.info('app: HotSpot Window has focus -- ' + (e.source).url);
 	});
 	hsWin.model = model;
 	hsWin.db = db;
@@ -702,7 +713,7 @@ function buildAppTabs() {
 		url: 'view/reportViewer.js'
 	});
 	reportsWin.addEventListener('focus', function(e){
-		Ti.API.info('win3 is active -- ' + (e.source).url);
+		Ti.API.info('app: win3 is active -- ' + (e.source).url);
 	});
 	reportsWin.model = model;
 	reportsTab = Titanium.UI.createTab({

@@ -17,19 +17,19 @@ var abuseReport = null;
 var abuseChoices = [{
 		title: 'Spam',
 		color: '#fff',
-		selectedColor: CSSMgr.color0,
+		selectedColor: CSSMgr.color0
 	}, {
 		title: 'Hateful',
 		color: '#fff',
-		selectedColor: CSSMgr.color0,
+		selectedColor: CSSMgr.color0
 	}, {
 		title: 'Violent behavior',
 		color: '#fff',
-		selectedColor: CSSMgr.color0,
+		selectedColor: CSSMgr.color0
 	},{
 		title: 'Nudity or sexual content',
 		color: '#fff',
-		selectedColor: CSSMgr.color0,
+		selectedColor: CSSMgr.color0
 	}
 ];
 	

@@ -6,7 +6,7 @@
 	Msgs.MY_HOTSPOTS = 'My HotSpots';
 	Msgs.HOTSPOT_OPTIONS = 'HotSpot Options';
 	Msgs.VISIT_OPTIONS = 'Visit Options';
-	Msgs.OUT_OF_ZONE = '[OUTSIDE LAKE ZONE]';
+	Msgs.OUT_OF_ZONE = '[ Outside of Docked Community ]';
 	Msgs.USERS = ' USER(S)';
 	Msgs.TAKE_PIC = 'Take photo';
 	Msgs.SELECT_FROM_GALLERY = 'From gallery';

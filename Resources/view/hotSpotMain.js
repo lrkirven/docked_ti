@@ -120,21 +120,19 @@ function init() {
 		hasChild:true,
 		leftImage: '../images/Hotspot.png',
 		ptr: 'myHotSpotViewer.js'
-	}, {
+	},{
 		title:'Local HotSpots',
 		hasChild:true,
 		leftImage: '../images/Hotspot.png',
 		ptr: 'localHotSpotViewer.js'
-	},
-	 {
+	},{
 		title:'Mark HotSpot',
 		hasChild:true,
 		hotSpot:null,
 		canEdit:true,
 		leftImage: '../images/Hotspot.png',
 		ptr:'hotSpotEditor.js'
-	}
-	];
+	}];
 	
 	inPolygonAnonymousMM = [{
 		title:'Local HotSpots',
@@ -143,36 +141,27 @@ function init() {
 		ptr:'localHotSpotViewer.js'
 	}];
 	
+	/*
 	outPolygonMM = [{
 		title:'My HotSpots',
 		hasChild:true,
 		leftImage: '../images/Hotspot.png',
 		ptr: 'myHotSpotViewer.js'
-	},
-	{
+	},{
 		title:'Mark HotSpot',
 		hasChild:true,
 		writeFlag:true,
 		leftImage: '../images/Hotspot.png',
-		ptr:'markHotSpot.js'
+		ptr:'hotSpotEditor.js'
 	}];
-	
-	
-	var exitBtn = Titanium.UI.createButto({
-		backgroundImage:'../images/Chat.png',
-		font: { fontFamily:model.myFont, fontSize:20, fontWeight:'bold' },
-		style: Titanium.UI.iPhone.SystemButtonStyle.PLAIN,
-		enabled: true,
-		bottom: 20,
-		right: 10,
-		height: 30,
-		width: 30
-	});
-	exitBtn.addEventListener('click', function(e) {
-		Ti.App.fireEvent('EXIT_APP', {});
-	});
-	win.setRightNavButton(exitBtn);
 	*/
+	
+	outPolygonMM = [{
+		title:'My HotSpots',
+		hasChild:true,
+		leftImage: '../images/Hotspot.png',
+		ptr: 'myHotSpotViewer.js'
+	}];
 	
 	
 	if (currentLake != null) {
@@ -208,6 +197,7 @@ function init() {
 	}
 	else {
 		Ti.API.info('-----> Outside of a lake polygon!!');
+		win.touchEnabled = true;
 		/*
 		 * header
 		 */	
@@ -234,6 +224,7 @@ function init() {
 	 */
 	Base.attachiAd(win);
 	
+	/*
 	win.addEventListener('focus', function(e) {
 		if (openMyHotSpotViewerFlag) {
 			Ti.API.info('Trying to open MY hotspots window ...');
@@ -260,12 +251,11 @@ function init() {
 			});
 			w.model = model;
 			currentHSWin = w;
-			Titanium.UI.currentTab.open(w, {
-				animated: true
-			});
+			Titanium.UI.currentTab.open(w, { animated: true });
 			openMarkHotSpotFlag = false;
 		}
 	});
+	*/
 };
 
 init();
