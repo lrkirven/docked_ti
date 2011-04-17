@@ -126,6 +126,9 @@ function buildReportTableRows(dp) {
 	return list;
 };
 
+/**
+ * Initial entry
+ */
 function init() {
 	var rows = [];	
 	var map = model.getReportActivityMap();
