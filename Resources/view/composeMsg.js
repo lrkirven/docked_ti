@@ -8,6 +8,7 @@ Ti.include('../model/modelLocator.js');
 Ti.include('../client/picasaClient.js');
 Ti.include('../client/restClient.js');
 Ti.include('../client/fbClient.js');
+Ti.include('../client/webPurityClient.js');
 
 Ti.include('baseViewer.js');
 
@@ -44,6 +45,24 @@ Titanium.App.addEventListener('DOCKED_FB_PUBLISH_STREAM_RESP', function(e) {
 	}
 	else {
 		Ti.API.warn('**** Unable to post to Facebook ***');
+	}
+});
+
+Titanium.App.addEventListener('WP_FILTERED_TEXT', function(e) {
+	if (e.status == 0) {
+		var msgEvent = model.getPendingMsgEvent();
+		Ti.API.info('Got WP_FILTERED_TEXT -- ' + e.result);
+		if (e.result.rsp.found > 0) {
+			Ti.API.info('Filtering text to this ---> ' + e.result.rsp.text);
+			msgEvent.messageData = e.result.rsp.text;
+			model.setPendingMsgEvent(msgEvent);
+		}
+		var currentUser = model.getCurrentUser();
+		var restClient = new RestClient();
+		restClient.postMessage(currentUser.id, msgEvent);
+	}
+	else {
+		Ti.API.warn('**** Unable to filter text ***');
 	}
 });
 
@@ -393,9 +412,14 @@ function buildForm() {
 			else {
 				Ti.API.info('Not adding fb profile pic ....');
 			}
-			restClient = new RestClient();
-			Ti.API.info('BuzzMsg TIMESTAMP ----> ' + msgEvent.userLocalTime);
-			restClient.postMessage(currentUser.id, msgEvent, addToMyHotSpots);
+			// restClient = new RestClient();
+			// Ti.API.info('BuzzMsg TIMESTAMP ----> ' + msgEvent.userLocalTime);
+			// restClient.postMessage(currentUser.id, msgEvent, addToMyHotSpots);
+			model.setPendingMsgEvent(msgEvent);
+			var wbClient = new WebPurityClient();
+			var wpKey = model.getWPApiKey();
+			wbClient.setApiKey(wpKey);
+			wbClient.filterText(msgEvent.messageData);
 		}
 	});
 	win.add(panel);
@@ -441,8 +465,12 @@ function handleUploadedPic(e) {
 		var msgEvent = model.getPendingMsgEvent();
 		msgEvent.photoUrl = uploadedEntry.url;
 		model.setPendingMsgEvent(msgEvent);
-		var restClient = new RestClient();
-		restClient.postMessage(currentUser.id, msgEvent);
+		// var restClient = new RestClient();
+		// restClient.postMessage(currentUser.id, msgEvent);
+		var wbClient = new WebPurityClient();
+		var wpKey = model.getWPApiKey();
+		wbClient.setApiKey(wpKey);
+		wbClient.filterText(msgEvent.messageData);
 	}
 	else {
 		Tools.reportMsg(Msgs.APP_NAME, 'Unable to complete request at this time');
