@@ -5,6 +5,7 @@ Ti.include('../util/tea.js');
 Ti.include('../props/cssMgr.js');
 Ti.include('../model/modelLocator.js');
 Ti.include('../client/restClient.js');
+Ti.include('../client/webPurityClient.js');
 
 Ti.include('baseViewer.js');
 
@@ -21,6 +22,25 @@ var preloader = null;
 
 Titanium.App.addEventListener('USER_REGISTERED', function(e) { 
 	preloader.hide();
+});
+
+Titanium.App.addEventListener('WP_CHECKED_TEXT', function(e) {
+	if (e.status == 0) {
+		Ti.API.info('Got WP_CHECKED_TEXT -- ' + e.result);
+		if (e.result.rsp.found == 0) {
+			if (preloader != null) {
+				preloader.show();
+			}
+			var client = new RestClient();
+			client.registerUser(enteredEmailAddr, enteredDisplayName, model.getPW3());	
+		}
+		else {
+			Tools.reportMsg(Msgs.APP_NAME, 'Display name is not VALID. Please try again.');
+		}
+	}
+	else {
+		Ti.API.warn('**** Unable to filter text ***');
+	}
 });
 
 /**
@@ -167,12 +187,17 @@ function buildForm() {
 		width: 100
 	});
 	registerBtn.addEventListener('click', function() {
+		var wbClient = new WebPurityClient();
+		var wpKey = model.getWPApiKey();
+		wbClient.setApiKey(wpKey);
+		wbClient.checkText(enteredDisplayName);
+		/*
 		if (preloader != null) {
 			preloader.show();
 		}
-		var str = displayNameText.value;	
 		var client = new RestClient();
 		client.registerUser(enteredEmailAddr, enteredDisplayName, model.getPW3());	
+		*/
 	});
 	
 	var laterBtn = Titanium.UI.createButton({

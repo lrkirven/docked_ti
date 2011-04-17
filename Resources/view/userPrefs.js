@@ -5,6 +5,7 @@ Ti.include('../util/tea.js');
 Ti.include('../props/cssMgr.js');
 Ti.include('../model/modelLocator.js');
 Ti.include('../client/restClient.js');
+Ti.include('../client/webPurityClient.js');
 
 Ti.include('baseViewer.js');
 
@@ -20,6 +21,24 @@ Titanium.App.addEventListener('UPDATED_DISPLAY_NAME', function(e) {
 	}
 	else {
 		Tools.reportMsg(Msgs.APP_NAME, e.errorMsg);
+	}
+});
+
+Titanium.App.addEventListener('WP_CHECKED_TEXT', function(e) {
+	if (e.status == 0) {
+		Ti.API.info('Got WP_CHECKED_TEXT -- ' + e.result);
+		if (e.result.rsp.found == 0) {
+			var client = new RestClient();
+			var user = model.getCurrentUser();
+			var str = displayNameText.value;
+			client.updateDisplayName(user.id, str);	
+		}
+		else {
+			Tools.reportMsg(Msgs.APP_NAME, 'Display name is not VALID. Please try again.');
+		}
+	}
+	else {
+		Ti.API.warn('**** Unable to filter text ***');
 	}
 });
 
@@ -41,22 +60,6 @@ function buildForm() {
 
 	var icon = Base.createIcon(15, 15);
 	panel.add(icon);
-
-	/*	
-	var appName = Titanium.UI.createLabel({
-		color: CSSMgr.color0,
-		text: Msgs.APP_NAME,
-		font: { fontFamily: model.myFont, fontSize:25, fontWeight: 'bold' },
-		top: 10,
-		right: 20,
-		width: 280,
-		textAlign: 'right',
-		shadowColor:'#eee',
-		shadowOffset:{x:0,y:1},
-		height: 'auto'
-	});
-	panel.add(appName);
-	*/
 
 	var lbl = Titanium.UI.createLabel({
 		color: CSSMgr.color0,
@@ -117,9 +120,15 @@ function buildForm() {
 	saveBtn.addEventListener('click', function() {
 		var str = displayNameText.value;	
 		if (str != model.getCurrentUser().displayName) {
+			/*
 			var client = new RestClient();
 			var user = model.getCurrentUser();
 			client.updateDisplayName(user.id, str);	
+			*/
+			var wbClient = new WebPurityClient();
+			var wpKey = model.getWPApiKey();
+			wbClient.setApiKey(wpKey);
+			wbClient.checkText(str);
 		}
 	});
 	

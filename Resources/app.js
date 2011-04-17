@@ -21,7 +21,9 @@ var myFont = 'Verdana';
 var db = Titanium.Database.open('db.docked.co');
 if (Common.RESET_APP) {
 	db.execute('DROP TABLE IF EXISTS AppParams');
-	db.execute("DELETE FROM AppParams WHERE name = 'FB_ACCESS_TOKEN'");	
+}
+if (Common.RESET_FB) {
+	db.execute("DELETE FROM AppParams WHERE name = 'FB_ACCESS_TOKEN'");
 }
 db.execute('CREATE TABLE IF NOT EXISTS AppParams (id INTEGER PRIMARY KEY, name VARCHAR(30), valueStr TEXT, valueInt INTEGER)');
 var tabGroup = null;
@@ -563,7 +565,7 @@ Titanium.App.addEventListener('USER_REGISTERED', function(e) {
 		Ti.API.info('Picasa Password: [' + pPasswordStr + ']');
 		model.setPicasaPassword(pPasswordStr);
 		
-		var wpApiKey = token.picasaPassword;
+		var wpApiKey = token.wpApiKey;
 		var wpApiKeyStr = Tea.decrypt(wpApiKey, model.getPW1());
 		Ti.API.info('WebPurity API Key: [' + wpApiKeyStr + ']');
 		model.setWPApiKey(wpApiKeyStr);

@@ -6,6 +6,7 @@
 	Common.CLIENT_REL_DATE = '04/08/2011';
 	Common.DEBUG = false;	
 	Common.RESET_APP = false;	
+	Common.RESET_FB = false;	
 	Common.MAX_DISPLAY_NAME_LENGTH = 15;
 	Common.MAX_MSG_LENG = 140;
 	Common.ANONYMOUS_USER = 'ABC123';

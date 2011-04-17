@@ -24,10 +24,8 @@ function ModelLocator() {
 	var fbStatus = null;
 	var fbProfileUrl = null;
 	var useFbProfilePic = false;
-	// var fbAPIKey = '8851fedb7bd7eef10c642cdaffa7faa9';
 	var fbAPIKey = null;
-	var wpAPIKey = null;
-	// var fbSecret = '4a4cbd0adac0c8ead93f848f93083ad6';
+	var wpAPIKey = '0c27007ca617fcfa2858805a018a3758';
 	var fbSecret = null;
 	var fbAccessToken = null;
 	var fbAccessTokenTM = 0;
