@@ -100,7 +100,7 @@
 		 * rounding distance to 2 decimals
 		 */
 		var dec = 2;
-		var dInMiles = Math.round(dInMiles*Math.pow(10,dec))/Math.pow(10,dec);
+		dInMiles = Math.round(dInMiles*Math.pow(10,dec))/Math.pow(10,dec);
 		return dInMiles;
 	};
 	
