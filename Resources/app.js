@@ -63,7 +63,7 @@ function hasUserRegistered() {
  * @param {Object} pPassword
  * @param {Object} serverSecret
  */
-function addRegistration(llId, emailAddr, displayName, fbKey, fbSecret, pUser, pPassword, serverSecret) {
+function addRegistration(llId, emailAddr, displayName, fbKey, fbSecret, pUser, pPassword, serverSecret, wpApiKey) {
 	var rows = 0;
     rows += db.execute("INSERT INTO AppParams (name, valueStr, valueInt) VALUES ('LLID', '" + llId + "', 0)");
     rows += db.execute("INSERT INTO AppParams (name, valueStr, valueInt) VALUES ('EMAILADDR', '" + emailAddr + "', 0)");
@@ -76,6 +76,7 @@ function addRegistration(llId, emailAddr, displayName, fbKey, fbSecret, pUser, p
     rows += db.execute("INSERT INTO AppParams (name, valueStr, valueInt) VALUES ('SYNC_TO_FB', '', 0)");
     rows += db.execute("INSERT INTO AppParams (name, valueStr, valueInt) VALUES ('USE_FB_PIC', '', 0)");
     rows += db.execute("INSERT INTO AppParams (name, valueStr, valueInt) VALUES ('FB_PROFILE_PIC', 'NULL', 0)");
+    rows += db.execute("INSERT INTO AppParams (name, valueStr, valueInt) VALUES ('WPAPIKEY', '" + wpApiKey + "', 0)");
 	Ti.API.info("addRegistration():  rows --> " +  rows);
 };
 
@@ -131,6 +132,16 @@ function loadApplicationConfiguration() {
 	
 	var user = { emailAddr:emailAddrStr, displayName:displayName, idClear:llIdStr, id:c2sLLId };
 	model.setCurrentUser(user);
+	
+	// wbApiKey
+	rowcpt = db.execute("SELECT * FROM AppParams WHERE name = 'WPAPIKEY'");
+	var wpKey = null;
+	var wpKeyStr = null;
+    if (rowcpt.isValidRow()) {
+        wpKey = rowcpt.fieldByName('valueStr');
+		wpKeyStr = Tea.decrypt(wpKey, model.getPW1());
+		model.setWPApiKey(wpKeyStr);
+    }
 	
 	// fb key
 	rowcpt = db.execute("SELECT * FROM AppParams WHERE name = 'FBKEY'");
@@ -551,8 +562,13 @@ Titanium.App.addEventListener('USER_REGISTERED', function(e) {
 		var pPasswordStr = Tea.decrypt(pPassword, model.getPW1());
 		Ti.API.info('Picasa Password: [' + pPasswordStr + ']');
 		model.setPicasaPassword(pPasswordStr);
+		
+		var wpApiKey = token.picasaPassword;
+		var wpApiKeyStr = Tea.decrypt(wpApiKey, model.getPW1());
+		Ti.API.info('WebPurity API Key: [' + wpApiKeyStr + ']');
+		model.setWPApiKey(wpApiKeyStr);
 			
-		addRegistration(llid, emailAddr, nickname, fbKey, fbSecret, pUser, pPassword, serverSecret);
+		addRegistration(llid, emailAddr, nickname, fbKey, fbSecret, pUser, pPassword, serverSecret, wpApiKey);
 				
 		
 		Tools.reportMsg(Msgs.APP_NAME, "Registration Complete.");
