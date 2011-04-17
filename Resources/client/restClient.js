@@ -1269,11 +1269,11 @@ function RestClient() {
                 xhr.send();	
 			},
 			getRecentReportData : function() {
+				
                	Titanium.API.info('getRecentReportData: Entered');
 				
 				if (!Titanium.Network.online) {
-					Ti.App.fireEvent('RECENT_REPORT_DATA_RECD', { status:69,
-						errorMsg: Msgs.NO_DATA_SERVICE
+					Ti.App.fireEvent('RECENT_REPORT_DATA_RECD', { status:69, errorMsg: Msgs.NO_DATA_SERVICE
 					});
 				}
 				
