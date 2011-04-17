@@ -1,13 +1,16 @@
 Ti.include('../util/msgs.js');
 Ti.include('../util/common.js');
+Ti.include('../util/tools.js');
 Ti.include('../util/date.format.js');
 Ti.include('../props/cssMgr.js');
 Ti.include('../model/modelLocator.js');
+Ti.include('../client/restClient.js');
 
 Ti.include('baseViewer.js');
 
 var win = Ti.UI.currentWindow;
 var model = win.model;
+var reportTbl = null;
 
 var stateDP =  [
 	{ title:'Alaska Fishing', hasChild:true, leftImage:'../images/Fish.png', state:'AK' },
@@ -47,11 +50,32 @@ var stateDP =  [
 	{ title:'Wyoming Fishing', hasChild:true, leftImage:'../images/Fish.png', state:'WY'}
 ];
 
+
+Titanium.App.addEventListener('RECENT_REPORT_DATA_RECD', function(e) { 
+	var i = 0;
+	var list = e.result;
+	var item = null;
+	var map = {};
+		
+	for (i=0; i<list.length; i++) {
+		item = list[i];		
+		var lastReportDate = new Date(item.lastReportDate);
+		var tm = lastReportDate.format('mmm dd yyyy');
+		Ti.API.info('Adding pair state=' + item.state + ' tm=' + tm);
+		map[item.state] = tm;	
+	}	
+	model.setReportActivityMap(map);
+	var rows = buildReportTableRows(stateDP);
+	reportTbl.data = rows;
+});
+
 function buildReportTableRows(dp) {
 	var i = 0;
 	var item = null;
 	var MAX_ROW_WIDTH = 320;
 	var list = [];
+	
+	var map = model.getReportActivityMap();
 	
 	for (i = 0; i < dp.length; i++) {
 		item = dp[i];
@@ -63,7 +87,7 @@ function buildReportTableRows(dp) {
 			clickName:'row',
 			state:item.state,
 			stateTitle:item.title,
-			hasChild:true,
+			hasChild:true
 		});
 		
 		var title = Ti.UI.createLabel({
@@ -78,11 +102,16 @@ function buildReportTableRows(dp) {
 		});
 		row.add(title);	
 		
-		var reportDate = new Date();
-		var dateStr = reportDate.format('mmm dd, yyyy');
+		var dateStr = '[ No Updates ]';
+		if (map != null) {
+			var d = map[item.state];	
+			if (d != null) {
+				dateStr = d;
+			}
+		}
 		var lastUpdate = Ti.UI.createLabel({
 			color: CSSMgr.color0,
-			font: { fontSize: 11, fontWeight: 'normal', fontFamily: model.myFont },
+			font: { fontSize: 11, fontWeight: 'bold', fontFamily: model.myFont },
 			right: 10,
 			bottom: 0,
 			height: 25,
@@ -98,6 +127,15 @@ function buildReportTableRows(dp) {
 };
 
 function init() {
+	var rows = [];	
+	var map = model.getReportActivityMap();
+	if (map == null) {
+		var client = new RestClient();
+		client.getRecentReportData();
+	}
+	else {
+		rows = buildReportTableRows(stateDP);
+	}
 	
 	var tblHeader = Ti.UI.createView({ height:30, width:320 });
 	var label = Ti.UI.createLabel({ 
@@ -110,8 +148,7 @@ function init() {
 	tblHeader.add(label);
 	
 	// create table view
-	var rows = buildReportTableRows(stateDP);
-	var reportTbl = Titanium.UI.createTableView({
+	reportTbl = Titanium.UI.createTableView({
 		data:rows, 
 		headerView:tblHeader,
 		top:0,
@@ -137,23 +174,6 @@ function init() {
 	});
 	reportTbl.backgroundImage = '../images/Background.png';
 	win.add(reportTbl);
-	
-	/*
-	var exitBtn = Titanium.UI.createButton({
-		backgroundImage:'../images/Exit.png',
-		font: { fontFamily:model.myFont, fontSize:20, fontWeight:'bold' },
-		style: Titanium.UI.iPhone.SystemButtonStyle.PLAIN,
-		enabled: true,
-		bottom: 20,
-		right: 10,
-		height: 30,
-		width: 30
-	});
-	exitBtn.addEventListener('click', function(e) {
-		Ti.App.fireEvent('EXIT_APP', {});
-	});
-	win.setRightNavButton(exitBtn);
-	*/
 	
 	/*
 	 * iAd 

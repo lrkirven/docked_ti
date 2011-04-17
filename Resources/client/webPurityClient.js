@@ -48,8 +48,8 @@ function WebPurityClient() {
 		getApiKey :  function() {
 			return apiKey;	
 		},
-		
-		filterText : function(messageData) {
+	'
+		filterText : func'ion(messageData) {
 			if (!Titanium.Network.online) {
 				Ti.App.fireEvent('WP_FILTERED_TEXT', { status:69,
 					errorMsg: Msgs.NO_DATA_SERVICE

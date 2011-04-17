@@ -1268,6 +1268,79 @@ function RestClient() {
                 Titanium.API.info('getReportByReportId: Trying to get msgs from server ... ');
                 xhr.send();	
 			},
+			getRecentReportData : function() {
+               	Titanium.API.info('getRecentReportData: Entered');
+				
+				if (!Titanium.Network.online) {
+					Ti.App.fireEvent('RECENT_REPORT_DATA_RECD', { status:69,
+						errorMsg: Msgs.NO_DATA_SERVICE
+					});
+				}
+				
+				var xhr = Ti.Network.createHTTPClient();
+                xhr.setTimeout(90000);
+				
+                // 
+                // error
+                //
+                xhr.onerror = function(e) {
+					Ti.App.fireEvent('RECENT_REPORT_DATA_RECD', { status:69,
+						errorMsg: 'Unable to connect to remote services -- Please check your network connection'	
+					});
+                }; 
+            
+                // 
+                // success    
+                //
+                xhr.onload = function() {
+					if (this.status >= httpCodes.BAD_REQUEST) {
+						handleErrorResp(this.status, 'RECENT_REPORT_DATA_RECD');	
+						return;
+					}
+					if (Tools.test4NotFound(this.responseText)) {
+						Ti.App.fireEvent('RECENT_REPORT_DATA_RECD', { status:89,
+							errorMsg: 'Unable complete request at this time -- Apologize for the service failure.'	
+						});
+						return;
+					}
+					Titanium.API.info('getReportByReportId: onload: Entered - [' + this.responseText + ']');
+					if (this.responseText == 'null' || this.responseText == undefined) {
+						Titanium.API.info('getReportByReportId: onload: Returning empty set');
+						Ti.App.fireEvent('RECENT_REPORT_DATA_RECD', { result:[], status:0 });
+						return;
+					}
+					if (this.responseText != null) {
+						var jsonNodeData = JSON.parse(this.responseText);
+						if (jsonNodeData != null) {
+							Titanium.API.info('getReportByReportId: onload: SUCCESS');
+							Ti.App.fireEvent('RECENT_REPORT_DATA_RECD', { result:jsonNodeData, status:0 });
+						}
+						else {
+							Ti.App.fireEvent('RECENT_REPORT_DATA_RECD', { status:99,
+								errorMsg: 'Unable to complete request at this time'	
+							});
+						}
+					}
+					else {
+						Ti.App.fireEvent('RECENT_REPORT_DATA_RECD', { status:99,
+							errorMsg: 'Unable to complete request at this time'	
+						});
+					}
+                };
+
+                //
+                // create connection
+                //
+				var targetURL = myReportRestURL + 'toplevel'; 
+				Titanium.API.info('getRecentReportData: REST URL: ' + targetURL);
+                xhr.open('GET', targetURL);
+				xhr.setRequestHeader('Accept', 'application/json');
+                //
+                // send HTTP request
+                //
+                Titanium.API.info('getRecentReportData: Trying to get recent report data ... ');
+                xhr.send();	
+			},
 			/**
 			 * This method returns all of the PUBLIC hotpsots for a specific water resource.
 			 * 

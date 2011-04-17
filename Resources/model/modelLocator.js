@@ -43,6 +43,7 @@ function ModelLocator() {
 	var lastPing = 0;
 	var lastLocTime = 0;
 	var sync2Fb = false;
+	var reportActMap = null;
 	
     this.singletonInstance = null;
 
@@ -63,6 +64,12 @@ function ModelLocator() {
         return {
 			getAppName : function() {
 				return 'Docked';
+			},
+			setReportActivityMap : function (m) {
+				reportActMap = m;	
+			},
+			getReportActivityMap : function() {
+				return reportActMap;
 			},
 			setSync2Fb : function (d) {
 				sync2Fb = d;	

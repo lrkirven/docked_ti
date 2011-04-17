@@ -64,8 +64,8 @@ function buildForm() {
 
 	var lakeText = Titanium.UI.createLabel({
 		color: CSSMgr.color0,
-		text: ( hotSpot != null ? hotSpot.location : (currentLake != null ? currentLake.name : 'UNKNOWN' ), 
-		font: { fontSize:15, fontFamily: model.myFont, fontWeight: 'bold' },
+		text: ( hotSpot != null ? hotSpot.location : (currentLake != null ? currentLake.name : 'UNKNOWN' )), 
+		font: { fontSize:15, fontFamily: model.myFont, fontWeight:'bold' },
 		top: 5,
 		left: 0,
 		width: 300,

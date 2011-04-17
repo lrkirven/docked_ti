@@ -95,7 +95,7 @@ function connect2Facebook(bConnect) {
 				Ti.API.info('Got success date ' + JSON.stringify(data));
 				Ti.API.info('Got access token ' + fbAuthModule.ACCESS_TOKEN);
 				model.setFbAccessToken(fbAuthModule.ACCESS_TOKEN);
-				dbInsertFacebookAccessToken(fbAuthModule.ACCESS_TOKEN)
+				dbInsertFacebookAccessToken(fbAuthModule.ACCESS_TOKEN);
 				fbFlag = true;
 			});
 		}
