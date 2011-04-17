@@ -26,6 +26,7 @@ function ModelLocator() {
 	var useFbProfilePic = false;
 	// var fbAPIKey = '8851fedb7bd7eef10c642cdaffa7faa9';
 	var fbAPIKey = null;
+	var wpAPIKey = null;
 	// var fbSecret = '4a4cbd0adac0c8ead93f848f93083ad6';
 	var fbSecret = null;
 	var fbAccessToken = null;
@@ -186,6 +187,12 @@ function ModelLocator() {
 			},
 			getFBSecret : function() {
 				return fbSecret;
+			},
+			setWPApiKey : function (k) {
+				wpAPIKey = k;	
+			},
+			getWPApiKey : function() {
+				return wpAPIKey;
 			},
 			setCurrentLake : function (obj) {
 				currentLake = obj;	
