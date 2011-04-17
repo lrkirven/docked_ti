@@ -118,10 +118,8 @@ function postMessage2FB(m) {
 		}
 		
 		var fbClient = new FacebookClient();
-		var token = model.getFbAccessToken();
 		fbClient.setAccessToken(token);
-		// fbClient.publishStream(fbRec);
-		fbClient.publishStreamToDockedPage(fbRec);
+		fbClient.publishStream(fbRec);
 	}
 	else {
 		Ti.API.warn('**** User is not logged into Facebook -- Cannot post message to FB');
