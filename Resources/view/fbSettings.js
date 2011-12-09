@@ -18,6 +18,7 @@ var tempFlag = false;
 var initFlag = true;
 var fbFlag = false;
 var fbProfileFlag = false;
+var fbBaseUrl = 'https://graph.facebook.com';
 
 //////////////////////////////////////////////////////////////////////////////////
 // DB related methods
@@ -159,6 +160,29 @@ Titanium.App.addEventListener('FB_USER_PROFILE_RECD', function(e) {
 	}
 });
 
+function shareFacebook(){
+	var fbAppId = model.getFBAPIKey();
+	Ti.API.info('shareFacebook(): fbAppId=' + fbAppId);
+    Titanium.Facebook.appid = fbAppId;
+    Titanium.Facebook.permissions = ['publish_stream','user_photos','offline_access'];
+ 
+    if(!Titanium.Facebook.loggedIn){
+        var a = Titanium.UI.createAlertDialog({
+            title:'Facebook Login',
+            message:'You must authorize before you can share via Facebook.',
+            buttonNames:['OK','Cancel'],
+            cancel:1
+        });
+        a.show();
+        a.addEventListener('click', function(e){
+            if (e.index == 0){
+                Titanium.Facebook.authorize();  
+            };
+        });
+ 
+    }
+}
+
 
 function buildForm() {
 
@@ -212,7 +236,8 @@ function buildForm() {
 			dbUpdateSync2Fb(false);
 			model.setUseFBProfilePic(false);
 			dbUpdateUseFbProfilePic(false);
-			connect2Facebook(true);
+			// connect2Facebook(true);
+			shareFacebook();
 		}
 		else {
 			model.setSync2Fb(false);
@@ -251,10 +276,35 @@ function buildForm() {
 			Ti.API.info('Use FB Profile Pic? ' + e.value + ' [current] UseFBProfilePic flag=' + fbProfileFlag);
 			if (e.value) {
 				if (!fbProfileFlag) {
+					Titanium.Facebook.requestWithGraphPath('me', {}, 'GET', function(e) {
+				    	if (e.success) {
+							var res = JSON.parse(e.result);
+				       		Ti.API.info("Success! Returned from FB: " + res);
+							var fbId = res.id;
+							var profileUrl = fbBaseUrl + '/' + fbId + '/' + 'picture';
+							Ti.API.info('CONSTRUCTED FB PROFILE URL --> ' + profileUrl);
+							model.setUseFBProfilePic(true);
+							dbUpdateUseFbProfilePic(true);
+							fbProfileFlag = true;
+							var client = new RestClient();
+							var user = model.getCurrentUser();
+							client.updateProfileUrl(user.id, profileUrl);
+				    	} 
+						else {
+				        	if (e.error) {
+				            	Ti.API.info(e.error);
+				        	} 
+							else {
+				            	Ti.API.info("Unknown result");
+				        	}
+				    	}
+					});
+					/*
 					var fbClient = new FacebookClient();
 					var token = model.getFbAccessToken();
 					fbClient.setAccessToken(token);
 					fbClient.getUserProfile('profileUrl');
+					*/
 				}
 			}
 			else {

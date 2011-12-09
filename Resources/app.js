@@ -22,10 +22,10 @@ var db = Titanium.Database.open('db.docked.co');
 if (Common.RESET_APP) {
 	db.execute('DROP TABLE IF EXISTS AppParams');
 }
+db.execute('CREATE TABLE IF NOT EXISTS AppParams (id INTEGER PRIMARY KEY, name VARCHAR(30), valueStr TEXT, valueInt INTEGER)');
 if (Common.RESET_FB) {
 	db.execute("DELETE FROM AppParams WHERE name = 'FB_ACCESS_TOKEN'");
 }
-db.execute('CREATE TABLE IF NOT EXISTS AppParams (id INTEGER PRIMARY KEY, name VARCHAR(30), valueStr TEXT, valueInt INTEGER)');
 var tabGroup = null;
 var buzzTab = null;
 var hotspotTab = null;
@@ -152,6 +152,7 @@ function loadApplicationConfiguration() {
     if (rowcpt.isValidRow()) {
         fbKey = rowcpt.fieldByName('valueStr');
 		fbKeyStr = Tea.decrypt(fbKey, model.getPW1());
+		Ti.API.info('loadApplicationConfiguration(): fbKey=' + fbKeyStr);
 		model.setFBAPIKey(fbKeyStr);
     }
 	
@@ -162,6 +163,7 @@ function loadApplicationConfiguration() {
     if (rowcpt.isValidRow()) {
         fbSecret = rowcpt.fieldByName('valueStr');
 		fbSecretStr = Tea.decrypt(fbSecret, model.getPW1());
+		Ti.API.info('loadApplicationConfiguration(): fbSecret=' + fbSecretStr);
 		model.setFBSecret(fbSecretStr);
     }
 	
