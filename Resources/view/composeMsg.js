@@ -92,6 +92,45 @@ Titanium.App.addEventListener('ACTIVE_BUCKET', function(e) {
  * @param {Object} m
  */
 function postMessage2FB(m) {
+	var fbRec = null;
+	if (m.photoUrl != null) {
+		fbRec = {
+			name: 'Docked on ' + m.location,
+			link:'http://www.docked.co/landing.php?m=' + m.msgId,
+			caption:"docked.co",
+			message:m.messageData,
+			picture:m.photoUrl
+			// from:{ id:Common.DOCKED_FB_ID, name:Msgs.APP_NAME }
+		};
+	}
+	else {
+		fbRec = {
+			name: 'Docked on ' + m.location,
+			link:'http://www.docked.co/landing.php?m=' + m.msgId,
+			caption:"docked.co",
+			// from:{ id:Common.DOCKED_FB_ID, name:Msgs.APP_NAME },
+			message:m.messageData
+		};
+	}
+	Titanium.Facebook.requestWithGraphPath('me/feed', fbRec, 'POST', function(e) {
+		if (e.success) {
+			var res = JSON.parse(e.result);
+	   		Ti.API.info('Got successful post resp from FB: ' + res);
+			Tools.reportMsg(Msgs.APP_NAME, Msgs.MSG_POSTED);	
+			performExit();
+			win.close();
+	   	} 
+		else {
+		   	if (e.error) {
+		       	Ti.API.info(e.error);
+		  	} 
+			else {
+		       	Ti.API.info("Unknown result");
+			}
+		}
+	});
+					
+	/*			
 	var token = model.getFbAccessToken();
 	if (token != null) {
 		var fbRec = null;
@@ -127,6 +166,7 @@ function postMessage2FB(m) {
 		performExit();
 		win.close();
 	}
+	*/
 };
 
 
@@ -167,6 +207,8 @@ function buildForm() {
 	});
 	panel.add(msgLbl);
 	
+	Ti.API.info('UseFBProfilePic: ' + model.getUseFBProfilePic() + 
+		' URL: ' + model.getFBProfileUrl());
 	if (model.getUseFBProfilePic() && model.getFBProfileUrl() != null) {
 		var myProfileUrl = model.getFBProfileUrl();
 		Ti.API.info('myProfileUrl :: ' + myProfileUrl);

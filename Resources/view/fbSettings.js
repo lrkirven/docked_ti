@@ -186,10 +186,7 @@ function shareFacebook(){
 
 function buildForm() {
 
-	var savedToken = model.getFbAccessToken();
-	if (savedToken != null) {
-		fbFlag = true;
-	}
+	fbFlag = Titanium.Facebook.loggedIn;
 	
 	Ti.API.info('Using Facebook flag --> ' + fbFlag);
 	
@@ -246,7 +243,7 @@ function buildForm() {
 			dbUpdateUseFbProfilePic(false);
 			switchBtn0.enabled = false;
 			switchBtn1.enabled = false;
-			connect2Facebook(false);
+			// connect2Facebook(false);
 		}
 	});
 	panel.add(fbSwitch);
@@ -279,15 +276,18 @@ function buildForm() {
 					Titanium.Facebook.requestWithGraphPath('me', {}, 'GET', function(e) {
 				    	if (e.success) {
 							var res = JSON.parse(e.result);
-				       		Ti.API.info("Success! Returned from FB: " + res);
+				       		Ti.API.info('Got successful response from FB: ' + res);
 							var fbId = res.id;
 							var profileUrl = fbBaseUrl + '/' + fbId + '/' + 'picture';
 							Ti.API.info('CONSTRUCTED FB PROFILE URL --> ' + profileUrl);
 							model.setUseFBProfilePic(true);
 							dbUpdateUseFbProfilePic(true);
+							dbUpdateFbProfilePic(profileUrl);
 							fbProfileFlag = true;
 							var client = new RestClient();
 							var user = model.getCurrentUser();
+							Ti.API.info('Updating profile in cloud for user=' + user.id + 
+								' profileUrl=' + profileUrl);
 							client.updateProfileUrl(user.id, profileUrl);
 				    	} 
 						else {
@@ -299,12 +299,6 @@ function buildForm() {
 				        	}
 				    	}
 					});
-					/*
-					var fbClient = new FacebookClient();
-					var token = model.getFbAccessToken();
-					fbClient.setAccessToken(token);
-					fbClient.getUserProfile('profileUrl');
-					*/
 				}
 			}
 			else {
