@@ -9,6 +9,8 @@ Ti.include('../client/picasaClient.js');
 Ti.include('../client/restClient.js');
 Ti.include('../client/fbClient.js');
 Ti.include('../client/webPurityClient.js');
+// Ti.include('../lib/birdhouse-debug.js');
+Ti.include('../lib/birdhouse.js');
 
 Ti.include('baseViewer.js');
 
@@ -16,9 +18,17 @@ var win = Ti.UI.currentWindow;
 var model = win.model;
 var composeMsgWinPhotoIndBtn = null;
 var post2FB = false;
+var post2TW = false;
 var addToMyHotSpots = false;
 var msgLimit = null;
 var currentBucket = null;
+
+var BH = new BirdHouse({
+	consumer_key:'G8wMSEckfzvbbOklMpniA',
+	consumer_secret:'AvZXdkZIW42WrJrWHGkzWPmmzyTMVbZskOg9nJbvc',
+	callback_url: 'http://www.docked.co'
+});
+
 
 var b = Titanium.UI.createButton({title:'BACK'});
 b.addEventListener('click', function() {
@@ -87,6 +97,29 @@ Titanium.App.addEventListener('ACTIVE_BUCKET', function(e) {
 
 
 /**
+ * Post the same message to my twitter account.
+ * 
+ * @param {Object} m
+ */
+function postMsg2Twitter(m){
+	var tweetMsg = m.messageData + ' @DockedMobile';
+	BH.send_tweet('status='+escape(tweetMsg), function(retval){
+		if (retval === false) {
+			Ti.API.info('Tweet failed ...');
+			win.close();
+			return false;
+		}
+		else {
+			Ti.API.info('Tweet succeeded ...');
+			performExit();
+			win.close();
+			return true;
+		}
+	});
+};	
+	
+
+/**
  * Post message to your facebook wall.
  * 
  * @param {Object} m
@@ -129,44 +162,6 @@ function postMessage2FB(m) {
 			}
 		}
 	});
-					
-	/*			
-	var token = model.getFbAccessToken();
-	if (token != null) {
-		var fbRec = null;
-		if (m.photoUrl != null) {
-			fbRec = {
-				name: 'Docked on ' + m.location,
-				link:'http://www.docked.co/landing.php?m=' + m.msgId,
-				caption:"docked.co",
-				message:m.messageData,
-				picture:m.photoUrl,
-				from:{ id:Common.DOCKED_FB_ID, name:Msgs.APP_NAME },
-				access_token:token
-			};
-		}
-		else {
-			fbRec = {
-				name: 'Docked on ' + m.location,
-				link:'http://www.docked.co/landing.php?m=' + m.msgId,
-				caption:"docked.co",
-				from:{ id:Common.DOCKED_FB_ID, name:Msgs.APP_NAME },
-				message:m.messageData,
-				access_token:token
-			};
-		}
-		
-		var fbClient = new FacebookClient();
-		fbClient.setAccessToken(token);
-		fbClient.publishStream(fbRec);
-	}
-	else {
-		Ti.API.warn('**** User is not logged into Facebook -- Cannot post message to FB');
-		Tools.reportMsg(Msgs.APP_NAME, Msgs.MSG_POSTED);	
-		performExit();
-		win.close();
-	}
-	*/
 };
 
 
@@ -474,11 +469,14 @@ function performExit() {
 function handleNewMsgPosted(e) {
 	if (e.status == 0) {
 		if (post2FB) {
-			postingInd.hide();
 			Ti.API.info('handleNewMsgPosted(): Going to facebook ---> ' + e.origMsgEvent);
 			postMessage2FB(e.newMsgEvent);
 		}
-		else {
+		if (post2TW) {
+			Ti.API.info('Trying to post a message to Twitter.');
+			postMsg2Twitter(e.newMsgEvent);
+		}
+		if (!post2FB && !post2TW) {
 			postingInd.hide();
 			var alertDialog = Titanium.UI.createAlertDialog({
 				message: 'Message posted!',
@@ -542,6 +540,7 @@ Titanium.App.addEventListener('FOUND_LAST_BUCKET', function(e) {
 function init() {
 	
 	post2FB = model.getSync2Fb();
+	post2TW = model.getSync2Tw();
 
 	/*
 	 * listeners

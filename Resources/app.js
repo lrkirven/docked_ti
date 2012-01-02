@@ -425,9 +425,11 @@ function handleInitialUserPosition(e) {
 		//
 		if (Common.DEBUG) {
 			// lat = 32.859258;
-			lat = 33.30424880981445;
+			// lat = 33.30424880981445;
+			lat = 33.108798;
 			// lng = -96.520557;
-			lng = -96.5897216796875
+			// lng = -96.5897216796875
+			lng = -96.966705;
 		}
 		
 		model.setUserLng(lng);

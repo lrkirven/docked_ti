@@ -41,6 +41,7 @@ function ModelLocator() {
 	var lastPing = 0;
 	var lastLocTime = 0;
 	var sync2Fb = false;
+	var sync2Tw = true;
 	var reportActMap = null;
 	
     this.singletonInstance = null;
@@ -74,6 +75,12 @@ function ModelLocator() {
 			},
 			getSync2Fb : function() {
 				return sync2Fb;
+			},
+			setSync2Tw : function (d) {
+				sync2Tw = d;	
+			},
+			getSync2Tw : function() {
+				return sync2Tw;
 			},
 			isFbAccessTokenValid : function() {
 				if (fbAccessToken == null) {
