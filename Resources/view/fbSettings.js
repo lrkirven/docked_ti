@@ -316,7 +316,7 @@ function buildForm() {
 	
 	var lbl1 = Titanium.UI.createLabel({
 		color: CSSMgr.color0,
-		text: 'Post your Docked Buzz to facebook: ',
+		text: 'Post your Docked Buzz to Facebook: ',
 		font: { fontFamily: model.myFont, fontSize: 15, fontWeight:'bold' },
 		top: 200,
 		left: 10,

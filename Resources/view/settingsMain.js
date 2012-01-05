@@ -36,6 +36,12 @@ function init() {
 			ptr: 'fbSettings.js'
 		},
 		{
+			title: 'Share with Twitter',
+			hasChild: true,
+			leftImage: '../images/Gears.png',
+			ptr: 'twSettings.js'
+		},
+		{
 			title: 'User Preferences',
 			hasChild: true,
 			leftImage: '../images/Gears.png',
