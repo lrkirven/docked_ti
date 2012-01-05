@@ -187,6 +187,23 @@ function loadApplicationConfiguration() {
 		model.setPicasaPassword(pPasswordStr);
     }
 	
+	// sync to twitter
+	rowcpt = db.execute("SELECT * FROM AppParams WHERE name = 'SYNC_TO_TW'");
+    if (rowcpt.isValidRow()) {
+        val = rowcpt.fieldByName('valueInt');
+		if (val > 0) {
+			Ti.API.info('loadApplicationConfiguration(): SYNC_TO_TW TRUE');
+			model.setSync2Tw(true);	
+		}
+		else {
+			Ti.API.info('loadApplicationConfiguration(): SYNC_TO_TW FALSE');
+			model.setSync2Tw(false);	
+		}
+    }
+	else {
+		Ti.API.info('loadApplicationConfiguration(): SYNC_TO_TW -- NOT FOUND');
+	}
+	
 	// sync to facebook
 	rowcpt = db.execute("SELECT * FROM AppParams WHERE name = 'SYNC_TO_FB'");
     if (rowcpt.isValidRow()) {
