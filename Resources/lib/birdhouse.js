@@ -1140,7 +1140,8 @@ function BirdHouse(params) {
 	this.authorize = authorize;
 	this.deauthorize = deauthorize;
 	this.api = api;
-	this.authorized = function() { return authorized; }
+	// this.authorized = function() { return authorized; }
+	this.authorized = authorized;
 	this.get_tweets = get_tweets;
 	this.tweet = tweet;
 	this.short_tweet = short_tweet;

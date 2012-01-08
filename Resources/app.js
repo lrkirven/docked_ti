@@ -76,6 +76,7 @@ function addRegistration(llId, emailAddr, displayName, fbKey, fbSecret, pUser, p
     rows += db.execute("INSERT INTO AppParams (name, valueStr, valueInt) VALUES ('PPASSWORD', '" + pPassword + "', 0)");
     rows += db.execute("INSERT INTO AppParams (name, valueStr, valueInt) VALUES ('SERVERSECRET', '" + serverSecret + "', 0)");
     rows += db.execute("INSERT INTO AppParams (name, valueStr, valueInt) VALUES ('SYNC_TO_FB', '', 0)");
+    rows += db.execute("INSERT INTO AppParams (name, valueStr, valueInt) VALUES ('SYNC_TO_TW', '', 0)");
     rows += db.execute("INSERT INTO AppParams (name, valueStr, valueInt) VALUES ('USE_FB_PIC', '', 0)");
     rows += db.execute("INSERT INTO AppParams (name, valueStr, valueInt) VALUES ('FB_PROFILE_PIC', 'NULL', 0)");
     rows += db.execute("INSERT INTO AppParams (name, valueStr, valueInt) VALUES ('WPAPIKEY', '" + wpApiKey + "', 0)");
@@ -201,7 +202,8 @@ function loadApplicationConfiguration() {
 		}
     }
 	else {
-		Ti.API.info('loadApplicationConfiguration(): SYNC_TO_TW -- NOT FOUND');
+		Ti.API.info('loadApplicationConfiguration(): SYNC_TO_TW -- NOT FOUND -- ADDING');
+    	db.execute("INSERT INTO AppParams (name, valueStr, valueInt) VALUES ('SYNC_TO_TW', '', 0)");
 	}
 	
 	// sync to facebook

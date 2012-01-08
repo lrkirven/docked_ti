@@ -41,7 +41,7 @@ function ModelLocator() {
 	var lastPing = 0;
 	var lastLocTime = 0;
 	var sync2Fb = false;
-	var sync2Tw = true;
+	var sync2Tw = false;
 	var reportActMap = null;
 	
     this.singletonInstance = null;

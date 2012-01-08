@@ -15,7 +15,6 @@ var db = win.db;
 var switchBtn1 = null;
 var tempFlag = false;
 var initFlag = true;
-var twFlag = false;
 var fbBaseUrl = 'https://graph.facebook.com';
 
 
@@ -24,6 +23,8 @@ var BH = new BirdHouse({
 	consumer_secret:'AvZXdkZIW42WrJrWHGkzWPmmzyTMVbZskOg9nJbvc',
 	callback_url: 'http://www.docked.co'
 });
+
+var twFlag = BH.authorized;
 
 //////////////////////////////////////////////////////////////////////////////////
 // DB related methods
@@ -79,6 +80,7 @@ function buildForm() {
 	var icon = Base.createIcon(15, 15);
 	panel.add(icon);
 	
+	/*
 	var twLbl = Titanium.UI.createLabel({
 		color: CSSMgr.color0,
 		text: 'Connect to your Twitter account: ',
@@ -102,14 +104,19 @@ function buildForm() {
 			model.setSync2Tw(false);
 			dbUpdateSync2Tw(false);
 			BH.authorize(function (e){
+				var alertDialog = Titanium.UI.createAlertDialog({
+					buttonNames: ['OK']
+				});
 				if (e===true) {
 					alertDialog.message = 'Successfully authorized.';
+					
 					switchBtn1.enabled = true;
 				} 
 				else {
 					alertDialog.message = 'Failed to authorize.';
 					switchBtn1.enabled = false;
 				}
+				alertDialog.show();
 			});
 		}
 		else {
@@ -119,12 +126,13 @@ function buildForm() {
 		}
 	});
 	panel.add(twSwitch);
+	*/
 	
 	var lbl1 = Titanium.UI.createLabel({
 		color: CSSMgr.color0,
 		text: 'Post your Docked Buzz to Twitter: ',
 		font: { fontFamily: model.myFont, fontSize: 15, fontWeight:'bold' },
-		top: 135,
+		top: 70,
 		left: 10,
 		width: 280,
 		textAlign: 'left',
@@ -136,9 +144,9 @@ function buildForm() {
 	Ti.API.info('sync2Tw = ' + sync2Tw);
 	switchBtn1 = Titanium.UI.createSwitch({
 		value:sync2Tw,
-		top: 160,
+		top: 95,
 		left: 10,
-		enabled: twFlag
+		enabled: true
 	});
 	switchBtn1.addEventListener('change', function(e) {
 		Ti.API.info('Sync Docked Buzz to Twitter? ' + e.value);
@@ -156,5 +164,7 @@ function init() {
 	initFlag = false;	
 };
 
-
+//
+// intitial entry
+//
 init();

@@ -101,7 +101,8 @@ Titanium.App.addEventListener('ACTIVE_BUCKET', function(e) {
  * 
  * @param {Object} m
  */
-function postMsg2Twitter(m){
+function postMsg2Twitter(m) {
+	var authFlag = BH.authorized;
 	var tweetMsg = m.messageData + ' @DockedMobile';
 	BH.send_tweet('status='+escape(tweetMsg), function(retval){
 		if (retval === false) {
