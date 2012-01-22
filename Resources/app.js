@@ -524,6 +524,11 @@ Titanium.App.addEventListener('UPDATED_DISPLAY_NAME', function(e) {
 	
 });
 
+/**
+ * User registered their application
+ * 
+ * @param {Object} e
+ */
 Titanium.App.addEventListener('USER_REGISTERED', function(e) { 
 
 	Ti.API.info('Registration complete --> ' + e.status);
