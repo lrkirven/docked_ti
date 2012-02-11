@@ -642,7 +642,8 @@ Titanium.App.addEventListener('USER_REGISTERED', function(e) {
 		Ti.API.info('TW Secret: [' + twSecretStr + ']');
 		model.setTWSecret(twSecretStr);
 			
-		addRegistration(llid, emailAddr, nickname, fbKey, fbSecret, pUser, pPassword, serverSecret, wpApiKey);
+		addRegistration(llid, emailAddr, nickname, fbKey, fbSecret, 
+			pUser, pPassword, serverSecret, wpApiKey, twKey, twSecret);
 				
 		
 		Tools.reportMsg(Msgs.APP_NAME, "Registration Complete.");
