@@ -25,8 +25,10 @@ function ModelLocator() {
 	var fbProfileUrl = null;
 	var useFbProfilePic = false;
 	var fbAPIKey = null;
-	var wpAPIKey = '0c27007ca617fcfa2858805a018a3758';
 	var fbSecret = null;
+	var wpAPIKey = '0c27007ca617fcfa2858805a018a3758';
+	var twAPIKey = null;
+	var twSecret = null;
 	var fbAccessToken = null;
 	var fbAccessTokenTM = 0;
 	var picasaUser = null;
@@ -43,6 +45,7 @@ function ModelLocator() {
 	var sync2Fb = false;
 	var sync2Tw = false;
 	var reportActMap = null;
+	var llIDEnc = null;
 	
     this.singletonInstance = null;
 
@@ -81,6 +84,12 @@ function ModelLocator() {
 			},
 			getSync2Tw : function() {
 				return sync2Tw;
+			},
+			setLlIDEnc : function (d) {
+				llIDEnc = d;	
+			},
+			getLlIDEnc : function() {
+				return llIDEnc;
 			},
 			isFbAccessTokenValid : function() {
 				if (fbAccessToken == null) {
@@ -205,6 +214,18 @@ function ModelLocator() {
 			},
 			getWPApiKey : function() {
 				return wpAPIKey;
+			},
+			setTWAPIKey : function (k) {
+				twAPIKey = k;	
+			},
+			getTWAPIKey : function() {
+				return twAPIKey;
+			},
+			setTWSecret : function (s) {
+				twSecret = s;	
+			},
+			getTWSecret : function() {
+				return twSecret;
 			},
 			setCurrentLake : function (obj) {
 				currentLake = obj;	

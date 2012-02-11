@@ -65,7 +65,7 @@ function hasUserRegistered() {
  * @param {Object} pPassword
  * @param {Object} serverSecret
  */
-function addRegistration(llId, emailAddr, displayName, fbKey, fbSecret, pUser, pPassword, serverSecret, wpApiKey) {
+function addRegistration(llId, emailAddr, displayName, fbKey, fbSecret, pUser, pPassword, serverSecret, wpApiKey, twKey, twSecret) {
 	var rows = 0;
     rows += db.execute("INSERT INTO AppParams (name, valueStr, valueInt) VALUES ('LLID', '" + llId + "', 0)");
     rows += db.execute("INSERT INTO AppParams (name, valueStr, valueInt) VALUES ('EMAILADDR', '" + emailAddr + "', 0)");
@@ -80,6 +80,8 @@ function addRegistration(llId, emailAddr, displayName, fbKey, fbSecret, pUser, p
     rows += db.execute("INSERT INTO AppParams (name, valueStr, valueInt) VALUES ('USE_FB_PIC', '', 0)");
     rows += db.execute("INSERT INTO AppParams (name, valueStr, valueInt) VALUES ('FB_PROFILE_PIC', 'NULL', 0)");
     rows += db.execute("INSERT INTO AppParams (name, valueStr, valueInt) VALUES ('WPAPIKEY', '" + wpApiKey + "', 0)");
+    rows += db.execute("INSERT INTO AppParams (name, valueStr, valueInt) VALUES ('TWKEY', '" + twKey + "', 0)");
+    rows += db.execute("INSERT INTO AppParams (name, valueStr, valueInt) VALUES ('TWSECRET', '" + twSecret + "', 0)");
 	Ti.API.info("addRegistration():  rows --> " +  rows);
 };
 
@@ -114,6 +116,7 @@ function loadApplicationConfiguration() {
 		llIdStr = Tea.decrypt(llId, model.getPW1());
     }
 	var c2sLLId = Tea.encrypt(llIdStr, model.getPW2());
+	model.setLlIDEnc(c2sLLId);
 	
 	// email address
 	rowcpt = db.execute("SELECT * FROM AppParams WHERE name = 'EMAILADDR'");
@@ -257,6 +260,35 @@ function loadApplicationConfiguration() {
     }
 	else {
 		Ti.API.info('loadApplicationConfiguration(): FB_PROFILE_PIC -- NOT FOUND');
+	}
+	
+	
+	// twitter key
+	rowcpt = db.execute("SELECT * FROM AppParams WHERE name = 'TWKEY'");
+	var twKey = null;
+	var twKeyStr = null;
+    if (rowcpt.isValidRow()) {
+        twKey = rowcpt.fieldByName('valueStr');
+		twKeyStr = Tea.decrypt(twKey, model.getPW1());
+		Ti.API.info('loadApplicationConfiguration(): twKey=' + twKeyStr);
+		model.setTWAPIKey(twKeyStr);
+    }
+	else {
+		model.setTWAPIKey('G8wMSEckfzvbbOklMpniA');
+	}
+	
+	// twitter secret
+	rowcpt = db.execute("SELECT * FROM AppParams WHERE name = 'TWSECRET'");
+	var twSecret = null;
+	var twSecretStr = null;
+    if (rowcpt.isValidRow()) {
+        twSecret = rowcpt.fieldByName('valueStr');
+		twSecretStr = Tea.decrypt(twSecret, model.getPW1());
+		Ti.API.info('loadApplicationConfiguration(): twSecret=' + twSecretStr);
+		model.setTWSecret(twSecretStr);
+    }
+	else {
+		model.setTWSecret('AvZXdkZIW42WrJrWHGkzWPmmzyTMVbZskOg9nJbvc');
 	}
 	
 	Ti.API.info("loadApplicationConfiguration(): Done");
@@ -597,6 +629,18 @@ Titanium.App.addEventListener('USER_REGISTERED', function(e) {
 		var wpApiKeyStr = Tea.decrypt(wpApiKey, model.getPW1());
 		Ti.API.info('WebPurity API Key: [' + wpApiKeyStr + ']');
 		model.setWPApiKey(wpApiKeyStr);
+		
+		// twitter key
+		var twKey = token.twKey;
+		var twKeyStr = Tea.decrypt(twKey, model.getPW1());
+		Ti.API.info('Twitter Key: [' + twKeyStr + ']');
+		model.setTWAPIKey(twKey.text);
+			
+		// twitter secret	
+		var twSecret = token.twSecret;
+		var twSecretStr = Tea.decrypt(twSecret, model.getPW1());
+		Ti.API.info('TW Secret: [' + twSecretStr + ']');
+		model.setTWSecret(twSecretStr);
 			
 		addRegistration(llid, emailAddr, nickname, fbKey, fbSecret, pUser, pPassword, serverSecret, wpApiKey);
 				

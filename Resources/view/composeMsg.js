@@ -6,6 +6,7 @@ Ti.include('../props/cssMgr.js');
 Ti.include('../props/cssMgr.js');
 Ti.include('../model/modelLocator.js');
 Ti.include('../client/picasaClient.js');
+Ti.include('../client/amazonS3Client.js');
 Ti.include('../client/restClient.js');
 Ti.include('../client/fbClient.js');
 Ti.include('../client/webPurityClient.js');
@@ -23,9 +24,15 @@ var addToMyHotSpots = false;
 var msgLimit = null;
 var currentBucket = null;
 
+/**
+ * Get Twitter security critieria from model
+ */
+var twKey = model.getTWAPIKey();
+var twSecret = model.getTWSecret();
+
 var BH = new BirdHouse({
-	consumer_key:'G8wMSEckfzvbbOklMpniA',
-	consumer_secret:'AvZXdkZIW42WrJrWHGkzWPmmzyTMVbZskOg9nJbvc',
+	consumer_key:twKey,
+	consumer_secret:twSecret,
 	callback_url: 'http://www.docked.co'
 });
 
@@ -408,6 +415,7 @@ function buildForm() {
 			/*
 			 * Upload photo
 			 */
+			/*
 			var pUser = model.getPicasaUser();
 			var pPassword = model.getPicasaPassword();
 			var client = new PicasaClient();
@@ -417,6 +425,11 @@ function buildForm() {
 			client.setPicasaPassword(pPassword);
 			client.setLastBucket(currentBucket);
 			client.upload2(rawImage);
+			*/
+			
+			var client =  new AmazonS3Client();
+			var id = model.getLlIDEnc();
+			client.uploadPhoto(id, myLocation.resKey, rawImage)
 		}
 		//
 		// just posting message
