@@ -1,13 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ti:app xmlns:ti="http://ti.appcelerator.org">
-<id>net.lazylaker.app</id>
-<name>docked_ti</name>
-<version>1.0</version>
-<publisher>ZARCODE, LLC</publisher>
-<url>www.zarcode.com</url>
-<description>No description provided</description>
-<copyright>2011 by ZARCODE, LLC</copyright>
-<icon>default_app_logo.png</icon>
+    <deployment-targets>
+        <target device="mobileweb">false</target>
+        <target device="iphone">true</target>
+        <target device="ipad">true</target>
+        <target device="android">true</target>
+        <target device="blackberry">false</target>
+    </deployment-targets>
+    <sdk-version>1.7.6.v20120116143134</sdk-version>
+    <id>net.lazylaker.app</id>
+    <name>Docked</name>
+    <version>1.0</version>
+    <publisher>ZARCODE, LLC</publisher>
+    <url>http://www.docked.co/</url>
+    <description>not specified</description>
+    <copyright>2012 by ZARCODE, LLC</copyright>
+    <icon>appicon.png</icon>
     <persistent-wifi>false</persistent-wifi>
     <prerendered-icon>false</prerendered-icon>
     <statusbar-style>default</statusbar-style>
@@ -15,20 +23,18 @@
     <fullscreen>false</fullscreen>
     <navbar-hidden>false</navbar-hidden>
     <analytics>true</analytics>
-<guid>df7d00e5-90e3-4a92-badc-997c92923005</guid>
-	<iphone>
-		<orientations device="iphone">
-			<orientation>Ti.UI.PORTRAIT</orientation>
-		</orientations>
-		<orientations device="ipad">
-			<orientation>Ti.UI.PORTRAIT</orientation>
-			<orientation>Ti.UI.UPSIDE_PORTRAIT</orientation>
-			<orientation>Ti.UI.LANDSCAPE_LEFT</orientation>
-			<orientation>Ti.UI.LANDSCAPE_RIGHT</orientation>
-		</orientations>
-	</iphone>
-	<android xmlns:android="http://schemas.android.com/apk/res/android">
-	</android>
-	<modules>
-	</modules>
+    <guid>6addd722-033c-4e40-820c-5b62ba528eff</guid>
+    <iphone>
+        <orientations device="iphone">
+            <orientation>Ti.UI.PORTRAIT</orientation>
+        </orientations>
+        <orientations device="ipad">
+            <orientation>Ti.UI.PORTRAIT</orientation>
+            <orientation>Ti.UI.UPSIDE_PORTRAIT</orientation>
+            <orientation>Ti.UI.LANDSCAPE_LEFT</orientation>
+            <orientation>Ti.UI.LANDSCAPE_RIGHT</orientation>
+        </orientations>
+    </iphone>
+    <android xmlns:android="http://schemas.android.com/apk/res/android"/>
+    <modules/>
 </ti:app>
