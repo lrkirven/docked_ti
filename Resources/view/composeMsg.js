@@ -30,6 +30,9 @@ var currentBucket = null;
 var twKey = model.getTWAPIKey();
 var twSecret = model.getTWSecret();
 
+Ti.API.info('composeMsg: Twitter Key: ' + twKey);
+Ti.API.info('composeMsg: Twitter Secret: ' + twSecret);
+
 var BH = new BirdHouse({
 	consumer_key:twKey,
 	consumer_secret:twSecret,
@@ -111,6 +114,9 @@ Titanium.App.addEventListener('ACTIVE_BUCKET', function(e) {
 function postMsg2Twitter(m) {
 	var authFlag = BH.authorized;
 	var tweetMsg = m.messageData + ' @DockedMobile';
+	
+	Ti.API.info('postMsg2Twitter(): Calling birdhouse to post to Twitter ...');
+	
 	BH.send_tweet('status='+escape(tweetMsg), function(retval){
 		if (retval === false) {
 			Ti.API.info('Tweet failed ...');
