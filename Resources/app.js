@@ -1,6 +1,6 @@
 Ti.include('util/common.js');
 Ti.include('util/msgs.js');
-Ti.include('util/date.format.js');
+Ti.include('util/dateformat.js');
 Ti.include('util/tools.js');
 Ti.include('util/tea.js');
 Ti.include('props/cssMgr.js');
@@ -634,7 +634,7 @@ Titanium.App.addEventListener('USER_REGISTERED', function(e) {
 		var twKey = token.twKey;
 		var twKeyStr = Tea.decrypt(twKey, model.getPW1());
 		Ti.API.info('Twitter Key: [' + twKeyStr + ']');
-		model.setTWAPIKey(twKey.text);
+		model.setTWAPIKey(twKeyStr);
 			
 		// twitter secret	
 		var twSecret = token.twSecret;
